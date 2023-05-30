@@ -1,0 +1,321 @@
+new method for print -
+1. print ("For n_clusters = {}, silhouette score is {}".format(n_clusters, score)) 
+	in it first {} filles with first var of .format/n_clusters and second {} filled with score
+
+2. print('Radius is: ', c.radius)
+
+3. print("IQR value for column %s is: %s" % (col, IQR))
+4. print(f"hi,{name}")
+
+5. we can print without print command aalso-   rating_df.shape,ratings_new.shape   use comma for two or more
+
+for how much subsets can we have for any set-
+											from itertools import combinations
+											print(list(combinations([1, 2, 3, 4], 2)))
+
+
+
+Functions-
+           
+                  def check_even_or_odd(num):
+                   '''
+                       This function checks whether a number is odd or even and then returns the corresponding string
+                   '''
+                   print(f'Given number is {num}')
+  
+                 # Step 1 : Check if the number is even. If it is return 'even'
+                     if num%2 == 0:
+                      return 'even'
+
+                 # Step 2 : Else just return 'odd'
+                     else:
+                      return 'odd'
+				Now call it- even_odd = check_even_or_odd(10)
+                             print(even_odd)	
+                 2.Function and method both look similar as they perform in an almost similar way, but the key difference is the concept of ‘Class and its Object’. Functions can be called only by its name, as it is defined independently. But methods cannot be called by its name only we need to invoke the class by reference of that class in which it is defined, that is, the method is defined within a class and hence they are dependent on that class.
+
+                 3.A method is called by its name but it is associated with an object (dependent). It is implicitly passed to an object on which it is invoked. It may or may not return any data. A method can operate the data (instance variables) that is contained by the corresponding class.				
+
+					#setting up global var
+						global_var = 0  
+						def modify_global_var():  
+							global global_var # Setting global_var as a global variable  
+							global_var = 10  
+						modify_global_var()  
+						global_var
+						
+					square= lambda x: x*x
+					print(square)
+
+
+Methods-
+             
+                def insert_value_to_list(list_obj, index_to_place, value_to_place):
+                  '''
+                     This function inserts an element to a list at a specified index
+                  '''
+
+                 # Step 1 : Get the first part  
+                    first_part = list_obj[0:index_to_place]
+
+                 # Step 2 : Append the element at the end of the first part
+                    first_part.append(value_to_place)
+
+                 # Step 3 : Get the last part
+                    last_part = list_obj[index_to_place:]
+
+                 # Step 4 : Use the extend method to add the last part to the first part
+                    first_part.extend(last_part)
+  
+                 # Step 5 : Return the first part
+                    return first_part			 
+			     Now call it- new_heights = insert_value_to_list(heights, 2, 180)
+				              print(new_heights)
+							  
+Scope-    def experiment():
+           global x
+           x = 50
+ 
+           return x							  
+		1.in above code global x is used for setting the value of x for everywhere in def experiment which is 50 and out of that if we normally
+           set a value of x it is also global	after calling a fuction	
+					  
+
+For Loop-         to get time taken by a for loop-   from tqdm import tqdm
+														import time
+
+													for i in tqdm(range(20)):
+														time.sleep(0.5)
+
+													for i in tqdm_notebook(range(20)):
+														time.sleep(0.5)
+
+
+					even_squared_numbers = []
+                  for number in list_of_numbers:
+				   if number%2 == 0:
+				  even_squared_numbers.append(number**2)
+				      OR
+					  
+				  for number in list_of_numbers:
+				   if number%2 == 0:
+				    squared_number = number**2
+					print(f"The square of {number} is {squared_number}")
+				   else:
+				    print(f"I am an odd number {number}.My master prohibits me from printing the squares of odd numbers. Strange but okay!")
+				  
+				  
+				  OR
+				  
+				  sum_squares = 0
+				  for number in range(1,11):
+				    sum_squares = sum_squares + number
+					print(sum_squares)
+					
+While Loop-   
+                  x = 0
+				  while x < 5:
+ 				   print('x is currently: ',x)
+				   print(' x is still less than 10, adding 1 to x')
+				   x+=1
+				  print("All done")
+				  print("I am done with the iterations")
+				  
+				  2. infinite loop- l = []
+  				                    for elem in l :
+									 print(elem)
+									 
+									 OR
+									 
+									 for elem in list_of_numbers:
+									  while elem > 3:
+									   pass
+									  else:
+
+List Comprehension:
+                    even_squared_numbers = [number**2 for number in list_of_numbers if number%2==0]
+					odd_squared_numbers = [number**2 if number%2!=0 else number**3 for number in list_of_numbers ]
+					list_of_numbers = [num1 for num1 in range(4) for num2 in range(3)]
+					
+					
+					
+Production_Grade_Programming-  
+                            class Circle:
+
+							  def __init__(self, radius=5):
+								self.radius = radius
+								self.area = 3.14 * radius * radius
+
+							  def setRadius(self, new_radius):
+								self.radius = new_radius
+								self.area = 3.14 * new_radius * new_radius
+
+							  def getCircumference(self):
+								return 2 * 3.14 * self.radius
+					
+					now for call it-  c = Circle()
+										print(c.radius)
+										print(c.getCircumference())
+										c.setRadius(2)
+										print(c.radius)
+										print(c.getCircumference())
+																		
+								
+				ANOTHER EXAMPLE- class Cylinder:
+				                  def __init__(self, radius, height):
+								   self.radius= radius
+								   self.height=height
+								  def volume(self):
+								   return 3.14*((self.radius)**2)*self.height
+								  def surface_area(self):
+								   return 2*3.14*(self.radius)*self.height
+								   
+					now for call it- c=Cylinder(3,4) 
+					                 print(c.volume())
+									 print(c.surface_area())
+                    
+				2.An attribute is a characteristic of an object. A method is an operation we can perform with the object.
+				
+				very imp colab of oop programming - with error handling-- 
+				1-  try- except---else (return else part when no exception will be there )(no condition will be checked for except:, it is exempted)
+				2-  try- except--except--inally(always executed)-
+				or more-
+				- https://colab.research.google.com/drive/1cJrAApfe_GUJC3DQ-Lp1-KQAfwpa4nhv#scrollTo=LtcO9Ne3iUo3
+					
+					
+					
+Imp example becoz u are frequintly forgot in which u r going to set a loop -----
+it is a func where inp_string-"AABBA"  AND WHICH Return the count of deletion word for getting "ABA"---
+----If u want to take index for running a loop then it always run for len of that particular list/etc
+def deletion_num_req(inp_string):
+  list_a=list(inp_string)
+  num_list=[]
+  c=0
+  for i in range(len(list_a)-1):
+    if list_a[i] == list_a[i+1]:
+      num_list.append(1)
+
+
+  return print(f"the required Number of deletion is {sum(num_list)}")
+  
+  
+  
+1. Fibonacci series of any number ;
+
+#taking number of terms to print the series  
+n = 9  
+first = 0 #first value of series  
+second = 1 #second value of series  
+series = [first, second]  
+if n == 0:
+  print("The required fibonacci series is",first)  
+else:
+  for i in range(0,n-2):
+    num = series[i] + series[i+1]
+    series.append(num)  
+print(series)  
+
+#OR RECURSIVE Methods-
+#fibo=0,1,1,2,3,5,8,13
+n=5
+def fibo(n):
+  if n==0:
+    return 0
+  elif n==1:
+    return 1
+  else:
+    ans=fibo(n-1)+fibo(n-2)
+    return ans
+print(fibo(6))
+for i in range(n):
+    print(fibo(i))
+
+
+2. CHECKING PRIME NUMBER:
+
+# Python program to check if a number is prime or not  
+  
+def isPrime(n):
+  
+    # Corner case
+    if n <= 1:
+        return False
+  
+    # Check from 2 to n-1
+    for i in range(2, n):
+        if n % i == 0:
+            return False
+  
+    return True
+n=37
+isPrime(n)
+	
+	
+	
+	
+3. check PALINDROME
+
+one='water'
+three='armra'
+def check(strr):
+  if strr==strr[::-1]:
+    return True
+  else:
+    return False
+check(three)
+
+4. PRINT FACTORIAL: the product of an integer and all the integers below it; e.g. factorial four ( 4! ) is equal to 24.
+
+n=4
+#start
+bb=1
+for i in range(1,n+1):
+  bb=bb*i
+print(bb)
+#OR
+ab=[1,2,3,4]
+result=np.prod(ab)
+print(result)
+
+#OR RECURSIVE Methods-
+
+def factoriall2(num):
+  return 1 if num==0 else (factoriall2(num-1))*num
+factoriall2(5)
+
+5. TABLE PRINT-
+
+def table1(n):
+  a=10
+  for i in range(1,a+1):
+    print(n*i)
+table1(5)
+
+#OR RECURSIVE METHOD
+def table(a,b=1):
+  if b>10:
+    return
+  print(a*b)
+  table(a,b+1)
+table(15)
+
+6. replace 12 with 23 and 23 with 12 ....so on + vice versa
+
+b=[23, 12, 5, 24,23,45,1,3]
+c=[]
+f=1
+for i in range(int(len(b)/2)):
+  i+=f
+  d=b[i]
+  c.append(d)
+  e=b[i-1]
+  c.append(e)
+  f+=1
+print(c)
+#output- [12, 23, 24, 5, 45, 23, 3, 1]
+
+7. 
+
+I am thrilled to be applying to Axtria for a  Data associate role because I have been following the company’s work for a while now and I am amazed by its data-driven approach to solving business problems.
+Since your firm uses advanced Data Science practices to address everyday problems for consumers and businesses, it would indeed be a privilege for any aspiring Data Scientist to work on these problems with a firm as reputed as yours.  
+Moreover, I see this opportunity as a way to contribute to a data-informed, innovative company whose drive resonates with my passion for data. I would love to join your company as it would prove to be an excellent platform for me to deploy my skills and knowledge in solving real-world Data Science problems. Working with your company would also provide me with the right exposure and help me grow professionally as well as personally.

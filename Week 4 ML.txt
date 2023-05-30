@@ -1,0 +1,658 @@
+
+# load the iris dataset fot classification
+from sklearn.datasets import load_iris
+iris = load_iris()
+  
+# store the feature matrix (X) and response vector (y)
+X = iris.data
+y = iris.target
+  
+# splitting X and y into training and testing sets
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4)
+
+
+
+
+
+note:  so onehotencoder is more efficient while modeling than pd.get_dummies
+
+			In short, if I’m doing machine learning then I should use OneHotEncoder(ohe) over get_dummies. OHE does the same things as get dummies but in addition, OHE saves the exploded categories into it’s object.
+
+			one hot encoder stores parameters and uses the same columns to hot encode your test.. while get dummies does this without thinking of the train features.. as a result it might create different number of features in test than what it created in train.
+			
+			For example on the training dataframe, when I apply get_dummies() on the ‘Call_Me?’ column; I return 3 new columns because there are 3 unique values. However, on the testing dataframe, I only have 2 unique values under the ‘Call_Me?’ column and therefore get_dummies() returns only 2 new columns.
+			
+Why Do We Need To Care About Handling Missing Value?
+					It is important to handle the missing values appropriately.
+
+					1. Many machine learning algorithms fail if the dataset contains missing values. However, algorithms like K-nearest and Naive Bayes support data with missing values.
+					2. You may end up building a biased machine learning model which will lead to incorrect results if the missing values are not handled properly.
+					3. Missing data can lead to a lack of precision in the statistical analysis.
+					
+			
+			If null values constitute majority of rows in a column.. its not wise to remove those rows.. instead go for imputation.. When it comes to detection you need to ensure that removing those outliers/missing values doesn't result in data loss...
+
+			This is the most common method of imputing missing values of numeric columns. If there are outliers then the mean will not be appropriate. In such cases, outliers need to be treated first.
+						
+			Rule of thumb for removing nulls-
+									1. if data is right/left skewed/numerical/normal disributed than go foR mean/median for missing and null/miss data filling(if out liers is there then choose median instead of mean to fill nulls/missings or remove the outliers first)
+										
+									2. In the case of the categorical variables, we can use frequent occ(mode)/KNN imputer for replacing missing/null value 
+																(KNN is a machine learning algorithm that works on the principle of distance measure. This algorithm can be used when there are nulls present in the dataset)
+				
+										for replacing nullls-
+												for col in data.columns:
+													if data[col].dtypes == 'int64' or data[col].dtypes == 'float64':
+														data[col].fillna(data[col].mean(), inplace=True)   #for numerical col treatment
+													else:
+														data[col].fillna(data[col].mode()[0], inplace=True)    # for categorical col treatment (can be use 
+																													for numerical also)
+																													
+											and
+													# if we want to replace the zero with mean of that col
+													# Insulin_col = df['Insulin']
+													# Insulin_col.replace(to_replace = 0, value = df.Insulin.mean(), inplace=True)
+DISTANCE metric- 
+				MANHATTAN DISTANCE-   used in only continuous variable, formula-        (x2-x1)+(y2-y1)
+				Euclidean-            used in only continuous variable,  formula-   sqrt((x2-x1)*2+(y2-y1)*2) not good if outlier is there
+				HAMMIS  (not imp)     used in both continuous and categorical(discrete or qualitative), formula- it talks about count the number of bits where 2 same
+
+				from scipy.spatial import distance
+
+				# Calculate Euclidean distance between two points
+				point1 = [1, 2, 3]
+				point2 = [4, 5, 6]
+
+				# Use the euclidean function from scipy's distance module to calculate the Euclidean distance
+				euclidean_distance = distance.euclidean(point1, point2) - euclean
+				manhattan_distance = distance.cityblock(point1, point2)  -manhattan
+
+
+
+				more details about all distance metrics and which one to use here-  https://towardsdatascience.com/5-data-similarity-metrics-f358a560855f													
+														
+			
+NOMINAL:
+			if column is nominal we have to go for one hot enco like- • A “color” variable with the values: “red“, “green“, and “blue“. it makes 3 col with, 1 if it is present otherwise 0.- EXM ARE gender,statename, countryname,pincode etc
+			we can also do that with pd.get_dummies(df,drop_first= True)
+			but it can trap in curse of dimensionality. for that we can apply count on that features and for top 10 value we can do one hot encoding on that and created 9 col and rest can be in 10th category, it can reduce our dimensionality.
+			
+ORDINAL: it has order/rank
+			if column is ordinal we have to go for one multilabel like- • A “color” variable with the values: “red“, “green“, and “blue“. it doen't create additional features, instead of that it shows 1 for red, 2for green and 3 for blue in only on column. exm- education , moood type, rating, status(which has values like high,med,low which we want to rank in order) etc
+ 
+					from sklearn.preprocessing import LabelEncoder
+						le = LabelEncoder()
+						le.fit([1, 2, 2, 6])
+						print(le.classes_)
+						print(le.transform([1, 1, 2, 6]))
+						print(le.inverse_transform([0, 0, 1, 2]))
+
+ 
+ if heavily skewed 1/x(means inde var), if moderately skewed log(x), if less skewed then sqrt(x)
+			
+			
+K- NEAREST NEIGHBOR:-
+                    
+						K-nearest neighbors (kNN) IS A SUPERVISED MACHINE LEARNING ALGORITHM THAT CAN BE USED TO SOLVE BOTH CLASSIFICATION AND REGRESSION TASKS. IT DOES NOT MAKE AN ASSUMPTION ABOUT THE UNDERLYING DATA DISTRIBUTION PATTERN. KNN AS AN ALGORITHM SEEMS TO BE INSPIRED FROM REAL LIFE. PEOPLE TEND TO BE EFFECTED BY THE PEOPLE AROUND THEM. Our behaviour is guided by the friends we grew up with. Our parents also shape our personality in some ways. If you grow up with people who love sports, it is higly likely that you will end up loving sports. There are ofcourse exceptions. kNN works in a similar fashion.  KNN algorithm can be used for both classification and regression problems
+
+						If you always hang out with a group of 5, each one in the group has an effect on your behavior and you will end up being the average of 5.
+
+						KNN CLASSIFIER DETERMINES THE CLASS OF A DATA POINT BY MAJORITY VOTING PRINCIPLE. IF K IS SET TO 5, THE CLASSES OF 5 CLOSEST POINTS ARE CHECKED. PREDICTION IS DONE ACCORDING TO THE MAJORITY CLASS. SIMILARLY, KNN REGRESSION TAKES THE MEAN VALUE OF 5 CLOSEST POINTS.
+
+						KNN IS A NON-PARAMETRIC ALGORITHM, WHICH MEANS IT DOES NOT MAKE ANY ASSUMPTION ON UNDERLYING DATA.IT IS ALSO CALLED AS LAZY LEARNER ALGORITHM AND IT IS ROBUST TO THE NOISY TRAINING DATA ALSO at a fair degree.
+
+						It is also called a lazy learner algorithm because it does not learn from the training set immediately instead it stores the dataset and at the time of classification, it performs an action on the dataset.
+						KNN ALGORITHM AT THE TRAINING PHASE JUST STORES THE DATASET AND WHEN IT GETS NEW DATA, THEN IT CLASSIFIES THAT DATA INTO A CATEGORY THAT IS MUCH SIMILAR TO THE NEW DATA.
+
+						The kNN working can be explained on the basis of the below algorithm:
+						Step-1: Select the number K of the neighbors
+						Step-2: Calculate the Euclidean distance in the whole dataset to find K number of neighbors
+						Step-3: Take the K nearest neighbors as per the calculated Euclidean distance.
+						Step-4: Among these K neighbors, count the number of the data points in each category.(LIKE IN BINARY CLASSIF WE HAVE TWO CATEG)
+						Step-5: Assign the new data points to that category for which the number of the neighbor is maximum(OR that has the majority vote of its K neighbors.).
+						Step-6: Our model is ready.				
+
+						Cons of KNN Algorithms:
+											1. KNN IS COMPUTATIONALLY EXPENSIVE AS IT SEARCHES THE NEAREST NEIGHBORS FOR THE NEW POINT AT THE PREDICTION STAGE. 
+											2. MEMORY REQUIREMENT FOR KNN IS HIGH. 
+											3. SENSITIVE TO OUTLIERS,
+											4.IMPACTED/BIASED BY IMBALANCED DATASETS											
+											4. ACCURACY IS IMPACTED BY NOISE OR IRRELEVANT DATA.
+						
+						
+						# if we want to replace the zero with mean of that col
+							# Insulin_col = df['Insulin']
+							# Insulin_col.replace(to_replace = 0, value = df.Insulin.mean(), inplace=True)
+							
+							
+
+
+NOTE:  if we increase k in knn then it will increase in bias and decrease the variance
+       and if we decrese the k then it wiil decrease the bias and increase variance thus in result it may overfitting.			
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+
+
+
+Generative Models:
+					GENERATIVE MODELS ARE MODELS WHERE THE FOCUS IS THE DISTRIBUTION OF INDIVIDUAL CLASSES IN A DATASET AND THE LEARNING ALGORITHMS TEND TO MODEL THE UNDERLYING PATTERNS/DISTRIBUTION OF THE DATA POINTS. THESE MODELS USE THE INTUITION OF joint probability in theory, creating instances where a given feature (x)/input and the desired output/label (y) exist at the same time.
+					Generative models use probability estimates and likelihood to model data points and distinguish between different class labels in a dataset. THESE MODELS ARE CAPABLE OF GENERATING NEW DATA INSTANCES. HOWEVER, THEY ALSO HAVE A MAJOR DRAWBACK. THE PRESENCE OF OUTLIERS AFFECTS THESE MODELS TO A SIGNIFICANT EXTENT.
+					Examples of generative models :
+													Naive Bayes Classifier
+													Hidden Markov Model
+													Linear Discriminant Analysis
+
+Discriminative Models:
+					DISCRIMINATIVE MODELS, ALSO CALLED CONDITIONAL MODELS, TEND TO LEARN THE BOUNDARY BETWEEN CLASSES/LABELS IN A DATASET. UNLIKE GENERATIVE MODELS, THE GOAL HERE IS TO FIND THE DECISION BOUNDARY SEPARATING ONE CLASS FROM ANOTHER.SO WHILE A GENERATIVE MODEL WILL TEND TO MODEL THE JOINT PROBABILITY OF DATA POINTS AND IS CAPABLE OF CREATING NEW INSTANCES USING PROBABILITY ESTIMATES AND MAXIMUM LIKELIHOOD, DISCRIMINATIVE MODELS (JUST AS IN THE LITERAL MEANING) SEPARATE CLASSES BY RATHER MODELING THE conditional probability AND DO NOT MAKE ANY ASSUMPTIONS ABOUT THE DATA POINT. THEY ARE ALSO NOT CAPABLE OF GENERATING NEW DATA INSTANCES.DISCRIMINATIVE MODELS HAVE THE ADVANTAGE OF BEING MORE ROBUST TO OUTLIERS, UNLIKE THE GENERATIVE MODELS.
+					Examples of discriminative models :
+														Logistic Regression
+														Support Vector Machine
+														Decision Trees
+
+
+Comparison between the two class of models
+											Accuracy
+													GENERATIVE MODELS ARE LESS ACCURATE THAN DISCRIMINATIVE MODELS WHEN THE ASSUMPTION OF CONDITIONAL INDEPENDENCE IS NOT SATISFIED. For example, in our spam classification problem, let  x1  = number of times “bank” appear in the email data, and  x2  = number of times “account” appear in the email. Regardless of whether spam, these two words always appear together, i.e.  x1=x2 . Learning in naive Bayes results in  p(x1 | y)=p(x2 | y) , which double counts the evidence. Logistic regression doesn’t have this problem because it can set either  α1=0  or  α2=0 .
+											Missing Data
+														GENERATIVE MODELS CAN WORK WITH MISSING DATA, AND DISCRIMINATIVE MODELS GENERALLY CAN’T. In generative models, we can still estimate the posterior by marginalizing over the unseen variables. However, discriminative models usually require all the features X to be observed.
+														
+											Performance
+														COMPARED WITH DISCRIMINATIVE MODELS, GENERATIVE MODELS NEED LESS DATA TO TRAIN. THIS IS BECAUSE GENERATIVE MODELS ARE MORE BIASED AS THEY MAKE STRONGER ASSUMPTIONS (ASSUMPTION OF CONDITIONAL INDEPENDENCE).
+                                            Application
+														DISCRIMINATIVE MODELS ARE “DISCRIMINATIVE” BECAUSE THEY ARE USEFUL BUT ONLY USEFUL FOR DISCRIMINATING Y’S LABEL, SO THEY CAN ONLY SOLVE CLASSIFICATION PROBLEMS. GENERATIVE MODELS HAVE MORE APPLICATIONS BESIDES CLASSIFICATION, E.G. SAMPLINGS, BAYES LEARNING, MAP INFERENCE.			
+
+Generative vs Discriminative Model
+									Suppose we are solving a classification problem to decide if an email is spam or not based on the words in the email. We have a joint model over labels Y=y, and features X=x1,x2,…xn. The joint distribution of the model can be represented as p(Y,X)=P(y,x1,x2…xn). Our goal is to estimate the probability of spam email: P(Y=1 | X). Both generative and discriminative models can solve this problem, but in different ways.
+										Let’s see why and how they are different!
+										To get the conditional probability P(Y | X), generative models estimate the prior P(Y) and likelihood P(X | Y) from training data and use Bayes rule to calculate the posterior P(Y | X):
+												P(Y | X)=P(X | Y)P(Y)/P(X)
+												posterior=(prior*likelihood)/evidence
+										On the other hand, discriminative models directly assume functional form for P(Y | X) and estimate parameters of P(Y | X) directly from training data.
+										
+Text Pre-processing
+					Our main issue with our data is that it is all in text format (strings). The classification algorithms that we've learned about so far will need some sort of numerical feature vector in order to perform the classification task. THERE ARE ACTUALLY MANY METHODS TO CONVERT A CORPUS TO A VECTOR FORMAT. THE SIMPLEST IS THE THE BAG-OF-WORDS APPROACH, WHERE EACH UNIQUE WORD IN A TEXT WILL BE REPRESENTED BY ONE NUMBER.
+					In this section we'll convert the raw messages (sequence of characters) into vectors (sequences of numbers).
+					As a first step, let's write a function that will split a message into its individual words and return a list. We'll also remove very common words, ('the', 'a', etc..). TO DO THIS WE WILL TAKE ADVANTAGE OF THE NLTK LIBRARY. IT'S PRETTY MUCH THE STANDARD LIBRARY IN PYTHON FOR PROCESSING TEXT AND HAS A LOT OF USEFUL FEATURES. WE'LL ONLY USE SOME OF THE BASIC ONES HERE.
+					Let's create a function that will process the string in the message column, then we can just use apply() in pandas do process all the text in the DataFrame.
+					First removing punctuation. We can just take advantage of Python's built-in string library to get a quick list of all the possible punctuation:
+					
+					
+					
+					
+					NOW LET'S "TOKENIZE" THESE MESSAGES. TOKENIZATION IS JUST THE TERM USED TO DESCRIBE THE PROCESS OF CONVERTING THE NORMAL TEXT STRINGS IN TO A LIST OF TOKENS (WORDS THAT WE ACTUALLY WANT).
+							exm--
+							abc='hello how are you'
+							tokens=['hello',how','are','you']
+					
+VECTORIZATION
+				CURRENTLY, WE HAVE THE MESSAGES AS LISTS OF TOKENS (ALSO KNOWN AS LEMMAS) AND NOW WE NEED TO CONVERT EACH OF THOSE MESSAGES INTO A VECTOR THE SCIKIT LEARN'S ALGORITHM MODELS CAN WORK WITH.
+				WE'LL DO THAT IN THREE STEPS USING THE BAG-OF-WORDS MODEL:
+						1.COUNT HOW MANY TIMES DOES A WORD OCCUR IN EACH MESSAGE (KNOWN AS TERM FREQUENCY)
+						2.WEIGH THE COUNTS, SO THAT FREQUENT TOKENS GET LOWER WEIGHT
+						3.NORMALIZE THE VECTORS TO UNIT LENGTH, TO ABSTRACT FROM THE ORIGINAL TEXT LENGTH (L2 NORM)					
+
+			IMP 	Bag-of-words(BoW)-: IS A STATISTICAL LANGUAGE MODEL USED TO ANALYZE TEXT AND DOCUMENTS BASED ON WORD COUNT. THE MODEL DOES NOT ACCOUNT FOR WORD ORDER WITHIN A DOCUMENT. BoW CAN BE IMPLEMENTED AS A PYTHON DICTIONARY WITH EACH KEY SET TO A WORD AND EACH VALUE SET TO THE NUMBER OF TIMES THAT WORD APPEARS IN A TEXT.
+
+
+
+
+NAIVE BAYES CLASSIFIER:
+						see clollab
+
+						when c parameter goes to infinite we have hard margin classifier.
+
+						two func od activ- prevent to blow off and help in reducing error
+
+						i guess Sentbox yt channel has a good series of videos on NN.
+						
+						WHAT IS NAIVE BAYES ALGORITHM?
+						
+									NAIVE BAYES CLASSIFIER:   Naive means- not too complex
+
+									NAIVE BAYES MODELS ARE A GROUP OF EXTREMELY FAST TO TRAIN(AND FAST TO USE) AND SIMPLE CLASSIFICATION ALGORITHMS THAT ARE OFTEN SUITABLE FOR VERY HIGH-DIMENSIONAL DATASETS. BECAUSE THEY ARE SO FAST AND HAVE SO FEW TUNABLE PARAMETERS, THEY END UP BEING VERY USEFUL AS A QUICK-AND-DIRTY BASELINE FOR A CLASSIFICATION PROBLEM.
+									
+									NAIVE BAYES CLASSIFIERS ARE BUILT ON BAYESIAN CLASSIFICATION METHODS. THESE RELY ON BAYES'S THEOREM, WHICH IS AN EQUATION DESCRIBING THE RELATIONSHIP OF CONDITIONAL PROBABILITIES OF STATISTICAL QUANTITIES. IN BAYESIAN CLASSIFICATION, WE'RE INTERESTED IN FINDING THE PROBABILITY OF A LABEL GIVEN SOME OBSERVED FEATURES, WHICH WE CAN WRITE AS P(L | FEATURES). Bayes's theorem tells us how to express this in terms of quantities we can compute more directly:
+									P(L | features)=P(features|L)P(L)/P(features)
+
+											NAIVE IN NAIVE CLASSIFIER REFERS TO STRONG INDEPENDENCE ASSUMPTION BETWEEN THE FEATURES. 
+											
+											MUST ARTICLE FOR EASYNESS OF UNDERSTANDING---- or just look it in register or 
+																								https://www.geeksforgeeks.org/naive-bayes-classifiers/
+		
+									IT IS A CLASSIFICATION TECHNIQUE BASED ON BAYES’ THEOREM WITH AN ASSUMPTION OF INDEPENDENCE AMONG PREDICTORS. IN SIMPLE TERMS, A NAIVE BAYES CLASSIFIER ASSUMES THAT THE PRESENCE OF A PARTICULAR FEATURE IN A CLASS IS UNRELATED TO THE PRESENCE OF ANY OTHER FEATURE.
+
+									For example, a fruit may be considered to be an apple if it is red, round, and about 3 inches in diameter. Even if these features depend on each other or upon the existence of the other features, all of these properties independently contribute to the probability that this fruit is an apple and that is why it is known as ‘Naive’.
+
+									NAIVE BAYES MODEL IS EASY TO BUILD AND PARTICULARLY USEFUL FOR VERY LARGE DATA SETS. ALONG WITH SIMPLICITY, NAIVE BAYES IS KNOWN TO OUTPERFORM EVEN HIGHLY SOPHISTICATED CLASSIFICATION METHODS.
+
+									Bayes theorem provides a way of calculating posterior probability P(c|x) from P(c), P(x) and P(x|c). Look at the equation below:
+											p(c|x)=P(x|c).P(c)/P(x)
+											
+											Above,
+
+												P(c|x) is the posterior probability of class (c, target) given predictor (x, attributes).
+												P(c) is the prior probability of class.
+												P(x|c) is the likelihood which is the probability of predictor given class.
+												P(x) is the prior probability of predictor.
+									 
+
+					How Naive Bayes algorithm works? or just look it in register-
+					
+									Let’s understand it using an example. Below I have a training data set of weather and corresponding target variable ‘Play’ (suggesting possibilities of playing). Now, we need to classify whether players will play or not based on weather condition. Let’s follow the below steps to perform it.
+
+									Step 1: Convert the data set into a frequency table
+
+									Step 2: Create Likelihood table by finding the probabilities like Overcast probability = 0.29 and probability of playing is 0.64.
+
+									Step 3: Now, use Naive Bayesian equation to calculate the posterior probability for each class. The class with the highest posterior probability is the outcome of prediction.
+
+									Problem: Players will play if weather is sunny. Is this statement is correct?
+
+									We can solve it using above discussed method of posterior probability.
+
+									P(Yes | Sunny) = P( Sunny | Yes) * P(Yes) / P (Sunny)
+
+									Here we have P (Sunny |Yes) = 3/9 = 0.33, P(Sunny) = 5/14 = 0.36, P( Yes)= 9/14 = 0.64
+
+									Now, P (Yes | Sunny) = 0.33 * 0.64 / 0.36 = 0.60, which has higher probability.
+
+									NAIVE BAYES USES A SIMILAR METHOD TO PREDICT THE PROBABILITY OF DIFFERENT CLASS BASED ON VARIOUS ATTRIBUTES. THIS ALGORITHM IS MOSTLY USED IN TEXT CLASSIFICATION AND WITH PROBLEMS HAVING MULTIPLE CLASSES.
+
+									 
+
+					WHAT ARE THE PROS AND CONS OF NAIVE BAYES?
+							Pros:
+
+									1. It is easy and fast to predict class of test data set. It also perform well in multi class prediction.
+									2. When assumption of independence holds, a Naive Bayes classifier performs better compare to other models like logistic regression and you need less training data.
+									3. It perform well in case of categorical input variables compared to numerical variable(s). For numerical variable, normal distribution is assumed (bell curve, which is a strong assumption).
+							Cons:
+
+									1. If categorical variable has a category (in test data set), which was not observed in training data set, then model will assign a 0 (zero) probability and will be unable to make a prediction. This is often known as “ZERO FREQUENCY”. To solve this, we can use the smoothing technique. One of the simplest smoothing techniques is called LAPLACE ESTIMATION.
+									2. On the other side naive Bayes is also known as a bad estimator, so the probability outputs from predict_proba are not to be taken too seriously.
+									3. Another limitation of Naive Bayes is the assumption of independent predictors. In real life, it is almost impossible that we get a set of predictors which are completely independent.
+									 
+
+				Applications of Naive Bayes Algorithms
+									1. Real time Prediction: Naive Bayes is an eager learning classifier and it is sure fast. Thus, it could be used for making predictions in real time.
+									2. Multi class Prediction: This algorithm is also well known for multi class prediction feature. Here we can predict the probability of multiple classes of target variable.
+									3. TEXT CLASSIFICATION/ SPAM FILTERING/ SENTIMENT ANALYSIS: Naive Bayes classifiers mostly used in text classification (due to better result in multi class problems and independence rule) have higher success rate as compared to other algorithms. As a result, it is widely used in Spam filtering (identify spam e-mail) and Sentiment Analysis (in social media analysis, to identify positive and negative customer sentiments)
+									4. RECOMMENDATION System: Naive Bayes Classifier and Collaborative Filtering together builds a Recommendation System that uses machine learning and data mining techniques to filter unseen information and predict whether a user would like a given resource or not
+									 
+
+					How to build a basic model using Naive Bayes in Python?
+									AGAIN, SCIKIT LEARN (PYTHON LIBRARY) WILL HELP HERE TO BUILD A NAIVE BAYES MODEL IN PYTHON. THERE ARE THREE TYPES OF NAIVE BAYES MODEL UNDER THE SCIKIT-LEARN LIBRARY:
+
+									Gaussian: It is used in classification and it assumes that features follow a normal distribution.
+
+									Multinomial: It is used for discrete counts. For example, let’s say,  we have a text classification problem. Here we can consider Bernoulli trials which is one step further and instead of “word occurring in the document”, we have “count how often word occurs in the document”, you can think of it as “number of times outcome number x_i is observed over the n trials”.
+
+									Bernoulli: The binomial model is useful if your feature vectors are binary (i.e. zeros and ones). One application would be text classification with ‘bag of words’ model where the 1s & 0s are “word occurs in the document” and “word does not occur in the document” respectively.
+									
+									FOR TEXT -NAIVE BAYES
+									FOR NON TEXT- CAN USE LOGISTIC(ALSO CALLED AS PERCEPTRON ALGO)
+
+									IF WE HAVE ONLY TWO CLASS OUTPUT LIKE (BINARY THING) 0/1 OR YES/NO HEAD/TAIL(binomial class) IE-FLIP A COIN IS BERNOLLI DISTRIBUTION
+
+
+									IF MANY INDEPENDENT FEATURE ARE CONT AND OUTCOME IS IN DISCRETE IN NATURE THEN GOUSSIAN(NORMAL) NAIVE CLASSIFIER.
+
+									IF  MANY FEATURES ARE DISCRETE(BINARY IN NATURE) ALSO THEN BERNOLLI NAIVE CLASSI AND MULTI NAIVE CLASSIFIER  (mostly use for textual text data)
+
+
+
+
+
+SVMc:
+
+		SUPPORT VECTOR MACHINE is SUPERVISED ML ALGO THAT IS USED FOR CLASSIFICATION, REGRESSION AND FOR OUTLIER DETECTION PURPOSES. SVMS ARE A POPULAR CHOICE FOR CLASSIFICATION BECAUSE THEY CAN ACHIEVE HIGH ACCURACY WITH RELATIVELY LITTLE DATA.
+		What do you mean by generalization error in terms of the SVM? === How accurately the SVM can predict outcomes for unseen data
+
+		How accurately the SVM can predict outcomes for unseen data===  The SVM allows very low error in classification
+		THE SVM’S ARE MORE EFFECTIVE WHEN===  THE DATA IS LINEARLY SEPARABLE   & THE DATA IS CLEAN AND READY TO USE
+		In SVM, if the number of input features is 3, then the hyperplane is a.====  Plane
+		
+		
+		SVMs are one of the powerful machine learning algorithms for classification, regression and outlier detection purposes. An SVM classifier builds a model that assigns new data points to one of the given categories. Thus, it can be viewed as a non-probabilistic binary linear classifier.
+		SVMS CAN BE USED FOR LINEAR CLASSIFICATION PURPOSES. IN ADDITION TO PERFORMING LINEAR CLASSIFICATION, SVMS CAN EFFICIENTLY PERFORM A NON-LINEAR CLASSIFICATION USING THE KERNEL TRICK. IT ENABLE US TO IMPLICITLY MAP THE INPUTS INTO HIGH DIMENSIONAL FEATURE SPACES.
+		
+		Motivation behind Support Vector Machines:
+													EARLIER WE UNDERSTOOD THE CONCEPT OF BAYESIAN CLASSIFICATION, WHERE WE LEARNED A SIMPLE MODEL DESCRIBING THE DISTRIBUTION OF EACH UNDERLYING CLASS, AND USED THESE GENERATIVE MODELS TO PROBABILISTICALLY DETERMINE LABELS FOR NEW POINTS.
+													THAT WAS AN EXAMPLE OF GENERATIVE CLASSIFICATION; HERE WE WILL CONSIDER INSTEAD DISCRIMINATIVE CLASSIFICATION: RATHER THAN MODELING EACH CLASS, WE SIMPLY FIND A LINE OR CURVE (IN TWO DIMENSIONS) OR MANIFOLD (IN MULTIPLE DIMENSIONS) THAT DIVIDES THE CLASSES FROM EACH OTHER.
+		
+		Support Vector Machines: Maximizing the Margin
+														Support vector machines offer one way to improve on this.The intuition is this: RATHER THAN SIMPLY DRAWING A ZERO-WIDTH LINE BETWEEN THE CLASSES, WE CAN DRAW AROUND EACH LINE with A MARGIN OF SOME WIDTH, UP TO THE NEAREST POINT.HERE IS AN EXAMPLE OF HOW THIS MIGHT LOOK:
+														
+														
+														Training a linear support vector classifier, like nearly every problem in machine learning, and in life, is an optimization problem. WE MAXIMIZE THE MARGIN — THE DISTANCE SEPARATING THE CLOSEST PAIR OF DATA POINTS BELONGING TO OPPOSITE CLASSES. THESE POINTS ARE CALLED THE SUPPORT VECTORS, BECAUSE THEY ARE THE DATA OBSERVATIONS THAT “SUPPORT”, OR DETERMINE, THE DECISION BOUNDARY. TO TRAIN A SUPPORT VECTOR CLASSIFIER, WE FIND THE MAXIMAL MARGIN HYPERPLANE, OR OPTIMAL SEPARATING HYPERPLANE, WHICH OPTIMALLY SEPARATES THE TWO CLASSES IN ORDER TO GENERALIZE TO NEW DATA AND MAKE ACCURATE CLASSIFICATION PREDICTIONS.
+														
+														
+														Support vector classification relies on this notion of linearly separable data. “Soft margin” classification can accommodate some classification errors on the training data, in the case where data is not perfectly linearly separable. HOWEVER, IN PRACTICE, REAL-WORLD DATA IS OFTEN VERY FAR FROM BEING LINEARLY SEPARABLE, AND WE NEED TO TRANSFORM THE DATA INTO A HIGHER DIMENSIONAL SPACE IN ORDER TO FIT A SUPPORT VECTOR CLASSIFIER.
+
+
+		
+		Beyond linear boundaries: Kernel SVM
+												Where SVM becomes extremely powerful is when it is combined with kernels.We have seen a version of kernels before, in the basis function of linear regressions. There we projected our data into higher-dimensional space defined by polynomials and Gaussian basis functions, and thereby were able to fit for nonlinear relationships with a linear classifier.
+												
+												
+									The Kernel Trick
+									
+												A FUNCTION THAT TAKES VECTORS AS INPUT IN THE ORIGINAL SPACE AND RETURN THE DOT PRODUCTS OF THE VECTORS ON THE FEATURE SPACE IS CALLED A kernel function.(in short we can say it converts low dimension to high dimension)
+												We have seen how higher dimensional transformations can allow us to separate data in order to make classification predictions. It seems that in order to train a support vector classifier and optimize our objective function, we would have to perform operations with the higher dimensional vectors in the transformed feature space. In real applications, there might be many features in the data and applying transformations that involve many polynomial combinations of these features will lead to extremely high and impractical computational costs.
+
+												The kernel trick provides a solution to this problem. The “trick” is that kernel methods represent the data only through a set of pairwise similarity comparisons between the original data observations x (with the original coordinates in the lower dimensional space), instead of explicitly applying the transformations ϕ(x) and representing the data by these transformed coordinates in the higher dimensional feature space.
+												
+												WHEN WE FAIL TO SEPARATE CLASSES BY JUST DRAWING STRAIGHT LINE THEN WE USES THIS TRICK-
+												
+												
+												OUR KERNEL FUNCTION ACCEPTS INPUTS IN THE ORIGINAL LOWER DIMENSIONAL SPACE AND RETURNS THE DOT PRODUCT OF THE TRANSFORMED VECTORS IN THE HIGHER DIMENSIONAL SPACE. THERE ARE ALSO THEOREMS WHICH GUARANTEE THE EXISTENCE OF SUCH KERNEL FUNCTIONS UNDER CERTAIN CONDITIONS.
+												So IN LAYMAN'S TERMS WE CAN SAY THAT KERNEL TRICK CONVERTS LOW DIMEN FEATURES SPACE TO HIGH DIMEN FEATURES SPACE.
+												
+												FOR THAT WE HAVE TO PASS THE PARAMETER kernel='rbf' and gamma=between 0 to 1
+												
+												like -- SVC(kernel='rbf',gamma=0.6).fit(X,y) # the higher the gamma the complex the model and 0= straight line
+												
+												WHERE, 	rbf=radial basis function
+														poly= polynomial
+												
+								The Role of Margin in SVMs
+												LET’S START WITH A SET OF DATA POINTS THAT WE WANT TO CLASSIFY INTO TWO GROUPS. WE CAN CONSIDER TWO CASES FOR THESE DATA: EITHER THEY ARE LINEARLY SEPARABLE, OR THE SEPARATING HYPERPLANE IS NON-LINEAR. WHEN THE DATA IS LINEARLY SEPARABLE, AND WE DON’T WANT TO HAVE ANY MISCLASSIFICATIONS, WE USE SVM WITH A HARD MARGIN. HOWEVER, WHEN A LINEAR BOUNDARY IS NOT FEASIBLE, OR WE WANT TO ALLOW SOME MISCLASSIFICATIONS IN THE HOPE OF ACHIEVING BETTER GENERALITY, WE CAN OPT FOR A SOFT MARGIN FOR OUR CLASSIFIER.
+												
+												SOFT :The soft margin SVM follows a somewhat similar optimization procedure with a couple of differences. First, in this scenario, we allow misclassifications to happen. SO WE’LL NEED TO MINIMIZE THE MISCLASSIFICATION ERROR, which means that we’ll have to deal with one more constraint. Second, to minimize the error, we should define a loss function. A COMMON LOSS FUNCTION USED FOR SOFT MARGIN IS THE HINGE LOSS.
+												
+											A new regularization parameter C controls the trade-off between maximizing the margin and minimizing the loss. As you can see, the difference between the primal problem and the one for the hard margin is the addition of slack variables. The new slack variables (\zeta_i in the figure below) add flexibility for misclassifications of the model:
+											
+										
+										 HARD MARGIN VS. SOFT MARGIN
+														The difference between a hard margin and a soft margin in SVMs lies in the separability of the data. If our data is linearly separable, we go for a hard margin. However, if this is not the case, it won’t be feasible to do that. In the presence of the data points that make it impossible to find a linear classifier, we would have to be more lenient and let some of the data points be misclassified. In this case, a soft margin SVM is appropriate.
+														
+														Sometimes, the data is linearly separable, but the margin is so small that the model becomes prone to overfitting or being too sensitive to outliers. Also, in this case, we can opt for a larger margin by using soft margin SVM in order to help the model generalize better.
+														
+										MARGIN- these is a width lines around hyperplane which go through nearest vector of each class , it is a part of line(2d) or hyperplane(3d or more) WE HAVE TO MAXIMIZE THIS MARGIN FOR CREATING GENERALIZE MODEL.
+										SUPPORT VECTORS:  are those from which our margin lines go through.
+									
+												
+						Advantages of SVMs include:
+										1. They maximize the margin of decision boundary
+										2. They can handle large feature spaces.
+										3. SVMs work well with semi-structured and unstructured data.
+										4. They can use the concept of kernel trick to solve any complex problem.
+										
+						Disadvantages of SVMs include:
+										1. SVMS CAN BE DIFFICULT TO IMPLEMENT WHEN THE NUMBER OF CLASSES IS MORE THAN 2.
+										2. SVMS TAKE A LONG TIME FOR TRAINING AND THEY ARE SENSITIVE TO NOISE.
+										3. Choosing a good kernel function is not easy in SVM and requires a lot of testing.
+										4. Hyperparameters like gamma and cost-C are not easy to fine-tune.
+														
+		SVMs uses Hinge loss in regression case
+
+		better to go with collab
+
+
+
+NEURAL NETWORK:    
+
+				IN SIMPLE TERMS, NEURAL NETWORKS ARE REPRESENTATIVE OF THE HUMAN BRAIN, AND THEY ARE SPECIFICIALLY MADE TO RECOGNIZE PATTERNS. THEY INTERPRET DATA THROUGH VARIOUS MODELS. THE PATTERNS THAT THESE MODELS DETECT ARE ALL NUMERICAL SPECIFICALLY IN THE FORM OF VECTORS. ARTIFICIAL NEURAL NETWORKS ARE COMPUTATION SYSTEMS THAT INTEND TO IMITATE HUMAN LEARNING CAPABILITIES VIA A COMPLEX ARCHITECTURE THAT RESEMBLES THE HUMAN NERVOUS SYSTEM.
+				
+				 NEURAL NETWORKS ARE MULTI-LAYER NETWORKS OF NEURONS  THAT WE USE TO CLASSIFY THINGS, MAKE PREDICTIONS, ETC.
+
+				The Human Nervous System
+						Human nervous system consists of billions of neurons. These neurons collectively process input received from sensory organs, process the information, and decides what to do in reaction to the input. A typical neuron in the human nervous system has three main parts: dendrites, nucleus, and axons. The information passed to a neuron is received by dendrites. The nucleus is responsible for processing this information. The output of a neuron is passed to other neurons via the axon, which is connected to the dendrites of other neurons further down the network.
+				Perceptrons
+						ARTIFICIAL NEURAL NETWORKS ARE INSPIRED BY THE HUMAN NEURAL NETWORK ARCHITECTURE. THE SIMPLEST NEURAL NETWORK CONSISTS OF ONLY ONE NEURON (or two layer) AND IS CALLED A PERCEPTRON
+						A perceptron has one input layer and one neuron. Input layer acts as the dendrites and is responsible for receiving the inputs. THE NUMBER OF NODES IN THE INPUT LAYER IS EQUAL TO THE NUMBER OF FEATURES IN THE INPUT DATASET(SO IN CASE OF PERCEPTRON THERE ARE ONLY ONE FEATURE AND AS A RESULTS IT ONLY CONTAINS ONE INPUT LAYER). Each input is multiplied with a weight (which is typically initialized with some random value) and the results are added together. The sum is then passed through an activation function. The activation function of a perceptron resembles the nucleus of human nervous system neuron. It processes the information and yields an output. In the case of a perceptron, this output is the final outcome. However, in the case of multilayer perceptrons, the output from the neurons in the previous layer serves as the input to the neurons of the proceeding layer.
+						The Perceptron consists of two main components
+							Neurons ( xi )
+							Weights ( wi )
+						PERCEPTRONS REPRESENT THE MOST BASIC FORM OF A NEURAL NETWORK WITH ONLY TWO LAYERS, THE INPUT AND OUTPUT LAYER. As shown in the diagram above, both layers are joined by weights represented by the arrows. EACH INDIVIDUAL NEURON REPRESENTS A NUMBER. FOR EXAMPLE, IF THERE ARE THREE INPUTS, THE INPUT LAYER WILL CONSIST OF 3 NEURONS PLUS AN ADDITIONAL BIAS NEURON. The importance of the bias ( b ) will become clear later. THE OUTPUT LAYER SIMPLY CONSISTS OF ONE NEURON IN THIS SCENARIO WHICH REPRESENTS THE NUMBER WE ARE ATTEMPTING TO PREDICT.
+
+				Decoding how Neural Networks work:
+									Forward Propagation:
+														THE PROCESS OF GOING FROM THE INPUT LAYER TO THE OUTPUT IS KNOWN AS FORWARD PROPAGATION. TO SIMPLIFY THE COMPUTATIONS, WE WILL USE VECTOR NOTATION TO REPRESENT THE INPUT FEATURES AND THE WEIGHTS.
+														x=[x1x2...xn] 
+														w=[w1w2...wn] 
+														Finally, to get the value of the output neuron, we simply take the dot product of these two vectors and add the bias.
+														z=x*w+b=x1*w1+x2×w2+...+xn×wn+b		
+									The Bias Term:
+													To get a better understanding of this output, lets analyze it with just one input neuron. In other words, our output neuron will store the following.
+													z=x1×w1+b 
+													If we visualize this in two dimensional space, we know that this will represent a line with slope  w1  and intercept  b . We can now easily see the role of the bias. Without it, our model would always go through the origin. Now, we can shift our model along the axes giving us more flexibility while training. However, we are still only able to represent linear models. To add non-linearities to our model we use an activation function.		
+								Activation Functions
+													LETS IMAGINE THAT WE ARE SOLVING A BINARY CLASSIFICATION PROBLEM. THIS MEANS THE RANGE OF OUR OUTPUT  Y^  (PREDICTED VALUE) MUST BE  (0,1)  SINCE WE ARE PREDICTING A PROBABLITY THAT THE INPUT BELONGS TO A CERTAIN CLASS. HOWEVER, THE RANGE OF A LINEAR EQUATION IS  (−∞,∞) . THEREFORE, WE MUST APPLY SOME OTHER FUNCTION TO SATISFY THIS CONSTRAINT. IN BINARY CLASSIFICATION PROBLEMS, THE MOST COMMON ACTIVATION FUNCTION IS CALLED THE SIGMOID FUNCTION.
+													σ(x)=1/1+e**−x
+													THE MOST COMMON ONES OTHER THAN SIGMOID ARE RELU, TANH, AND SOFTMAX.
+													
+													A sigmoid function is a mathematical function having a characteristic "S"-shaped curve or sigmoid curve.
+													A common example of a sigmoid function is the logistic function shown in the first figure and defined by the formula:
+													In some fields, most notably in the context of artificial neural networks, the term "sigmoid function" is used as an alias for the logistic function
+													
+													1. A connection (though in practice, there will generally be multiple connections, each with its own weight, going into a particular neuron), with a weight “living inside it”, that transforms your input (using B1) and gives it to the neuron.
+													2. A neuron that includes a bias term (B0) and an activation function (sigmoid in our case).
+													
+													And these two objects are the fundamental building blocks of the neural network. More complex neural networks are just models with more hidden layers and that means more neurons and more connections between neurons.
+													
+													EACH NEURON IN A NEURAL NETWORK IS LIKE ITS OWN LITTLE MODEL.
+													
+								THE OUTPUT: 
+								                 THAT IS ALL THERE IS TO GET THE OUTPUT FROM A PERCEPTRON! TO SUM IT UP IN THREE SIMPLE STEPS:
+													1. GET THE DOT PRODUCT OF THE WEIGHTS AND THE INPUT FEATURES  (X*W) .
+													2. ADD THE BIAS  (X*W+B) .
+													3. APPLY THE ACTIVATION FUNCTION AND THAT IS THE PREDICTED VALUE  (Y^=Σ(X*W+B)) !
+												SO FAR WE KNOW HOW TO TAKE THE INPUT VALUES AND RETURN THE CORRESPONDING OUTPUT. HOWEVER, WE MUST ADJUST THE WEIGHTS TO MAKE THE NETWORK FIT THE TRAINING DATA. THE PROCESS OF MAKING THESE ADJUSTMENTS IS KNOWN AS BACK PROPAGATION.
+												
+								In order to adjust our weights, first we must figure out a way to numerically signify the accuracy of our prediction. In other words, we need to figure out how close our predicted value is to the actual value. A simple way to do this is to use the Sum of Squares Error.
+								L(y,y^)=(y−y^)2 
+								
+								or we can also use Mean Squared Error (MSE) as the cost function:
+										MSE = Sum [ ( Prediction - Actual )**2] * (1 / num_observations)
+								Although this function works, most real-life applications will not use this error function. We will discuss another group of cross entropy loss functions.
+								
+								LOSS FUNCTION
+												Several functions exist for accomplishing this task, however, the most common loss function for binary problems is called BINARY CROSS-ENTROPY.
+												L(y,y^)=−(ylog(y^)+(1−y)log(1−y^))
+												
+								Keep in mind that  y^  is a decimal value in the range  (0,1) . THE  LOG  FUNCTION RETURNS A NEGATIVE NUMBER FOR SUCH VALUES. AS A RESULT, WE MUST TAKE THE NEGATIVE OF THE LOG TO RETURN A POSITIVE VALUE.
+								
+								FORWARD PROPAGATION
+												THE PROCESS OF GOING FROM THE INPUT LAYER TO THE OUTPUT IS KNOWN AS FORWARD PROPAGATION.
+												Z=X*W+B=X1×W1+X2×W2+...+XN×WN+B
+								
+								BACK PROPOGATION= 
+													SO BASICALLY BACKPROPAGATION ALLOWS US TO CALCULATE THE ERROR ATTRIBUTABLE TO EACH NEURON AND THAT IN TURN ALLOWS US TO CALCULATE THE PARTIAL DERIVATIVES AND ULTIMATELY THE GRADIENT SO THAT WE CAN UTILIZE GRADIENT DESCENT. 3 TAKEAWAYS OF BACKPROPOGATION--
+															1. IT IS THE PROCESS OF SHIFTING THE ERROR BACKWARDS LAYER BY LAYER AND ATTRIBUTING THE CORRECT AMOUNT OF ERROR TO EACH NEURON IN THE NEURAL NETWORK.
+															2. THE ERROR ATTRIBUTABLE TO A PARTICULAR NEURON IS A GOOD APPROXIMATION FOR HOW CHANGING THAT NEURON’S WEIGHTS (FROM THE CONNECTIONS LEADING INTO THE NEURON) AND BIAS WILL AFFECT THE COST FUNCTION.
+															3. WHEN LOOKING BACKWARDS, THE MORE ACTIVE NEURONS (THE NON-LAZY ONES) ARE THE ONES THAT GET BLAMED AND TWEAKED BY THE BACKPROPAGATION PROCESS.
+
+								
+								
+												To simplify this process, we will show back propagation with the Sum of Squares error as our loss function.
+												L(y,y^)=(y−y^)2
+												Keep in mind that our goal is to find the global minimum of the loss concerning our weights. To update our weights, we first need to find out how much a small change in the weight will affect our loss function. In other words, this is what we need to find:
+												∂L(y,y^)/∂w
+						ARTIFICIAL NEURAL NETWORKS
+													ANNS ARE COMPOSED OF MULTIPLE NODES, WHICH IMITATE BIOLOGICAL NEURONS OF THE HUMAN BRAIN. THE NODE IS CONNECTED VIA LINKS AND THEY CAN INTERACT WITH EACH OTHER.
+
+													EACH NODE TAKES INPUT DATA AND PERFORMS SIMPLE OPERATIONS ON THAT DATA. THE RESULTS ARE PASSED ON TO OTHER NODES. THE OUTPUT FROM EACH NODE IS CALLED ITS ACTIVATION. EACH CONNECTION FROM A NODE HAS A WEIGHT ASSOCIATED WITH IT. ANNS LEARN BY ALTERING WEIGHT VALUES EACH TIME.
+													
+													ARTIFICIAL NEURAL NETWORKS (ANN) ARE VERY SIMILAR TO PERCEPTRONS EXCEPT THEY HAVE ONE EXTRA LAYER. THE FIGURE BELOW SHOWS AN EXAMPLE OF THE ANN. THE INPUT AND OUTPUT LAYERS DO NOT CHANGE. THE LAYER IN THE MIDDLE IS CALLED THE HIDDEN LAYER. BEFORE, WE ONLY HAD ONE WEIGHT MATRIX, CONNECTING THE INPUT TO THE OUTPUT. NOW, WE HAVE AN EXTRA SET OF CONNECTIONS.
+													
+						Initializing weights in init is an important step in building a neural network as the neural network needs values to adjust so that it can create a more balanced and efficient network. Weights act as the inputs for the activation functions and are essentially the value that each neuron provides into the neural network which is constantly tweaked with each passing epoch.
+						
+						Here we also define our activation functions, such as sigmoid, which serve the purpose of interpreting the data to feed it into the next layer of the neural network. Activation functions are necessary because most data is not linear, so there need to be specialized functions that can deal with more complicated
+						
+						
+						
+					WHAT IS COMPILE===NEURAL NETWORKS USE COMPILE TO BUILD THE LAYERS AND ADD THE LOSS FUNCTION AND OPTIMIZER SETTINGS TO THE NN
+					
+					
+					for more-  https://towardsdatascience.com/understanding-neural-networks-19020b758230
+					
+					
+					
+					
+
+					
+
+Handling class Imbalance-	
+								# Class count
+								class_count_0, class_count_1 = data['Target'].value_counts()
+
+								# Separate class
+								class_0 = data[data['Target'] == 0]
+								class_1 = data[data['Target'] == 1]
+								print('class 0:', class_0.shape)
+								print('class 1:', class_1.shape)
+							1. Random Under-Sampling
+														UNDERSAMPLING CAN BE DEFINED AS REMOVING SOME OBSERVATIONS OF THE MAJORITY CLASS. THIS IS DONE UNTIL THE MAJORITY AND MINORITY CLASS IS BALANCED OUT.
+
+														UNDERSAMPLING CAN BE A GOOD CHOICE WHEN YOU HAVE A TON OF DATA -THINK MILLIONS OF ROWS. BUT A DRAWBACK TO UNDERSAMPLING IS THAT WE ARE REMOVING INFORMATION THAT MAY BE VALUABLE.
+														
+														class_0_under = class_0.sample(class_count_1)
+														test_under = pd.concat([class_0_under, class_1], axis=0)
+														test_under['Target'].value_counts()
+														
+														OR
+														
+														from imblearn.under_sampling import RandomUnderSampler
+
+														rus = RandomUnderSampler(random_state=42, replacement=True)
+														x_rus, y_rus = rus.fit_resample(data.iloc[:,0:-1], data['Target'])
+
+														print('Original dataset shape:', len(data))
+														print('Resampled dataset shape', len(y_rus))
+														
+							2. Random Over-Sampling
+													OVERSAMPLING CAN BE DEFINED AS ADDING MORE COPIES TO THE MINORITY CLASS. OVERSAMPLING CAN BE A GOOD CHOICE WHEN YOU DON’T HAVE A TON OF DATA TO WORK WITH.
+
+													A CON TO CONSIDER WHEN UNDERSAMPLING IS THAT IT CAN CAUSE OVERFITTING AND POOR GENERALIZATION TO YOUR TEST SET.	
+													
+													class_1_over = class_1.sample(class_count_0, replace=True)
+													test_over = pd.concat([class_1_over, class_0], axis=0)
+													test_over['Target'].value_counts()	
+													
+													OR
+													from imblearn.over_sampling import RandomOverSampler
+													
+													ros = RandomOverSampler(random_state=42)
+													x_ros, y_ros = ros.fit_resample(data.iloc[:,0:-1], data['Target'])
+													print('Original dataset shape:', len(data))
+													print('Resampled dataset shape', len(y_ros))
+						
+
+							3. Under-Sampling: TOMEK LINKS
+												TOMEK LINKS ARE PAIRS OF VERY CLOSE INSTANCES BUT OF OPPOSITE CLASSES. REMOVING THE INSTANCES OF THE MAJORITY CLASS OF EACH PAIR INCREASES THE SPACE BETWEEN THE TWO CLASSES, FACILITATING THE CLASSIFICATION PROCESS.
+
+												TOMEK’S LINK EXISTS IF THE TWO SAMPLES ARE THE NEAREST NEIGHBORS OF EACH OTHER.	
+												
+												from imblearn.under_sampling import TomekLinks
+												tl = TomekLinks(sampling_strategy='majority')
+												X_tl, y_tl = tl.fit_resample(data.iloc[:,0:-1], data['Target'])
+												print('Original dataset shape:', len(data))
+												print('Resampled dataset shape', len(y_tl))
+												
+												
+							
+							4. SYNTHETIC MINORITY OVERSAMPLING TECHNIQUE (SMOTE)
+												THIS TECHNIQUE GENERATES SYNTHETIC DATA FOR THE MINORITY CLASS.
+
+												SMOTE (SYNTHETIC MINORITY OVERSAMPLING TECHNIQUE) WORKS BY RANDOMLY PICKING A POINT FROM THE MINORITY CLASS AND COMPUTING THE K-NEAREST NEIGHBORS FOR THIS POINT. THE SYNTHETIC POINTS ARE ADDED BETWEEN THE CHOSEN POINT AND ITS NEIGHBORS.
+												SMOTE algorithm works in 4 simple steps:
+													1. Choose a minority class as the input vector
+													2. Find its k nearest neighbors (k_neighbors is specified as an argument in the SMOTE() function)
+													3. Choose one of these neighbors and place a synthetic point anywhere on the line joining the point under consideration and its chosen neighbor
+													4. Repeat the steps until data is balanced
+												
+												from imblearn.over_sampling import SMOTE
+												smote = SMOTE()
+												# fit predictor and target variable
+												x_smote, y_smote = smote.fit_resample(data.iloc[:,0:-1], data['Target'])
+												
+												print('Original dataset shape', len(data))
+												print('Resampled dataset shape', len(y_smote))
+							
+							5. Penalize Algorithms (Cost-Sensitive Training)
+							
+												The next tactic is to use penalized learning algorithms that increase the cost of classification mistakes on the minority class.
+
+												A POPULAR ALGORITHM FOR THIS TECHNIQUE IS PENALIZED-SVM.
+
+												During training, we can use the argument class_weight=’balanced’ to penalize mistakes on the minority class by an amount proportional to how under-represented it is.
+												
+												from sklearn.svm import SVC
+												# we can add class_weight='balanced' to add penalize mistake
+												svc_model = SVC(class_weight='balanced', probability=True)
+												svc_model.fit(X_train, Y_train)
+												svc_predict = svc_model.predict(X_test)
+												
+												print('ROCAUC score:',roc_auc_score(Y_test, svc_predict))
+												print('Accuracy score:',accuracy_score(Y_test, svc_predict))
+												
+												what happen exactly in it see notebook
+												
+							6. . Try Tree Based Algorithms
+							
+												While in every machine learning problem, it’s a good rule of thumb to try a variety of algorithms, it can be especially beneficial with imbalanced datasets.
+
+												DECISION TREES FREQUENTLY PERFORM WELL ON IMBALANCED DATA. IN MODERN MACHINE LEARNING, TREE ENSEMBLES (RANDOM FORESTS, GRADIENT BOOSTED TREES, ETC.) ALMOST ALWAYS OUTPERFORM SINGULAR DECISION TREES, SO WE’LL JUMP RIGHT INTO THOSE:
+
+												Tree base algorithm work by learning a hierarchy of if/else questions. This can force both classes to be addressed.
+												
+												from xgboost import XGBClassifier
+												xgb_model = XGBClassifier().fit(X_train, Y_train)
+												# predict
+												xgb_y_predict = xgb_model.predict(X_test)
+
+												print('ROCAUC score:', roc_auc_score(Y_test, xgb_y_predict))
+												print('Accuracy score:', accuracy_score(Y_test, xgb_y_predict))
+												
+						Choose the evaluation metric wisely
+									ACCURACY IS NOT THE BEST METRIC TO USE WHEN EVALUATING IMBALANCED DATASETS AS IT CAN BE MISLEADING.
+
+									Metrics that can provide better insight are:
+
+									1. Confusion Matrix: a table showing correct predictions and types of incorrect predictions.
+									2. Precision: the number of true positives divided by all positive predictions. Precision is also called Positive Predictive Value. It is a measure of a classifier’s exactness. Low precision indicates a high number of false positives.
+									3. Recall: the number of true positives divided by the number of positive values in the test data. The recall is also called Sensitivity or the True Positive Rate. It is a measure of a classifier’s completeness. Low recall indicates a high number of false negatives.
+									4. F1 Score: the weighted average of precision and recall.
+									5. Area Under ROC Curve (AUC-ROC): AUC-ROC represents the likelihood of your model distinguishing observations from two classes. In other words, if you randomly select one observation from each class, what’s the probability that your model will be able to “rank” them correctly?	
+									
+									
+									
+									
+									for more ---    https://www.analyticsvidhya.com/blog/2021/06/5-techniques-to-handle-imbalanced-data-for-a-classification-problem/
+
+	
+we can call imbalance data, a target biased data.		
+TMK Supports multiclass undersampling as well.
+
+Note:
+use sampling technique after split only on train data bcoz You don’t want to test on a under/oversampled dataset at all, you’re just performing the sampling to help the model train more effectively. It still needs to work on regular, imbalanced data afterwards.
+		
+		
+		
+		
+		
+		
+		
+		

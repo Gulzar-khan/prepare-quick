@@ -1,0 +1,2196 @@
+fav ml model describe? in detail for interview? see video of statquest channel on youtube for this model also
+
+Standard deviation is a metric of variance i.e. how much the individual data points are spread out from the mean.(from anomaly chapter)
+
+
+bias nikalte h from test and train both use kar k.(mostly on train)
+varianceonly test se nikalte h.
+
+Note: For regression and all other ml models we use Tabular(or cross-sectional) datasets but for time series it is temporal datasets(datasets which have date and time).
+
+
+note:    !pip install --upgrade xlrd             =====for updating xlrd for getting xls file type of excel access in collab- example in anomaly dtection
+
+1. General Modelling Techniques - Feature Engineering
+
+
+				FEATURE ENGINEERING IS A PROCESS OF TRANSFORMING THE GIVEN DATA INTO A FORM WHICH IS EASIER TO INTERPRET. Here, we are interested in making it more transparent for a machine learning model, but some features can be generated so that the data visualization prepared for people without a data-related background can be more digestible. However, the concept of transparency for the machine learning models is a complicated thing as different models often require different approaches for the different kinds of data.
+
+				Feature engineering is an informal topic, and there are many possible definitions. The machine learning workflow is fluid and iterative, so there’s no one “right answer.”
+
+				IN A NUTSHELL, WE DEFINE FEATURE ENGINEERING AS CREATING NEW FEATURES FROM YOUR EXISTING ONES TO IMPROVE MODEL PERFORMANCE.
+				
+				Why do we need it?
+								The intention of feature engineering is to achieve two primary goals:
+
+									1. Preparing an input dataset that is compatible with and best fits the machine learning algorithm.
+
+									2. Improving the performance of machine learning models
+
+								According to a survey in Forbes, data scientists spend 80% of their time on data preparation. The importance of feature engineering is realized through its time-efficient approach to preparing data that brings consistent output
+								
+								When feature engineering processes are executed well, the resulting dataset will be optimal and contain all the essential factors that bear an impact on the business problem. These datasets in turn result in best possible predictive models and most beneficial insights.
+								
+								
+				Basic EDA-
+							1. UNIVARIATE ANALYSIS
+										Univariate analysis is the simplest form of analyzing data. “Uni” means “one”, so in other words your data has only one variable. It doesn’t deal with causes or relationships (unlike regression ) and it’s major purpose is to describe; It takes data, summarizes that data and finds patterns in the data.
+											Ex:- CDF, PDF, Box plot, Violin plot.
+											
+							2. BIVARIATE ANALYSIS
+										Bivariate analysis means the analysis of bivariate data. It is one of the simplest forms of statistical analysis, used to find out if there is a relationship between two sets of values. It usually involves the variables X and Y. The results from bivariate analysis can be stored in a two-column data table.
+											Ex:- Box plot, Scatter Plot,Violin plot, Joint plot.\
+											
+							3. MULTIVARIATE ANALYSIS
+										Multivariate means more than one variable behind the resultant outcome. Anything that happens in the world or business is not due to one reason but multiple reasons behind the outcome known as multivariate. As an example, Weather is dependent on multiple factors like pollution, precipitation, humidity to name a few.
+											Ex:- Pair Plot, 3D Scatter Plot.
+											
+				Let's dive into Feature Engineering with the help of the Housing Dataset.-   IN COLLLAB
+				
+				LINEAR REGRESSION, LOGISTIC REGRESSION, KMEANS CLUSTERING, HIERCHICAL CLUSTERING, AND NEURAL NETWORKS ARE SENSITIVE TO OUTLIERS.
+
+				DECISION TREE, ENSEMBLE OF DECISION TREES, NAÏVE BAYES CLASSIFIER, AND SUPPORT VECTOR MACHINE, KNN ARE NOT SENSITIVE TO OUTLIERS.
+
+				Handling Outliers is a good practice before passing the data to the ML model as we can get a better model with good metrics.
+
+				
+				 if column is nominal we have to go for one hot enco like- • A “color” variable with the values: “red“, “green“, and “blue“. it makes 3 col with, 1 if it is present otherwise 0.-
+ 
+						gender=pd.get_dummies(df['Gender'],drop_first=True,prefix='ANYTHING WHAT WE WANT IN THE NAME OF DUMMY TABLE',prefix_sep='_')
+						df=pd.concat([df,gender],axis=1)
+						
+						OR
+									#One hot encoder on Gender
+									from sklearn.preprocessing import OneHotEncoder
+									enc=OneHotEncoder()
+									enc_data=pd.DataFrame(enc.fit_transform(data[['Gender']]).toarray())
+									names=enc.get_feature_names_out()
+									enc_data.columns=names
+
+/
++								df1=data.join(enc_data)
+						
+				if column is ordinal we have to go for one multilabel like- • A “color” variable with the values: “red“, “green“, and “blue“. it doesn't create additional features, instead of that it shows 1 for red, 2 for green and 3 for blue in only on column
+ 
+					from sklearn.preprocessing import LabelEncoder
+						le = LabelEncoder()
+						le.fit([1, 2, 2, 6])
+						print(le.classes_)
+						print(le.transform([1, 1, 2, 6]))
+						print(le.inverse_transform([0, 0, 1, 2]))
+						
+						or
+						ind['state']=le.fit_transform(ind['state'])
+						
+				Data Transformation-
+										YOU CAN READ IT ABOUT THAT IN DETAIL ON WEEK 2 & 3 IN DETAIL FOR FIRST 3 POINT OF SCALING ONLY OR
+								It refers to putting the values in the same range or same scale so that no variable is dominated by the other.
+
+								Most of the time, the collected data set contains features highly varying in magnitudes, units, and ranges. If scaling is not done then the algorithm only takes magnitude into account and not units hence incorrect modeling. To solve this issue, we have to do scaling to bring all the variables to the same level of magnitude.
+								
+								1. Standardization
+											Standardization is another scaling technique where the values are centered around the mean with a unit standard deviation. This means that the mean of the attribute becomes zero and the resultant distribution has a unit standard deviation.
+											scaler = StandardScaler()
+											X_train=ss.fit_transform(X_train)
+											X_test=ss.transform(X_test)
+
+											The standard score of a sample x is calculated as:
+											x(new)=x-mu/sigma
+								
+														And we know std dev(sigma)=root of variance which we are setting here is 1, so std dev will also be 1.
+																						where variance =(x-mu)**2/N 
+											
+								2. Normalization
+											Normalization is a scaling technique in which values are shifted and rescaled so that they end up ranging between 0 and 1. It is also known as Min-Max scaling.
+											
+											scaler = MinMaxScaler()
+											
+																			x(new)=x-x(min)/x(max)-x(min)
+
+											
+								3. Robust Scalar
+											It is used to scale the feature to median and quantile. Scaling using median and quantiles consists of subtracting the median from all the observations and then dividing by the interquartile difference. The inter quantile difference is the difference between the 75th and 25th.
+											Scaler=RobustScaler()
+											
+								4. Gaussian Transformation
+											Some machine learning algorithms like linear and logistic regression assume that the features are normally distributed. So, we need to transform the features by the following methods.
+
+											Logarithmic Transformation,inverse(1/df[feature]),sqrt and exponential
+											
+								5. Box-Cox Transformation
+											A Box-Cox transformation is a transformation of a non-normal dependent variable into a normal shape. Normality is an important assumption for many statistical techniques; if your data isn’t normal, applying a Box-Cox means that you can run a broader number of tests.
+
+											The Box-Cox transformation is named after statisticians George Box and Sir David Roxbee Cox who collaborated on a 1964 paper and developed the technique.
+
+													T(y)=(y exp(lambda)-1)/(lambda)
+
+											where y is the response variable and ‘lambda’ is the transformation parameter from -5 to 5. In the transformation, all values of ‘lambda’ are considered and the optimal value for a given variable is selected.
+											
+					 Data Reduction
+								Let us assume we have a dataset of billions of rows of data. Now we will require high computationally cost and timing cost to work on that population. So, Here Data reduction comes in handy. DATA REDUCTION IS A PROCESS THAT REDUCED THE VOLUME OF ORIGINAL DATA AND REPRESENTS IT IN A MUCH SMALLER VOLUME. DATA REDUCTION TECHNIQUES ENSURE THE INTEGRITY OF DATA WHILE REDUCING THE DATA. IT IS DONE TO AVOID THE CURSE OF DIMENSIONALITY. CURSE OF DIMENSIONALITY REFERS TO A SET OF PROBLEMS THAT ARISE WHEN WORKING WITH HIGH-DIMENSIONAL DATA AND WORKING WITH HIGH DIMENSIONALITY WE WILL HAVE A CHANCE OF OVERFITTING. SO, WITHOUT CHANGING THE FEATURE AND DELETING THE ATTRIBUTES.
+								
+								1. Dimensionality Reduction
+													Dimensionality reduction eliminates the attributes from the data set under consideration thereby reducing the volume of original data. In the section below, we will discuss three methods of dimensionality reduction. Those are Wavelet Transform, Principal Component Analysis, and Attribute Subset Selection. It will reduce the data from high dimensionality to low dimensionality.
+
+												We have a separate lecture and video for Principal Component Analysis.
+
+								2. Numerosity Reduction
+													THE NUMEROSITY REDUCTION REDUCES THE VOLUME OF THE ORIGINAL DATA AND REPRESENTS IT IN A MUCH SMALLER FORM. This technique includes two types parametric and non-parametric numerosity reduction. Parametric numerosity reduction incorporates ‘storing only data parameters instead of the original data. One method of parametric numerosity reduction is the ‘regression and log-linear method. Non-parametric numerosity reduction involves Histogram, Sampling Techniques, and Data cube aggregation. Sampling Techniques involve several techniques like Random Sampling, Stratified sampling, Selective sampling, and Cluster sampling.
+
+					Feature Selection
+								Feature selection is the process of reducing the number of input variables when developing a predictive model. It is desirable to reduce the number of input variables to both reduce the computational cost of modeling and, in some cases, to improve the performance of the model.
+								
+								1. Using Pearson Correlation
+
+										A PEARSON CORRELATION IS A NUMBER BETWEEN -1 AND 1 THAT INDICATES THE EXTENT TO WHICH TWO VARIABLES ARE LINEARLY RELATED. THE PEARSON CORRELATION IS ALSO KNOWN AS THE “PRODUCT MOMENT CORRELATION COEFFICIENT” (PMCC) OR SIMPLY “CORRELATION”
+
+										Pearson correlations are suitable only for metric variables The correlation coefficient has values between -1 to 1
+
+										• A value closer to 0 implies weaker correlation (exact 0 implying no correlation)
+
+										• A value closer to 1 implies stronger positive correlation
+
+										• A value closer to -1 implies stronger negative correlation
+										
+										for more- https://towardsdatascience.com/feature-selection-correlation-and-p-value-da8921bfb3cf#:~:text=How%20does%20correlation%20help%20in,one%20of%20the%20two%20features.
+										
+								2. VARIABLE INFLATION FACTOR
+
+										COLLINEARITY IS THE STATE WHERE TWO VARIABLES ARE HIGHLY CORRELATED AND CONTAIN SIMILAR INFORMATION ABOUT THE VARIANCE WITHIN A GIVEN DATASET. TO DETECT COLLINEARITY AMONG VARIABLES, SIMPLY CREATE A CORRELATION MATRIX AND FIND VARIABLES WITH LARGE ABSOLUTE VALUES.
+
+										Steps for Implementing VIF
+
+												• Calculate the VIF factors.
+
+												• Inspect the factors for each predictor variable, if the VIF is between 5–10, multicollinearity is likely present and you should consider dropping the variable.
+
+												IN VIF METHOD, WE PICK EACH FEATURE AND REGRESS IT AGAINST ALL OF THE OTHER FEATURES. FOR EACH REGRESSION, THE FACTOR IS CALCULATED AS :
+
+												VIF=1/(1-R^2)
+
+												WHERE, R-SQUARED IS THE COEFFICIENT OF DETERMINATION IN LINEAR REGRESSION. ITS VALUE LIES BETWEEN 0 AND 1.		
+												
+											
+								3. Forward Elimination
+
+											Forward selection is an iterative method in which we start with having no feature in the model. In each iteration, we keep adding the feature which best improves our model till an addition of a new variable does not improve the performance of the model.
+											
+								5. Recursive Feature elimination
+
+											It is a greedy optimization algorithm which aims to find the best performing feature subset. It repeatedly creates models and keeps aside the best or the worst performing feature at each iteration. It constructs the next model with the left features until all the features are exhausted. It then ranks the features based on the order of their elimination.
+											rfe=RFE(lr,n_features_to_select=7)
+
+											
+								6. Embedded Method
+
+											Embedded methods are iterative in a sense that takes care of each iteration of the model training process and CAREFULLY EXTRACT THOSE FEATURES WHICH CONTRIBUTE THE MOST TO THE TRAINING FOR A PARTICULAR ITERATION.
+
+												Example: Random Forest Importance
+
+												
+								7. Dropping Constant Feature
+
+											FEATURE SELECTOR THAT REMOVES ALL LOW VARIANCE FEATURES. THIS FEATURE SELECTION ALGORITHM LOOKS ONLY AT THE FEATURES(X), NOT THE DESIRED OUTPUTS(Y), AND CAN BE USED FOR UNSUPPORTED LEARNING.
+											
+											var_thres= VarianceThreshold(threshold=0)
+											
+								8. Fisher Score
+
+											FISHER SCORE IS ONE OF THE MOST WIDELY USED SUPERVISED FEATURE SELECTION METHODS. THE ALGORITHM WHICH WE WILL USE RETURNS THE RANKS OF THE VARIABLES BASED ON THE FISHER’S SCORE IN DESCENDING ORDER. WE CAN THEN SELECT THE VARIABLES AS PER THE CASE.
+											ranks= fisher_score.fisher_score(x,y)
+											
+								for more and implementation-    https://medium.com/analytics-vidhya/feature-selection-techniques-2614b3b7efcd
+											
+					FOR chi square,f-test(ANOA) refer collab and for code of all above refer collab also as this is most imp chapter
+					
+					
+					
+					
+K-Means Clustering-
+					Clustering can be considered the most important unsupervised learning problem; so, as every other problem of this kind, it deals with finding a structure in a collection of unlabeled data.A LOOSE DEFINITION OF CLUSTERING COULD BE “THE PROCESS OF ORGANIZING OBJECTS INTO GROUPS WHOSE MEMBERS ARE SIMILAR IN SOME WAY”.A CLUSTER IS THEREFORE A COLLECTION OF OBJECTS WHICH ARE “SIMILAR” BETWEEN THEM AND ARE “DISSIMILAR” TO THE OBJECTS BELONGING TO OTHER CLUSTERS.
+					
+					Introduction to k-means clustering
+									Clustering algorithms seek to learn, from the properties of the data, an optimal division or discrete labeling of groups of points.Many clustering algorithms are available in Scikit-Learn and elsewhere, but perhaps the simplest to understand is an algorithm known as k-means clustering, which is implemented in sklearn.cluster.KMeans.
+									THE K-MEANS ALGORITHM SEARCHES FOR A PRE-DETERMINED NUMBER OF CLUSTERS WITHIN AN UNLABELED MULTIDIMENSIONAL DATASET. IT ACCOMPLISHES THIS USING A SIMPLE CONCEPTION OF WHAT THE OPTIMAL CLUSTERING LOOKS LIKE:
+										THE "CLUSTER CENTER" IS THE ARITHMETIC MEAN OF ALL THE POINTS BELONGING TO THE CLUSTER.
+										EACH POINT IS CLOSER TO ITS OWN CLUSTER CENTER THAN TO OTHER CLUSTER CENTERS.
+									THOSE TWO ASSUMPTIONS ARE THE BASIS OF THE K-MEANS MODEL.
+									First, let's generate a two-dimensional dataset containing four distinct blobs.To emphasize that this is an unsupervised algorithm, we will leave the labels out of the visualization.
+									
+						
+							The good news is that the k-means algorithm (at least in this simple case) assigns the points to clusters very similarly to how we might assign them by eye.But you might wonder how this algorithm finds these clusters so quickly! After all, the number of possible combinations of cluster assignments is exponential in the number of data points—an exhaustive search would be very, very costly. Fortunately for us, such an exhaustive search is not necessary: instead, the typical approach to k-means involves an intuitive iterative approach known as expectation–maximization.
+							
+							
+						k-Means Algorithm: Expectation–Maximization
+											Expectation–maximization (E–M) is a powerful algorithm that comes up in a variety of contexts within data science. k-means is a particularly simple and easy-to-understand application of the algorithm.
+											In short, the expectation–maximization approach here consists of the following procedure:
+											1. Guess some cluster centers
+											2. Repeat until converged
+												 E-STEP: ASSIGN POINTS TO THE NEAREST CLUSTER CENTER
+												 M-STEP: SET THE CLUSTER CENTERS TO THE MEAN
+											HERE THE "E-STEP" OR "EXPECTATION STEP" IS SO-NAMED BECAUSE IT INVOLVES UPDATING OUR EXPECTATION OF WHICH CLUSTER EACH POINT BELONGS TO.
+											THE "M-STEP" OR "MAXIMIZATION STEP" IS SO-NAMED BECAUSE IT INVOLVES MAXIMIZING SOME FITNESS FUNCTION THAT DEFINES THE LOCATION OF THE CLUSTER CENTERS — IN THIS CASE, THAT MAXIMIZATION IS ACCOMPLISHED BY TAKING A SIMPLE MEAN OF THE DATA IN EACH CLUSTER.
+											The literature about this algorithm is vast, but can be summarized as follows: under typical circumstances, each repetition of the E-step and M-step will always result in a better estimate of the cluster characteristics.
+											
+											Caveats/DISADVANTAGES of expectation–maximization
+															There are a few issues to be aware of when using the expectation–maximization algorithm.
+															
+															1. The globally optimal result may not be achieved. First, although the E–M procedure is guaranteed to improve the result in each step, there is no assurance that it will lead to the global best solution. For example, if we use a different random seed in our simple procedure, the particular starting guesses lead to poor results:
+																Here the E–M approach has converged, but has not converged to a globally optimal configuration. For this reason, it is common for the algorithm to be run for multiple starting guesses, as indeed Scikit-Learn does by default (set by the n_init parameter, which defaults to 10).
+															2. THE NUMBER OF CLUSTERS MUST BE SELECTED BEFOREHAND. ANOTHER COMMON CHALLENGE WITH K-MEANS IS THAT YOU MUST TELL IT HOW MANY CLUSTERS YOU EXPECT: IT CANNOT LEARN THE NUMBER OF CLUSTERS FROM THE DATA.FOR EXAMPLE, IF WE ASK THE ALGORITHM TO IDENTIFY SIX CLUSTERS, IT WILL HAPPILY PROCEED AND FIND THE BEST SIX CLUSTERS.
+															
+						SELECTING THE NUMBER OF CLUSTERS WITH SILHOUETTE ANALYSIS ON KMEANS CLUSTERING:
+										SILHOUETTE ANALYSIS CAN BE USED TO STUDY THE SEPARATION DISTANCE BETWEEN THE RESULTING CLUSTERS. THE SILHOUETTE PLOT DISPLAYS A MEASURE OF HOW CLOSE EACH POINT IN ONE CLUSTER IS TO POINTS IN THE NEIGHBORING CLUSTERS AND THUS PROVIDES A WAY TO ASSESS PARAMETERS LIKE NUMBER OF CLUSTERS VISUALLY. THIS MEASURE HAS A RANGE OF [-1, 1].
+										
+										SILHOUETTE COEFFICIENTS (AS THESE VALUES ARE REFERRED TO AS) NEAR +1 INDICATE THAT THE SAMPLE IS FAR AWAY FROM THE NEIGHBORING CLUSTERS. A VALUE OF 0 INDICATES THAT THE SAMPLE IS ON OR VERY CLOSE TO THE DECISION BOUNDARY BETWEEN TWO NEIGHBORING CLUSTERS AND NEGATIVE VALUES INDICATE THAT THOSE SAMPLES MIGHT HAVE BEEN ASSIGNED TO THE WRONG CLUSTER.
+										
+								Calculation of Silhouette score
+											Silhouette score is used to evaluate the quality of clusters created using clustering algorithms such as K-Means in terms of how well samples are clustered with other samples that are similar to each other. The Silhouette score is calculated for each sample of different clusters. To calculate the Silhouette score for each observation/data point, the following distances need to be found out for each observations belonging to all the clusters:
+											
+											1. Mean distance between the observation and all other data points in the same cluster. This distance can also be called a mean intra-cluster distance. This mean distance is denoted by a.
+											2. Mean distance between the observation and all other data points of the next nearest cluster. This distance can also be called a mean nearest-cluster distance. This mean distance is denoted by b.
+											
+													The Silhouette Coefficient for a sample is  S=(b−a)/max(a,b) .
+									
+								
+								How to do Spectral Clustering?
+								       The three major steps involved in spectral clustering are: constructing a similarity graph, projecting data onto a lower-dimensional space, and clustering the data. Given a set of points S in a higher-dimensional space, it can be elaborated as follows:
+									   1. Form a distance matrix
+									   2. Transform the distance matrix into an affinity matrix A
+									   3. Compute the degree matrix D and the Laplacian matrix L = D – A.
+									   4. Find the eigenvalues and eigenvectors of L.
+									   5. With the eigenvectors of k largest eigenvalues computed from the previous step form a matrix.
+									   6. Normalize the vectors.
+									   7. Cluster the data points in k-dimensional space.
+									   
+								Pros and Cons of Spectral Clustering
+												Spectral clustering helps us overcome two major problems in clustering: one being the shape of the cluster and the other is determining the cluster centroid. K-means algorithm generally assumes that the clusters are spherical or round i.e. within k-radius from the cluster centroid. In K means, many iterations are required to determine the cluster centroid. In spectral, the clusters do not follow a fixed shape or pattern. Points that are far away but connected belong to the same cluster and the points which are less distant from each other could belong to different clusters if they are not connected. This implies that the algorithm could be effective for data of different shapes and sizes.
+												
+												When compared with other algorithms, it is computationally fast for sparse datasets of several thousand data points. You don’t need the actual dataset to work with. Distance or Though it might be costly to compute for large datasets as eigenvalues and eigenvectors need to be computed and then clustering is to be done. But the algorithms try to cut the cost. The number of clusters (k) needs to be fixed before starting the procedure.
+												
+										Where can I use spectral clustering?
+												Spectral clustering has its application in many areas which includes: image segmentation, educational data mining, entity resolution, speech separation, spectral clustering of protein sequences, text image segmentation. Though spectral clustering is a technique based on graph theory, the approach is used to identify communities of vertices in a graph based on the edges connecting them. This method is flexible and allows us to cluster non-graph data as well either with or without the original data.
+												Python packages for spectral clustering: 
+															spectralcluster. SpectralCluster is a python library that has inbuilt code for spectral clustering. There are other packages with which we can implement the spectral clustering algorithm.
+												
+										https://www.analyticsvidhya.com/blog/2021/05/what-why-and-how-of-spectral-clustering/
+										https://towardsdatascience.com/spectral-clustering-aba2640c0d5b
+										
+										https://www.analyticsvidhya.com/blog/2019/08/comprehensive-guide-k-means-clustering/
+										
+						4. k-means can be slow for large numbers of samples
+								Because each iteration of k-means must access every point in the dataset, the algorithm can be relatively slow as the number of samples grows. You might wonder if this requirement to use all data at each iteration can be relaxed; for example, you might just use a subset of the data to update the cluster centers at each step. This is the idea behind batch-based k-means algorithms, one form of which is implemented in sklearn.cluster.MiniBatchKMeans. The interface for this is the same as for standard KMeans; we will see an example of its use as we continue our discussion.
+								
+
+Hierarchical clustering
+						But there are certain challenges with K-means. It always makes spherical clusters. Also, we have to decide the number of clusters at the BEGINNING OF THE ALGORITHM. IDEALLY, WE WOULD NOT KNOW HOW MANY CLUSTERS SHOULD WE HAVE, IN THE BEGINNING OF THE ALGORITHM AND HENCE IT A CHALLENGE WITH K-MEANS.
+						Hierarchical clustering takes away the problem of having to pre-define the number of clusters. So, let’s see what hierarchical clustering is and how it improves on K-means.
+								
+						What is Hierarchical Clustering?
+						
+									A HIERARCHICAL CLUSTERING IS AN UPSUPEERVISED METHOD WHICH WORKS VIA GROUPING DATA INTO A TREE OF CLUSTERS. HIERARCHICAL CLUSTERING BEGINS BY TREATING EVERY DATA POINT AS A SEPARATE CLUSTER. THEN, IT REPEATEDLY EXECUTES THE SUBSEQUENT STEPS: IDENTIFY THE 2 CLUSTERS WHICH CAN BE CLOSEST TOGETHER, AND. MERGE THE 2 MAXIMUM COMPARABLE CLUSTERS.
+						There are mainly two types of hierarchical clustering:
+						1. Agglomerative hierarchical clustering
+						2. Divisive Hierarchical clustering
+						
+								1. AGGLOMERATIVE(additive) HIERARCHICAL CLUSTERING
+											Bottom Up Approach - We assign each point to an individual cluster in this technique. Suppose there are 4 data points. We will assign each of these points to a cluster and hence will have 4 clusters in the beginning:
+											Then, at each iteration, we merge the closest pair of clusters and repeat this step until only a single cluster is left:
+											We are merging (or adding) the clusters at each step, right? Hence, this type of clustering is also known as ADDITIVE hierarchical clustering.
+											
+								2. DIVISIVE HIERARCHICAL CLUSTERING
+											Top Down Approach or also known as DIANA (DIvisive ANAlysis) is the inverse of agglomerative clustering
+											Divisive hierarchical clustering works in the opposite way. Instead of starting with n clusters (in case of n observations), we start with a single cluster and assign all the points to that cluster.So, it doesn’t matter if we have 10 or 1000 data points. All these points will belong to the same cluster at the beginning:
+											Now, at each iteration, we split the farthest point in the cluster and repeat this process until each cluster only contains a single point:
+											We are splitting (or dividing) the clusters at each step, hence the name divisive hierarchical clustering.
+						Hierarchical Clustering - PROXIMITY MATRIX
+										In hierarchical clustering, we have a concept called a proximity matrix. This stores the distances between each point.
+										Let’s take a sample of 5 students:	
+										Creating a Proximity Matrix:
+												First, we will create a proximity matrix which will tell us the distance between each of these points. Since we are calculating the distance of each point from each of the other points, we will get a square matrix of shape n X n (where n is the number of observations).
+												Let’s make the 5 x 5 proximity matrix for our example:
+												The diagonal elements of this matrix will always be 0 as the distance of a point with itself is always 0. We will use the Euclidean distance formula(root of (X1-X2)**2) to calculate the rest of the distances. So, let’s say we want to calculate the distance between point 1 and 2:
+												√(10−7)**2=√9=3 
+												Similarly, we can calculate all the distances and fill the proximity matrix.
+												
+						Steps to Perform Hierarchical Clustering
+								Step 1: First, we assign all the points to an individual cluster:
+								Step 2: Next, we will look at the smallest distance Let’s look at the updated clusters and accordingly update the proximity matrix:
+								Step 3: We will repeat step 2 until only a single cluster is left.
+						So, we will first look at the minimum distance in the proximity matrix and then merge the closest pair of clusters. We will get the merged clusters as shown below after repeating these steps.
+						
+						LINKAGES :  we uses THese APPROACH for CALCULATING THE SIMILARITY/distance BETWEEN TWO CLUSTERS.
+						
+									1. * Single(MIN) : In single linkage hierarchical clustering, the distance between two clusters is defined as the shortest distance between two points in each cluster. For example, the distance between clusters “r” and “s” to the left is equal to the length of the arrow between their two closest points.
+											Pros of Single:
+													This approach can separate non-elliptical shapes as long as the gap between two clusters is not small.
+											Cons of Single:
+													MIN approach cannot separate clusters properly if there is noise between clusters.
+													It can cause premature merging of groups with close pairs, even if those groups are quite dissimilar overall.
+											
+									2. * Complete Linkage(MAX) : 
+											In complete linkage hierarchical clustering, the distance between two clusters is defined as the longest distance between two points in each cluster. For example, the distance between clusters “r” and “s” to the left is equal to the length of the arrow between their two farthest points.
+											
+											Pros of Complete :
+													MAX approach does well in separating clusters if there is noise between clusters.
+											Cons of Complete:
+													Max approach is biased towards globular clusters.
+													Max approach tends to break large clusters.
+													
+									3. * Average Linkage : 
+											In average linkage hierarchical clustering, the distance between two clusters is defined as the average distance between each point in one cluster to every point in the other cluster. For example, the distance between clusters “r” and “s” to the left is equal to the average length each arrow between connecting the points of one cluster to the other.
+											
+													Pros of Group Average:
+															The group Average approach does well in separating clusters if there is noise between clusters.
+													Cons of Group Average:
+															The group Average approach is biased towards globular clusters.
+															Distance between centroids: Compute the centroids of two clusters C1 & C2 and take the similarity between the two centroids as the similarity between two clusters. This is a less popular technique in the real world.
+													
+						4. Ward’s Method:
+									THIS APPROACH OF CALCULATING THE SIMILARITY BETWEEN TWO CLUSTERS IS EXACTLY THE SAME AS GROUP AVERAGE EXCEPT THAT WARD’S METHOD CALCULATES THE SUM OF THE SQUARE OF THE DISTANCES PI AND PJ.
+									Mathematically this can be written as,
+									sim(C1,C2)=∑(dist(Pi,Pj))*2/(|C1|∗|C2|) 
+									
+											Pros of Ward’s method:
+													Ward’s method approach also does well in separating clusters if there is noise between clusters.
+											Cons of Ward’s method:
+													WARD’S METHOD APPROACH IS ALSO BIASED TOWARDS GLOBULAR CLUSTERS.
+											
+						How should we Choose the Number of Clusters in Hierarchical Clustering?
+								HAS THAT ANSWER- https://www.analyticsvidhya.com/blog/2019/05/beginners-guide-hierarchical-clustering/
+					DENDROGRAM:	
+								A DENDROGRAM IS A DIAGRAM THAT SHOWS THE HIERARCHICAL RELATIONSHIP BETWEEN OBJECTS. IT IS MOST COMMONLY CREATED AS AN OUTPUT FROM HIERARCHICAL CLUSTERING. THE MAIN USE OF A DENDROGRAM IS TO WORK OUT THE BEST WAY TO ALLOCATE OBJECTS TO CLUSTERS.
+				important--- tiil last para>				
+								A DENDROGRAM IS A TREE-LIKE DIAGRAM THAT RECORDS THE SEQUENCES OF MERGES OR SPLITS.MORE THE DISTANCE OF THE VERTICAL LINES IN THE DENDROGRAM, MORE THE DISTANCE BETWEEN THOSE CLUSTERS.
+								We can set a threshold distance and draw a horizontal line (Generally, we try to set the threshold in such a way that it cuts the tallest vertical line AND at that cut we count the vertical line that is optimal no. of clusters)or (The number of clusters will be the number of vertical lines which are being intersected by the line drawn using the threshold).
+								
+								
+								
+								Dendrograms cannot tell you how many clusters you should have
+										A common mistake people make when reading dendrograms is to assume that the shape of the dendrogram gives a clue as to how many clusters exist.   https://www.displayr.com/what-is-dendrogram/
+								
+								
+								
+						Different between k-means and heirarchical also between different linkages like min,max in collab at the end in image.
+						
+						https://www.geeksforgeeks.org/difference-between-k-means-and-hierarchical-clustering/
+
+
+PCA-
+		Introduction to Principal Component Analysis
+		Up until now, we have been looking in depth at supervised learning estimators: those estimators that predict labels based on labeled training data. Here we begin looking at several unsupervised estimators, which can highlight interesting aspects of the data without reference to any known labels.
+		In this section, we explore what is perhaps one of the most broadly used of unsupervised algorithms, principal component analysis (PCA). PCA IS FUNDAMENTALLY A DIMENSIONALITY REDUCTION ALGORITHM, BUT IT CAN ALSO BE USEFUL AS A TOOL FOR VISUALIZATION, FOR NOISE FILTERING, FOR FEATURE EXTRACTION AND ENGINEERING, AND MUCH MORE.
+		
+		PRINCIPAL COMPONENT ANALYSIS IS A FAST AND FLEXIBLE UNSUPERVISED METHOD FOR DIMENSIONALITY REDUCTION IN DATA. ITS BEHAVIOR IS EASIEST TO VISUALIZE BY LOOKING AT A TWO-DIMENSIONAL DATASET.
+		
+		Normalization of Features
+					It is imperative to mention that a FEATURE SET MUST BE NORMALIZED BEFORE APPLYING PCA. For instance if a feature set has data expressed in units of Kilograms, Light years, or Millions, the variance scale is huge in the training set. If PCA is applied on such a feature set, the resultant loadings for features with high variance will also be large. Hence, principal components will be biased towards features with high variance, leading to false results.
+
+					FINALLY, THE LAST POINT TO REMEMBER BEFORE WE START CODING IS THAT PCA IS A STATISTICAL TECHNIQUE AND CAN ONLY BE APPLIED TO NUMERIC DATA. THEREFORE, CATEGORICAL FEATURES ARE REQUIRED TO BE CONVERTED INTO NUMERICAL FEATURES BEFORE PCA CAN BE APPLIED.
+		
+		In principal component analysis, this relationship is quantified by finding a list of the principal axes in the data, and using those axes to describe the dataset. Using Scikit-Learn's PCA estimator, we can compute this as follows:
+		
+						from sklearn.decomposition import PCA
+						pca = PCA(n_components=1) #it only choooses one highest variance feature due to n_components=1
+						X_train = pca.fit_transform(X_train)
+						X_test = pca.transform(X_test)
+						
+						The fit learns some quantities from the data, most importantly the "components" and "explained variance":'
+						print(pca.components_)
+						print(pca.explained_variance_)
+						
+						from sklearn.ensemble import RandomForestClassifier
+						classifier = RandomForestClassifier(max_depth=2, random_state=0)
+						classifier.fit(X_train, y_train)
+		
+		
+		PCA AS DIMENSIONALITY REDUCTION
+							Using PCA for dimensionality reduction involves zeroing out one or more of the smallest principal components, resulting in a lower-dimensional projection of the data that preserves the maximal data variance.
+							
+		Learning the math behind PCA
+				Step 1 : Take the whole dataset with dimension d (which corresponds to the d features)
+				Step 2 : Compute the mean of every dimension of the whole dataset.
+				Step 3 : Compute the covariance matrix of the whole dataset
+						FOR POPULATION-    Cov(X,Y)=∑(Xi−X¯)*(Yi−Y¯)/n
+
+						for sample 		Cov(X,Y)=∑(Xi−X¯)(Yi−Y¯)/(n-1)
+				Step 4 : Compute Eigenvectors and corresponding Eigenvalues for the covariance matrix A
+					Let A be a square matrix, ν a vector and λ a scalar that satisfies Aν=λν, then λ is called eigenvalue associated with eigenvector ν of A.
+				Step 5 : Sort the eigenvectors by decreasing eigenvalues and choose k eigenvectors with the largest eigenvalues to form a d×k dimensional matrix W.
+				Step 6 : Transform the samples onto the new subspace
+						In the last step, we use the d×k dimensional matrix W that we just computed to transform our samples onto the new subspace via the equation y=W'×x where W' is the transpose of the matrix W.
+				
+		Scree Plot:
+					A SCREE PLOT IS A SIMPLE LINE SEGMENT PLOT THAT SHOWS THE FRACTION OF TOTAL VARIANCE IN THE DATA.IT IS A PLOT, IN DESCENDING ORDER OF MAGNITUDE, OF THE EIGENVALUES OF A CORRELATION MATRIX. In the context of factor analysis or principal components analysis, a scree plot helps the analyst visualize the relative importance of the factors, a sharp drop in the plot signals that subsequent factors are ignorable.     more -    http://ba-finance-2013.blogspot.com/2012/09/scree-plots-interpretation-and.html
+						
+		PCA'S MAIN WEAKNESS IS THAT IT TENDS TO BE HIGHLY AFFECTED BY OUTLIERS IN THE DATA. For this reason, many robust variants of PCA have been developed, many of which act to iteratively discard data points that are poorly described by the initial components.
+		
+		https://towardsdatascience.com/a-one-stop-shop-for-principal-component-analysis-5582fb7e0a9c
+		https://towardsdatascience.com/principal-component-analysis-intro-61f236064b38
+		
+		implementation-     https://stackabuse.com/implementing-pca-in-python-with-scikit-learn/
+		
+		after aplying pca on xtrain and xtest :cj
+		
+							The PCA class contains explained_variance_ratio_ which returns the variance caused by each of the principal components. Execute the following line of code to find the "explained variance ratio".
+							
+							explained_variance = pca.explained_variance_ratio_
+							
+							The explained_variance variable is now a float type array which contains variance ratios for each principal component.
+							It can be seen that first principal component is responsible for 72.22% variance. Similarly, the second principal component causes 23.9% variance in the dataset. Collectively we can say that (72.22 + 23.9) 96.21% percent of the classification information contained in the feature set is captured by the first two principal components.
+
+		
+		
+		PCA is depend on covariance
+		scree plot for pca of feature yogdaan
+		what is eighenvectors and eighenvalues---   https://www.visiondummy.com/2014/03/eigenvalues-eigenvectors/   so much algebra behind that.
+
+		when to use .fit, .transform and .fit_transform for applying PCA---- https://www.analyticsvidhya.com/blog/2021/04/difference-between-fit-transform-fit_transform-methods-in-scikit-learn-with-python-code/
+		
+		
+CUSTOMER SEGMENTATION
+						CUSTOMER SEGMENTATION IS THE PROCESS BY WHICH YOU DIVIDE YOUR CUSTOMERS INTO SEGMENTS UP BASED ON COMMON CHARACTERISTICS – SUCH AS DEMOGRAPHICS OR BEHAVIORS, SO YOU CAN MARKET TO THOSE CUSTOMERS MORE EFFECTIVELY. THESE CUSTOMER SEGMENTATION GROUPS CAN ALSO BE USED TO BEGIN DISCUSSIONS OF BUILDING A MARKETING PERSONA.
+		
+		
+		CREATE THE RFM MODEL (RECENCY, FREQUENCY,MONETARY VALUE)
+					RECENCY, FREQUENCY, MONETARY VALUE IS A MARKETING ANALYSIS TOOL USED TO IDENTIFY A COMPANY'S OR AN ORGANIZATION'S BEST CUSTOMERS BY USING CERTAIN MEASURES. THE RFM MODEL IS BASED ON THREE QUANTITATIVE FACTORS: . FREQUENCY: HOW OFTEN A CUSTOMER MAKES A PURCHASE. MONETARY VALUE: HOW MUCH MONEY A CUSTOMER SPENDS ON PURCHASES. RECENCY: HOW RECENTLY A CUSTOMER HAS MADE A PURCHASE.
+					Performing RFM Segmentation and RFM Analysis, Step by Step
+					The first step in building an RFM model is to assign Recency, Frequency and Monetary values to each customer. ... The second step is to divide the customer list into tiered groups for each of the three dimensions (R, F and M), using Excel or another tool.
+					
+					
+					
+Anomaly detection:
+					
+					ANOMALY DETECTION IS THE PROCESS OF IDENTIFYING UNEXPECTED ITEMS OR EVENTS IN DATA SETS, WHICH DIFFER FROM THE NORM. AND ANOMALY DETECTION IS OFTEN APPLIED ON UNLABELED DATA WHICH IS KNOWN AS UNSUPERVISED ANOMALY DETECTION.
+					ANOMALY DETECTION HAS TWO BASIC ASSUMPTIONS:
+					   1. ANOMALIES ONLY OCCUR VERY RARELY IN THE DATA.
+					   2. THEIR FEATURES DIFFER FROM THE NORMAL INSTANCES SIGNIFICANTLY.
+					
+					Univariate Anomaly Detection:
+							Before we get to Multivariate anomaly detection, its necessary to work through a simple example of Univariate anomaly detection method in which we detect outliers from a distribution of values in a single feature space.
+							We are using a super store sales data set, and we are going to find patterns in Sales and Profit separately that do not conform to expected behavior. That is, spotting outliers for one variable at a time.
+							
+						ISOLATION FOREST:
+							ISOLATION FOREST IS AN ALGORITHM TO DETECT OUTLIERS THAT RETURNS THE ANOMALY SCORE OF EACH SAMPLE USING THE ISOLATIONFOREST ALGORITHM WHICH IS BASED ON THE FACT THAT ANOMALIES ARE DATA POINTS THAT ARE FEW AND DIFFERENT. ISOLATION FOREST IS A TREE-BASED MODEL. IN THESE TREES, PARTITIONS ARE CREATED BY FIRST RANDOMLY SELECTING A FEATURE AND THEN SELECTING A RANDOM SPLIT VALUE BETWEEN THE MINIMUM AND MAXIMUM VALUE OF THE SELECTED FEATURE.
+							
+							The following process shows how IsolationForest behaves in the case of the Susperstore’s sales, and the algorithm is implemented in Sklearn:
+										1. Trained IsolationForest using the Sales data.
+										2. Store the Sales in the NumPy array for using in our models later.
+										3. Computed the anomaly score for each observation. The anomaly score of an input sample is computed as the mean anomaly score of the trees in the forest.
+										4. Classified each observation as an outlier or non-outlier.
+										5. The visualization highlights the regions where the outliers fall.
+										
+							However, univariate analysis can only get us thus far. We may realize that some of these anomalies that determined by our models are anomalous in context of one variable but not the other. When our data is multidimensional as opposed to univariate, the approaches to anomaly detection become more computationally intensive and more mathematically complex.
+							
+					Multivariate Anomaly Detection:
+							Most of the analysis that we end up doing are multivariate due to complexity of the world we are living in. In multivariate anomaly detection, outlier is a combined unusual score on at least two variables.
+							
+							So, using the Sales and Profit variables, we are going to build an unsupervised multivariate anomaly detection model.
+							Sales & Profit:
+										WHEN WE ARE IN BUSINESS, WE EXPECT THAT SALES & PROFIT ARE POSITIVE CORRELATED. IF SOME OF THE SALES DATA POINTS AND PROFIT DATA POINTS ARE NOT POSITIVE CORRELATED, THEY WOULD BE CONSIDERED AS OUTLIERS AND NEED TO BE FURTHER INVESTIGATED.	
+										
+				Local outlier factor (LOF):
+
+		VERY IMPORTANT LOCAL OUTLIER>>> 
+										LOCAL OUTLIER FACTOR (LOF) IS AN ALGORITHM THAT IDENTIFIES THE OUTLIERS PRESENT IN THE DATASET. But what does the local outlier mean?
+										WHEN A POINT IS CONSIDERED AS AN OUTLIER BASED ON ITS LOCAL NEIGHBORHOOD, IT IS A LOCAL OUTLIER. LOF WILL IDENTIFY AN OUTLIER CONSIDERING THE DENSITY OF THE NEIGHBORHOOD. LOF PERFORMS WELL WHEN THE DENSITY OF THE DATA IS NOT THE SAME THROUGHOUT THE DATASET.
+										
+										Intuitively, if the point is not an outlier (inlier), the ratio of average LRD of neighbors is approximately equal to the LRD of a point (because the density of a point and its neighbors are roughly equal). In that case, LOF is nearly equal to 1. On the other hand, if the point is an outlier, the LRD of a point is less than the average LRD of neighbors. Then LOF value will be high.
+										
+										GENERALLY, IF LOF> 1, IT IS CONSIDERED AS AN OUTLIER, but that is not always true. Let’s say we know that we only have one outlier in the data, then we take the maximum LOF value among all the LOF values, and the point corresponding to the maximum LOF value will be considered as an outlier.
+										
+								ADVANTAGES OF LOF
+										A POINT WILL BE CONSIDERED AS AN OUTLIER IF IT IS AT A SMALL DISTANCE TO THE EXTREMELY DENSE CLUSTER. THE GLOBAL APPROACH MAY NOT CONSIDER THAT POINT AS AN OUTLIER. BUT THE LOF CAN EFFECTIVELY IDENTIFY THE LOCAL OUTLIERS.
+								DISADVANTAGES OF LOF
+										Since LOF is a ratio, it is tough to interpret. There is no specific threshold value above which a point is defined as an outlier. The identification of an outlier is dependent on the problem and the user.
+										for more LOF---  https://towardsdatascience.com/local-outlier-factor-lof-algorithm-for-outlier-identification-8efb887d9843
+										
+										
+
+							
+		
+		
+							ISOLATION FOREST IS A METHOD TO DETECT OUTLIER AND IQR IS USED TO TREAT THAT DETECTED OUTLIER
+							use lof(local outliers factor) also as well as these isolation forest method
+							
+					OUTLIER HANDLING WITH STD DEVIATION-
+					
+												Standard deviation is a metric of variance i.e. how much the individual data points are spread out from the mean.
+
+															For example, consider the two data sets:
+															27 23 25 22 23 20 20 25 29 29	 
+															and
+															12 31 31 16 28 47 9 5 40 47															 
+															Both have the same mean 25. However, the first dataset has values closer to the mean and the second dataset has values more spread out.
+															To be more precise, the standard deviation for the first dataset is 3.13 and for the second set is 14.67.
+										IF DATASETS HAVE input error and the data was in a normal distribution then only we can use this method-
+														import numpy
+
+														arr = [10, 386, 479, 627, 20, 523, 482, 483, 542, 699, 535, 617, 577, 471, 615, 583, 441, 562, 563, 527, 453, 530, 433, 541, 585, 704, 443, 569, 430, 637, 331, 511, 552, 496, 484, 566, 554, 472, 335, 440, 579, 341, 545, 615, 548, 604, 439, 556, 442, 461, 624, 611, 444, 578, 405, 487, 490, 496, 398, 512, 422, 455, 449, 432, 607, 679, 434, 597, 639, 565, 415, 486, 668, 414, 665, 763, 557, 304, 404, 454, 689, 610, 483, 441, 657, 590, 492, 476, 437, 483, 529, 363, 711, 543]
+
+														elements = numpy.array(arr)
+
+														mean = numpy.mean(elements, axis=0)
+														sd = numpy.std(elements, axis=0)
+
+														final_list = [x for x in arr if (x > mean - 2 * sd)]
+														final_list = [x for x in final_list if (x < mean + 2 * sd)]
+														print(final_list)
+
+
+NLP-
+
+
+		Why do we need NLP?
+				One of the main reasons why NLP is necessary is because it helps computers communicate with humans in natural language. It also scales other language-related tasks. Because of NLP, it is possible for computers to hear speech, interpret this speech, measure it and also determine which parts of the speech are important.
+				
+				Natural Language Processing is a field of computer science that deals with communication between computer systems and humans. It is a technique used in Artificial Intelligence and Machine Learning. It is used to create automated software that helps understand human spoken languages to extract useful information from the data it gets in the form of audio. Techniques in NLP allow computer systems to process and interpret data in the form of natural languages.
+				
+				List any two real-life applications of Natural Language Processing.
+							Two real-life applications of Natural Language Processing are as follows:
+
+							1- Google Translate: Google Translate is one of the famous applications of Natural Language Processing. It helps convert written or spoken sentences into any language. Also, we can find the correct pronunciation and meaning of a word by using Google Translate. It uses advanced techniques of Natural Language Processing to achieve success in translating sentences into various languages.
+							
+							2- Chatbots: To provide a better customer support service, companies have started using chatbots for 24/7 service. AI Chatbots help resolve the basic queries of customers. If a chatbot is not able to resolve any query, then it forwards it to the support team, while still engaging the customer. It helps make customers feel that the customer support team is quickly attending them. With the help of chatbots, companies have become capable of building cordial relations with customers. It is only possible with the help of Natural Language Processing.
+							
+											3-Machine Translation: This helps in translating a given piece of text from one language to another.
+											4-Text Summarization: Based on a large corpus, this is used to give a short summary that gives an idea of the entire text in the document.
+											5-Language Modeling: Based on the history of previous words, this helps uncover what the further sentence will look like. A good example of this is the auto-complete sentences feature in Gmail.
+											6-Topic Modelling: This helps uncover the topical structure of a large collection of documents. This indicates what topic a piece of text is actually about.
+											7-Question Answering: This helps prepare answers automatically based on a corpus of text, and on a question that is posed.
+											8-Conversational Agent: These are basically voice assistants that we commonly see such as Alexa, Siri, Google Assistant, Cortana, etc.
+											9-Information Retrieval: This helps in fetching relevant documents based on a user’s search query.
+											10-Information Extraction: This is the task of extracting relevant pieces of information from a given text, such as calendar events from emails.
+											11-Text Classification: This is used to create a bucket of categories of a given text, based on its content. This is used in a wide variety of AI-based applications such as sentiment analysis and spam detection.
+							
+				LIST THE COMPONENTS OF NATURAL LANGUAGE PROCESSING.
+							The major components of NLP are as follows:
+							1- Entity extraction: Entity extraction refers to the retrieval of information such as place, person, organization, etc. by the segmentation of a sentence. It helps in the recognition of an entity in a text.
+							2- Syntactic analysis: Syntactic analysis helps draw the specific meaning of a text.
+							3- Pragmatic analysis: To find useful information from a text, we implement pragmatic analysis techniques.
+							4- Morphological and lexical analysis: It helps in explaining the structure of words by analyzing them through parsing.
+							
+				The supervised ML models most commonly used in NLP are:
+
+									Support-Vector Machines (SVMs)
+									Bayesian Networks
+									Maximum Entropy
+									Conditional Random Fields
+									Neural Networks
+				Unsupervised learning is not that common in NLP, but still, some of the techniques are used:
+
+							Clustering
+							Latent Semantic Indexing (LSI)
+							Matrix Factorization
+							
+				What is NLTK?
+							NLTK is a Python library, which stands for Natural Language Toolkit. We use NLTK to process data in human spoken languages. NLTK allows us to apply techniques such as parsing, tokenization, lemmatization, stemming, and more to understand natural languages. It helps in categorizing text, parsing linguistic structure, analyzing documents, etc.
+							
+							dif- 
+									1- NLTK supports a wider range of languages compared to Spacey (Spacey supports only 7 languages)
+									2- While SPACEY has an object-oriented library, NLTK has a string processing library
+									3- While NLTK has a collection of programs to choose from, SPACEY contains only the best-suited algorithm for a problem in its toolkit
+									4- spaCy has support for word vectors whereas NLTK does not . 
+									5- As spaCy uses the latest and best algorithms, its performance is usually good as compared to NLTK. As we can see below, in word tokenization and POS-tagging spaCy performs better, but in sentence tokenization, NLTK outperforms spaCy.
+
+							A few of the libraries of the NLTK package that we often use in NLP are:
+
+							SequentialBackoffTagger
+							DefaultTagger
+							UnigramTagger
+							treebank
+							wordnet
+							FreqDist
+							patterns
+							RegexpTagger
+							backoff_tagger
+							UnigramTagger, BigramTagger, and TrigramTagger
+							
+				What are the stages in the lifecycle of a natural language processing (NLP) project?
+							1-Data Collection: The procedure of collecting, measuring, and evaluating correct insights for research using established approved procedures is referred to as data collection.
+							2-Data Cleaning: The practice of correcting or deleting incorrect, corrupted, improperly formatted, duplicate, or incomplete data from a dataset is known as data cleaning.
+							3-Data Pre-Processing: The process of converting raw data into a comprehensible format is known as data preparation.
+							4-Feature Engineering: Feature engineering is the process of extracting features (characteristics, qualities, and attributes) from raw data using domain expertise.
+							5-DATA MODELING: The practice of examining data objects and their relationships with other things is known as data modelling. It's utilised to look into the data requirements for various business activities.
+							6-Model Evaluation: Model evaluation is an important step in the creation of a model. It aids in the selection of the best model to represent our data and the prediction of how well the chosen model will perform in the future.
+							7-Model Deployment: The technical task of exposing an ML model to real-world use is known as model deployment.
+							8-Monitoring and Updating: The activity of measuring and analysing production model performance to ensure acceptable quality as defined by the use case is known as machine learning monitoring. It delivers alerts about performance difficulties and assists in diagnosing and resolving the core cause.
+							
+				
+				
+		Where can NLP be useful?
+				NLP can be useful in communicating with humans in their own language. It helps improve the efficiency of the machine translation and is useful in emotional analysis too. It can be helpful in sentiment analysis using python too. It also helps in structuring highly unstructured data. It can be helpful in creating chatbots, Text Summarization and virtual assistants.
+		What are the main challenges of NLP?
+				Breaking sentences into tokens, Parts of speech tagging, Understanding the context, Linking components of a created vocabulary, and Extracting semantic meaning are currently some of the main challenges of NLP.		
+				
+		What are the major tasks of NLP?
+				Translation, named entity recognition, relationship extraction, sentiment analysis, speech recognition, and topic segmentation are few of the major tasks of NLP. Under unstructured data, there can be a lot of untapped information that can help an organization grow.
+				
+		Why is NLP so hard?
+				There are several factors that make the process of Natural Language Processing difficult. There are hundreds of natural languages all over the world, words can be ambiguous in their meaning, each natural language has a different script and syntax, the meaning of words can change depending on the context, and so the process of NLP can be difficult. If you choose to upskill and continue learning, the process will become easier over time.
+				
+		What does a NLP pipeline consist of *?
+				The overall architecture of an NLP pipeline consists of several layers: 
+				1-a user interface; 
+				2-one or several NLP models, depending on the use case; 
+				3-a Natural Language Understanding layer to describe the meaning of words and sentences; 
+				4-a preprocessing layer; 
+				5-microservices for linking the components together and of course.
+				
+		How many steps of NLP is there?
+				The five phases of NLP involve lexical (structure) analysis, parsing, semantic analysis, discourse integration, and pragmatic analysis.
+				
+		What are the steps to follow when building a text classification system?
+				When creating a text classification system, the following steps are usually followed:
+
+				1-Gather or develop a labelled dataset that is appropriate for the purpose.
+				2-Decide on an evaluation metric after splitting the dataset into two (training and test) or three parts: training, validation (i.e., development), and test sets (s).
+				3-Convert unprocessed text into feature vectors.
+				4-Utilize the feature vectors and labels from the training set to train a classifier.
+				5-Benchmark the model's performance on the test set using the evaluation metric(s) from Step 2.
+				6-Deploy the model and track its performance to serve a real-world use case.
+				
+		How do Conversational Agents work?
+				The following NLP components are used in Conversational Agents:
+
+				1-Speech Recognition and Synthesis: In the first stage, speech recognition helps convert speech signals to their phonemes, and are then transcribed as words.
+				2-Natural Language Understanding (NLU): Here, the transcribed text from stage one is further analysed through AI techniques within the natural language understanding system. Certain NLP tasks such as Named Entity Recognition, Text Classification, Language modelling, etc. come into play here.
+				3-Dialog Management: Once the needed information from text is extracted, we move on to the stage of understanding the user’s intent. The user’s response can then be classified by using a text classification system as a pre-defined intent. This helps the conversational agent in figuring out what is actually being asked.
+				4-Generating Response: Based on the above stages, the agent generates an appropriate response that is based on a semantic interpretation of the user’s intent.
+
+imp-				
+		WHAT IS MASKED LANGUAGE MODEL?
+					Masked language models help learners to understand deep representations in downstream tasks by taking an output from the corrupt input. This model is often used to predict the words to be used in a sentence.
+					
+					MASKED LANGUAGE MODELLING IS AN NLP TECHNIQUE FOR EXTRACTING THE OUTPUT FROM A CONTAMINATED INPUT. LEARNERS CAN USE THIS APPROACH TO MASTER DEEP REPRESENTATIONS IN DOWNSTREAM TASKS. USING THIS NLP TECHNIQUE, YOU MAY PREDICT A WORD BASED ON THE OTHER WORDS IN THE SENTENCE.
+
+					The following is the process for Masked language modelling:
+
+							1- Our text is tokenized. We start with text tokenization, just as we would with transformers.
+							2- Make a tensor of labels. We're using a labels tensor to calculate loss against — and optimise towards — as we train our model.
+							3- Tokens in input ids are masked. We can mask a random selection of tokens now that we've produced a duplicate of input ids for labels.
+							4- Make a loss calculation. We use our model to process the input ids and labels tensors and determine the loss between them.
+							
+					
+		What is meant by data augmentation? What are some of the ways in which data augmentation can be done in NLP projects?
+					NLP HAS SOME METHODS THROUGH WHICH WE CAN TAKE A SMALL DATASET AND USE THAT IN ORDER TO CREATE MORE DATA. THIS IS CALLED DATA AUGMENTATION. IN THIS, WE USE LANGUAGE PROPERTIES TO CREATE TEXT THAT IS SYNTACTICALLY SIMILAR TO THE SOURCE TEXT DATA. BY USING THAT WE CAN ALSO OBTAIN MORE DATA OR NLP(WITH SCRAPING AND ROM PUBLIC DATASET,WE CAN ALSO OBTAIN IT)
+
+					Some of the ways in which data augmentation can be done in NLP projects are as follows:
+
+					Replacing entities
+					TF-IDF–based word replacement
+					Adding noise to data
+					Back translation
+					Synonym replacement
+					Bigram flipping
+					
+		What is Pragmatic Analysis?
+					PRAGMATIC ANALYSIS IS AN IMPORTANT TASK IN NLP FOR INTERPRETING KNOWLEDGE THAT IS LYING OUTSIDE A GIVEN DOCUMENT. THE AIM OF IMPLEMENTING PRAGMATIC ANALYSIS IS TO FOCUS ON EXPLORING A DIFFERENT ASPECT OF THE DOCUMENT OR TEXT IN A LANGUAGE. THIS REQUIRES A COMPREHENSIVE KNOWLEDGE OF THE REAL WORLD. THE PRAGMATIC ANALYSIS ALLOWS SOFTWARE APPLICATIONS FOR THE CRITICAL INTERPRETATION OF THE REAL-WORLD DATA TO KNOW THE ACTUAL MEANING OF SENTENCES AND WORDS.
+					
+					EXAMPLE:
+
+						Consider this sentence: ‘Do you know what time it is?’
+
+						This sentence can either be asked for knowing the time or for yelling at someone to make them note the time. This depends on the context in which we use the sentence.
+						
+		
+		What is PRAGMATIC AMBIGUITY in NLP?
+					PRAGMATIC AMBIGUITY REFERS TO THOSE WORDS WHICH HAVE MORE THAN ONE MEANING AND THEIR USE IN ANY SENTENCE CAN DEPEND ENTIRELY ON THE CONTEXT. PRAGMATIC AMBIGUITY CAN RESULT IN MULTIPLE INTERPRETATIONS OF THE SAME SENTENCE. MORE OFTEN THAN NOT, WE COME ACROSS SENTENCES WHICH HAVE WORDS WITH MULTIPLE MEANINGS, MAKING THE SENTENCE OPEN TO INTERPRETATION. THIS MULTIPLE INTERPRETATION CAUSES AMBIGUITY AND IS KNOWN AS PRAGMATIC AMBIGUITY IN NLP.
+					
+					EXAMPLE:
+
+							Check out the below sentence.
+
+							‘Are you feeling hungry?’
+
+							The given sentence could be either a question or a formal way of offering food.
+					
+		What is NES?
+					NAME ENTITY RECOGNITION IS MORE COMMONLY KNOWN AS NER IS THE PROCESS OF IDENTIFYING SPECIFIC ENTITIES IN A TEXT DOCUMENT THAT ARE MORE INFORMATIVE AND HAVE A UNIQUE CONTEXT. THESE OFTEN DENOTE PLACES, PEOPLE, ORGANIZATIONS, AND MORE. EVEN THOUGH IT SEEMS LIKE THESE ENTITIES ARE PROPER NOUNS, THE NER PROCESS IS FAR FROM IDENTIFYING JUST THE NOUNS. IN FACT, NER INVOLVES ENTITY CHUNKING OR EXTRACTION WHEREIN ENTITIES ARE SEGMENTED TO CATEGORIZE THEM UNDER DIFFERENT PREDEFINED CLASSES. THIS STEP FURTHER HELPS IN EXTRACTING INFORMATION.
+					
+		What is Syntactic Analysis?
+					SYNTACTIC ANALYSIS IS A TECHNIQUE OF ANALYZING SENTENCES TO EXTRACT MEANING FROM IT. USING SYNTACTIC ANALYSIS, A MACHINE CAN ANALYZE AND UNDERSTAND THE ORDER OF WORDS ARRANGED IN A SENTENCE. NLP EMPLOYS GRAMMAR RULES OF A LANGUAGE THAT HELPS IN THE SYNTACTIC ANALYSIS OF THE COMBINATION AND ORDER OF WORDS IN DOCUMENTS.
+
+					The techniques used for syntactic analysis are as follows:
+
+					1- PARSING: It helps in deciding the structure of a sentence or text in a document. It helps analyze the words in the text based on the grammar of the language.
+					2- WORD SEGMENTATION: The segmentation of words segregates the text into small significant units.
+					3- MORPHOLOGICAL segmentation: The purpose of morphological segmentation is to break words into their base form.
+					4- STEMMING: It is the process of removing the suffix from a word to obtain its root word.
+					5- LEMMATIZATION: It helps combine words using suffixes, without altering the meaning of the word.
+					
+		Explain Dependency Parsing in NLP.
+					Dependency parsing helps assign a syntactic structure to a sentence. Therefore, it is also called syntactic parsing. Dependency parsing is one of the critical tasks in NLP. It allows the analysis of a sentence using parsing algorithms. Also, BY USING THE PARSE TREE IN DEPENDENCY PARSING, WE CAN CHECK THE GRAMMAR AND ANALYZE THE SEMANTIC STRUCTURE OF A SENTENCE.
+
+					For implementing dependency parsing, we use the spacy package. It implements token properties to operate the dependency parse tree.
+					
+					
+		What is Semantic Analysis?
+					SEMANTIC ANALYSIS HELPS MAKE A MACHINE UNDERSTAND THE MEANING OF A TEXT. IT USES VARIOUS ALGORITHMS FOR THE INTERPRETATION OF WORDS IN SENTENCES. IT ALSO HELPS UNDERSTAND THE STRUCTURE OF A SENTENCE.
+
+					Techniques used for semantic analysis are as given below:
+					1- Named entity recognition: This is the process of information retrieval that helps identify entities such as the name of a person, organization, place, time, emotion, etc.
+					2- Word sense disambiguation: It helps identify the sense of a word used in different sentences.
+					3- Natural language generation: It is a process used by the software to convert the structured data into human spoken languages. By using NLG, organizations can automate content for custom reports.
+					
+					
+		What are Regular Expressions?
+					A regular expression is used to match and tag words. It consists of a series of characters for matching strings.
+
+					Suppose, if A and B are regular expressions, then the following are true for them:
+
+					If {ɛ} is a regular language, then ɛ is a regular expression for it.
+					If A and B are regular expressions, then A + B is also a regular expression within the language {A, B}.
+					If A and B are regular expressions, then the concatenation of A and B (A.B) is a regular expression.
+					If A is a regular expression, then A* (A occurring multiple times) is also a regular expression.
+					
+		What is Parsing in the context of NLP?
+	VERY IMP				
+					PARSING IN NLP REFERS TO THE UNDERSTANDING OF A SENTENCE AND ITS GRAMMATICAL STRUCTURE BY A MACHINE. PARSING ALLOWS THE MACHINE TO UNDERSTAND THE MEANING OF A WORD IN A SENTENCE AND THE GROUPING OF WORDS, PHRASES, NOUNS, SUBJECTS, AND OBJECTS IN A SENTENCE. PARSING HELPS ANALYZE THE TEXT OR THE DOCUMENT TO EXTRACT USEFUL INSIGHTS FROM IT.
+					
+					WHEN A SENTENCE PARSE  ONE WORD AT A TIME, THEN IT IS CALLED A UNIGRAM. THE SENTENCE PARSED TWO WORDS AT A TIME IS A BIGRAM.
+					WHEN THE SENTENCE IS PARSED THREE WORDS AT A TIME, THEN IT IS A TRIGRAM. SIMILARLY, N-GRAM REFERS TO THE PARSING OF N WORDS AT A TIME.
+
+					Example: To understand unigrams, bigrams, and trigrams, you can refer to the below diagram:
+								IMP IMAGE OF EXAMPLE--  https://intellipaat.com/blog/wp-content/uploads/2020/05/2.jpg
+
+
+					THEREFORE, PARSING ALLOWS MACHINES TO UNDERSTAND THE INDIVIDUAL MEANING OF A WORD IN A SENTENCE. ALSO, THIS TYPE OF PARSING HELPS PREDICT THE NEXT WORD AND CORRECT SPELLING ERRORS.
+					
+		What are the steps involved in solving an NLP problem?
+					Below are the steps involved in solving an NLP problem:
+
+								Gather the text from the available dataset or by web scraping
+								Apply stemming and lemmatization for text cleaning
+								Apply feature engineering techniques
+								Embed using word2vec
+								Train the built model using neural networks or other Machine Learning techniques
+								Evaluate the model’s performance
+								Make appropriate changes in the model
+								Deploy the model
+								
+		What is Feature Extraction in NLP?
+					FEATURES OR CHARACTERISTICS OF A WORD HELP IN TEXT OR DOCUMENT ANALYSIS. THEY ALSO HELP IN SENTIMENT ANALYSIS OF A TEXT. FEATURE EXTRACTION IS ONE OF THE TECHNIQUES THAT ARE USED BY RECOMMENDATION SYSTEMS. REVIEWS SUCH AS ‘EXCELLENT,’ ‘GOOD,’ OR ‘GREAT’ FOR A MOVIE ARE POSITIVE REVIEWS, RECOGNIZED BY A RECOMMENDER SYSTEM. The recommender system also tries to identify the features of the text that help in describing the context of a word or a sentence. Then, it makes a group or category of the words that have some common characteristics. Now, whenever a new word arrives, the system categorizes it as per the labels of such groups.
+					
+		THE METRICS USED TO TEST AN NLP MODEL ARE PRECISION, RECALL, AND F1. ALSO, WE USE ACCURACY FOR EVALUATING THE MODEL’S PERFORMANCE.
+		
+		What do you mean by PERPLEXITY IN NLP?
+					IT'S A STATISTIC FOR EVALUATING THE EFFECTIVENESS OF LANGUAGE MODELS. IT IS DESCRIBED MATHEMATICALLY AS A FUNCTION OF THE LIKELIHOOD THAT THE LANGUAGE MODEL DESCRIBES A TEST SAMPLE. The perplexity of a test sample X = x1, x2, x3,....,xn is given by,
+
+					PP(X)=P(x1,x2,…,xN)-1N
+
+					The total number of word tokens is N.
+
+					The more perplexing the situation, the less information the language model conveys.
+					
+		What do you mean by Text Extraction and Cleanup?
+					THE PROCESS OF EXTRACTING RAW TEXT FROM THE INPUT DATA BY GETTING RID OF ALL THE OTHER NON-TEXTUAL INFORMATION, SUCH AS MARKUP, METADATA, ETC., AND CONVERTING THE TEXT TO THE REQUIRED ENCODING FORMAT IS CALLED TEXT EXTRACTION AND CLEANUP. USUALLY, THIS DEPENDS ON THE FORMAT OF AVAILABLE DATA FOR THE REQUIRED PROJECT.
+
+					Following are the common ways used for Text Extraction in NLP:
+
+					Named Entity Recognition
+					Sentiment Analysis
+					Text Summarization
+					Aspect Mining
+					Topic Modeling
+					
+		What do you MEAN BY AUTOENCODERS?
+					A NETWORK THAT IS USED FOR LEARNING A VECTOR REPRESENTATION OF THE INPUT IN A COMPRESSED FORM, IS CALLED AN AUTOENCODER. IT IS A TYPE OF UNSUPERVISED LEARNING SINCE LABELS AREN’T NEEDED FOR THE PROCESS. This is mainly used to learn the mapping function from the input. In order to make the mapping useful, the input is reconstructed from the vector representation. After training is complete, the vector representation that we get helps encode the input text as a dense vector. Autoencoders are generally used to make feature representations.
+					
+		
+					
+		
+		
+		
+										
+		NLU VS NLP VS NLG -
+					https://intellipaat.com/blog/wp-content/uploads/2020/05/12-1.jpg
+					OR
+					
+					
+							What is Natural Language Processing?
+								It is a subset of Artificial Intelligence. It processes large amounts of human language data. It is an end to end process between the system and humans. It contains the whole system from understanding the information to making decisions while interacting. Such as to read information, break it down, understand it, and making decisions to respond. Historically most common tasks of Natural Language Understanding are:
+									Tokenization
+									Parsing
+									Information extraction
+									Similarity
+									Speech recognition
+									Speech generations and others.
+								In real life, NLP can be used for the:
+									Chatbot
+									Text summarization
+									Text categorization
+									Parts of speech tagging
+									Stemming
+									Text mining
+									Machine Translation
+									Ontology population
+									Language modeling and others
+								Let's take an example to understand it. In chatbot, if a user asks: "Can I play volleyball?". Then NLP uses Machine Learning and AI algorithms to read the data, find keywords, make decisions, and respond. It will take decisions according to various features such as whether it is raining or not? Is there any playground available or not? And Other accessories are available or not. Then it responds to the user about playing or not. It contains the whole system, from taking input to providing output.
+								
+						What is Natural Language Understanding?
+								It helps the machine to understand the data. It is used to interpret data to understand the meaning of data to be processed accordingly. It solves it by understanding the context, semantic, syntax, intent, and sentiment of the text. For this purpose, various rules, techniques, and models are used. It finds the objective behind that text. There are three linguistic levels to understand language.
+									1- Syntax: It understands sentences and phrases. It checks the grammar and syntax of the text.
+									2- Semantic: It checks the meaning of the text.
+									3- Pragmatic: It understands context to know what the text is trying to achieve.
+									
+								It has to understand the unstructured text with flaws in the structured and correct format. It converts text into a machine-readable format. It is used for semantics phrasing, semantic analysis, dialogues agents, etc. 
+								
+								LET'S TAKE AN EXAMPLE FOR MORE CLARITY. IF YOU ASKED: "HOW'S TODAY ?". NOW, WHAT IF THE SYSTEM ANSWERS, "TODAY IS OCTOBER 1, 2020, AND THURSDAY." IS THE SYSTEM PROVIDING YOU THE CORRECT ANSWER? NO, BECAUSE HERE, USERS WANT TO KNOW ABOUT THE WEATHER. THEREFORE, WE USE IT TO LEARN THE TEXT'S RIGHT MEANING OF SOME ERRORS.
+									
+									It is a subset technique of Artificial Intelligence that is used to narrow the communication gap between the Computer and Human.
+									
+						WHAT IS NATURAL LANGUAGE GENERATION?
+								NLG is a process to produce meaningful sentences in Natural Language. It explains the structured data in a manner that is easy to understand for humans with a high speed of thousands of pages per second. Some of the NLG models are listed below:
+								
+									1- Markov chain
+									2- Recurrent neural network (RNN)
+									3- Long short-term memory (LSTM)
+									4- Transformer
+				
+				DIFFERENCES-
+							NLU-
+								1- It is a narrow concept AND It is a subset of NLP.	
+								2- If we only talk about an understanding text, then it is enough.	
+								3- It is not necessarily that what is written or said is meant to be the same. There can be flaws and mistakes. It makes sure that it will infer correct intent and meaning even data is spoken and written with some errors. It is the ability to understand the text.	
+								4- It reads data and converts it to structured data.	
+							NLP-
+								1- It is a wider concept AND It is a combination of NLP and NLG for conversational Artificial Intelligence problems.	
+								2- But if we want more than understanding, such as decision making, then it comes into play.	
+								3- But, if we talk about NLP, it is about how the machine processes the given data. Such as make decisions, take actions, and respond to the system. It contains the whole End to End process. Every time it doesn't need to contain it.	
+								4- It converts unstructured data to structured data.	
+							NLG-
+								1- It is a narrow concept AND It is a subset of NLP.
+								2- It generates a human-like manner text based on the structured data.
+								3 - It generates structured data, but it is not necessarily that the generated text is easy to understand for humans. Thus NLG makes sure that it will be human-understandable.
+								4- NLG writes structured data.
+
+					
+					
+				A combination of NLU and NLG gives an NLP system.
+							NLP (Natural Language Processing): Whole processes such as decisions and actions are taken by it.
+							NLU (Natural Language Understanding): It understands the text's meaning.
+							NLG (Natural Language Generation): It generates the human language text from structured data generated by the system to respond.
+					
+		DIFFERENCES BETWEEN NLP AND CI(CONVERSATIONAL INTERACE	)- https://intellipaat.com/blog/wp-content/uploads/2020/05/13.jpg
+
+		
+					
+		Define the terminology in NLP.
+						This is one of the most often asked NLP interview questions.
+
+						The interpretation of Natural Language Processing depends on various factors, and they are:
+
+
+						1- Weights and Vectors
+								Use of TF-IDF for information retrieval
+								Length (TF-IDF and doc)
+								Google Word Vectors
+								Word Vectors
+								
+						2- Structure of the Text
+								POS tagging
+								Head of the sentence
+								Named Entity Recognition (NER)
+								
+								
+						3- Sentiment Analysis
+
+								Knowledge of the characteristics of sentiment
+								Knowledge about entities and the common dictionary available for sentiment analysis
+						
+						4- Classification of Text
+								Supervised learning algorithm
+								Training set
+								Validation set
+								Test set
+								Features of the text
+								LDA
+								
+						4- Machine Reading
+								Removal of possible entities
+								Joining with other entities
+								DBpedia
+					
+		
+					
+		
+				
+				
+				
+   1. tokenization---
+					IN THIS STEP, WE DECOMPOSE OUR TEXT DATA INTO THE SMALLEST UNIT CALLED TOKENS. GENERALLY, OUR DATASET CONSISTS LONG PARAGRAPH WHICH IS MADE UP OF MANY LINES AND LINES ARE MADE UP OF WORDS. IT IS QUITE DIFFICULT TO ANALYZE THE LONG PARAGRAPHS SO FIRST, WE DECOMPOSE THE PARAGRAPHS INTO SEPARATE LINES AND THEN LINES ARE DECOMPOSED INTO WORDS.
+					
+					Tokenization is a process used in NLP to split a sentence into tokens. Sentence tokenization refers to splitting a text or paragraph into sentences.
+
+					For tokenizing, we will import sent_tokenize from the nltk package:
+
+						 from nltk.tokenize import sent_tokenize<>
+							Para = “Hi Guys. Welcome to Intellipaat. This is a blog on the NLP interview questions and answers.”
+							sent_tokenize(Para)
+						Output:
+								[ 'Hi Guys. ' ,'Welcome to Intellipaat. ','This is a blog on the NLP interview questions and answers. ' ] 
+					TOKENIZING A WORD REFERS TO SPLITTING A SENTENCE INTO WORDS. NOW, TO TOKENIZE A WORD, WE WILL IMPORT WORD_TOKENIZE FROM THE NLTK PACKAGE.
+
+						  from nltk.tokenize import word_tokenize
+							Para = “Hi Guys. Welcome to Intellipaat. This is a blog on the NLP interview questions and answers.”
+
+							word_tokenize(Para)
+						Output:
+								[ 'Hi' , 'Guys' , ' . ' , 'Welcome' , 'to' , 'Intellipaat' , ' . ' , 'This' , 'is' ,   'a', 'blog' , 'on' , 'the' , 'NLP' , 'interview' , 'questions' , 'and' , 'answers' , ' . ' ]
+	1- Embeddings (Word): 
+						It is the process of embedding each token as a vector before passing it into a machine learning model. Embeddings can also be done on phrases and characters as well, apart from words.							
+	2- PARSING-		
+					PARSING IS THE METHOD TO IDENTIFY AND UNDERSTAND THE SYNTACTIC STRUCTURE OF A TEXT. IT IS DONE BY ANALYZING THE INDIVIDUAL ELEMENTS OF THE TEXT. THE MACHINE PARSES THE TEXT ONE WORD AT A TIME, THEN TWO AT A TIME, FURTHER THREE, AND SO ON.
+
+					WHEN THE MACHINE PARSES THE TEXT ONE WORD AT A TIME, THEN IT IS A UNIGRAM.
+					WHEN THE TEXT IS PARSED TWO WORDS AT A TIME, IT IS A BIGRAM.
+					THE SET OF WORDS IS A TRIGRAM WHEN THE MACHINE PARSES THREE WORDS AT A TIME.
+					LOOK AT THE BELOW EXAMPLE TO UNDERSTAND UNIGRAM, BIGRAM, AND TRIGRAM.
+					
+					now, let’s implement parsing with the help of the nltk package.
+
+								  import nltk
+								  text = ”Top 30 NLP interview questions and answers”
+								WE WILL NOW TOKENIZE THE TEXT USING WORD_TOKENIZE.
+
+								  text_token= word_tokenize(text)
+								NOW, WE WILL USE THE FUNCTION FOR EXTRACTING UNIGRAMS, BIGRAMS, AND TRIGRAMS.
+
+								  list(nltk.unigrams(text))
+								Output:	[ "Top 30 NLP interview questions and answer"]
+								  list(nltk.bigrams(text))
+								Output:	["Top 30", "30 NLP", "NLP interview", "interview questions",   "questions and", "and answer"]
+								  list(nltk.trigrams(text))
+								Output:	["Top 30 NLP", "NLP interview questions", "questions and answers"]
+								For extracting n-grams, we can use the function nltk.ngrams and give the argument n for the number of parsers.
+
+								  list(nltk.ngrams(text,n))
+
+
+					
+	
+   3) Normalization – 
+			Consider a situation in which we’re operating with a set of social media posts to find information events. Social media textual content may be very exceptional from the language we’d see in, say, newspapers. A phrase may be spelt in multiple ways, such as in shortened forms, (for instance, with and without hyphens), names are usually in lowercase, and so on. When we're developing NLP tools to work with such kinds of data, it’s beneficial to attain a canonical representation of textual content that captures these kinds of variations into one representation. This is referred to as text normalization.
+
+			Converting all text to lowercase or uppercase, converting digits to text (e.g., 7 to seven), expanding abbreviations, and so on are some frequent text normalisation stages.
+		
+		puctuation
+		stopwords---
+				STOP WORDS ARE THOSE WORDS IN ANY LANGUAGE THAT HELPS TO COMBINE THE SENTENCE AND MAKE IT MEANINGFUL. FOR EG. IN THE ENGLISH LANGUAGE VARious words like “I, am, are, is to, etc. are all known as stop-wards. But these stop-words are not that much useful for our model so there is a need to remove these stop-words from our dataset so that we can focus on only important words rather than these supporting words.
+				
+				Common words that occur in sentences that add weight to the sentence are known as stop words. These stop words act as a bridge and ensure that sentences are grammatically correct. In simple terms, words that are filtered out before processing natural language data is known as a stop word and it is a common pre-processing method.
+				
+				# stop-words in english language
+				from nltk.corpus import stopwords
+				stop_words = stopwords.words('english')
+				print(stop_words)
+				
+				or
+				#IF U R DOING VECTORIZATION
+				coun_vect = CountVectorizer(stop_words=’english’) # DIRECTLY REMOVE SKLEARN BUILT IN STOPWORD DURING VECTORIZATION
+				count_matrix = coun_vect.fit_transform(text)
+				count_array = count_matrix.toarray()
+				df = pd.DataFrame(data=count_array,columns = coun_vect.get_feature_names())
+				print(df)
+
+		stemming-		
+					
+					To put simply, STEMMING IS THE PROCESS OF REMOVING A PART OF A WORD, OR REDUCING A WORD TO ITS STEM OR ROOT. THIS MIGHT NOT NECESSARILY MEAN WE’RE REDUCING A WORD TO ITS DICTIONARY ROOT. We use a few algorithms to decide how to chop a word off. This is, for the most part, HOW STEMMING DIFFERS FROM LEMMATIZATION, WHICH IS REDUCING A WORD TO ITS DICTIONARY ROOT, which is more complex and needs a very high degree of knowledge of a language. We’ll talk about lemmatization in another post, maybe. For this post, we’ll stick to stemming and see a few examples.
+					
+					from nltk.stem import PorterStemmer
+					CREATING AN OBJECT FOR PORTERSTEMMER
+
+					  pst=PorterStemmer()
+					  pst.stem(“running”), pst.stem(“cookies”), pst.stem(“flying”)
+					Output:	(‘run’, ‘cooki', ‘fly’ )
+
+					Let’s assume we have a set of words — send, sent and sending. All three words are different tenses of the same root word send. So after we stem the words, we’ll have just the one word — send. Similarly, if we have the words — ask, asking and asked — we can apply stemming algorithms to get the root word — ask. Stemming is as simple as that. But (there’s always a but), unfortunately, it’s not as simple as that. We will some times have complications. And these complications are called over stemming and under stemming. Let’s see more about them in the next sections.
+					
+					CHOP TOO MUCH, AND STEM LOOKS IDENTICAL ALTHOUGH THEY ARE NOT > overstemming
+					CHOP TOO LITTLE, AND STEM LOOKS DIFFERENT ALTHOUGH THEY ARE NOT > understemming
+
+					OVER STEMMING
+					Over stemming is the process where a much larger part of a word is chopped off than what is required, which in turn leads to two or more words being reduced to the same root word or stem incorrectly when they should have been reduced to two or more stem words. For EXAMPLE, university and universe. Some stemming algorithms may reduce both the words to the stem univers, which would imply both the words mean the same thing, and that is clearly wrong. So we have to be careful when we select a stemming algorithm, and when we try to optimize the model. As you can imagine, under stemming is the opposite of this.
+
+					UNDER STEMMING
+					In under stemming, two or more words could be wrongly reduced to more than one root word, when they actually should be reduced to the same root word. For EXAMPLE, consider the words “data” and “datum.” Some algorithms may reduce these words to dat and datu respectively, which is obviously wrong. Both of these have to be reduced to the same stem dat. But trying to optimize such models might, in turn, lead to over stemming as well. So we have to be very careful when we’re dealing with stemming.
+					
+					ALGO FOR THAT:
+								 1. Porter Stemmer – PorterStemmer()
+										Martin Porter invented the Porter Stemmer or Porter algorithm in 1980. Five steps of word reduction are used in the method, each with its own set of mapping rules. Porter Stemmer is the original stemmer and is renowned for its ease of use and rapidity. Frequently, the resultant stem is a shorter word with the same root meaning.
+
+										PorterStemmer() is a module in NLTK that implements the Porter Stemming technique. Let us examine this with the aid of an example above.
+								2. Snowball Stemmer – SnowballStemmer()
+										Martin Porter also created Snowball Stemmer. The method utilized in this instance is more precise and is referred to as “English Stemmer” or “Porter2 Stemmer.” It is somewhat faster and more logical than the original Porter Stemmer.
+
+										SnowballStemmer() is a module in NLTK that implements the Snowball stemming technique. Let us examine this form of stemming using an example.
+
+										Example of SnowballStemmer()
+
+										In the example below, we first construct an instance of SnowballStemmer() to use the Snowball algorithm to stem the list of words.
+										
+										from nltk.stem import SnowballStemmer
+										snowball = SnowballStemmer(language='english')
+										words = ['generous','generate','generously','generation']
+										for word in words:
+											print(word,"--->",snowball.stem(word))
+										output:
+										generous ---> generous
+										generate ---> generat
+										generously ---> generous
+										generation ---> generat
+								3. Lancaster Stemmer – LancasterStemmer()
+										Lancaster Stemmer is straightforward, although it often produces results with excessive stemming. Over-stemming renders stems non-linguistic or meaningless.
+
+										LancasterStemmer() is a module in NLTK that implements the Lancaster stemming technique. Allow me to illustrate this with an example.
+
+										Example of LancasterStemmer()
+
+										In the example below, we construct an instance of LancasterStemmer() and then use the Lancaster algorithm to stem the list of words.
+										from nltk.stem import LancasterStemmer
+											lancaster = LancasterStemmer()
+											words = ['eating','eats','eaten','puts','putting']
+											for word in words:
+												print(word,"--->",lancaster.stem(word))
+											output:
+												eating ---> eat
+												eats ---> eat
+												eaten ---> eat
+												puts ---> put
+												putting ---> put
+								4. Regexp Stemmer – RegexpStemmer()
+								
+								more implementation on below link direct on df col also
+								
+						Stemming a Text File with NLTK
+										We demonstrated stemming certain words before, but what if you have a text file and want to conduct it on the full file? Allow us to comprehend how to do this.
+
+										In the example below, we constructed a function called stemming that uses word_tokenize to tokenize the text and then uses SnowballStemmer to stem down the token to its basic form.
+
+										We then add it to a list and finally join and return the list’s elements.
+										
+										from nltk.tokenize import word_tokenize
+											from nltk.stem import SnowballStemmer
+											def stemming(text):
+												snowball = SnowballStemmer(language='english')
+												list=[]
+												for token in word_tokenize(text):
+													list.append(snowball.stem(token))
+												return ' '.join(list)
+											in that u can directly give sentence as inputs
+
+					advance porter, snowball, lancaster and Regexp STEMMING FROM NLTK-     
+					https://www.analyticsvidhya.com/blog/2021/11/an-introduction-to-stemming-in-natural-language-processing/
+			
+		LEMMATIZATION--
+			 
+					LEMMATIZATION IS SIMILAR TO STEMMING BUT IT WORKS WITH MUCH BETTER EFFICIENCY. IN LEMMATIZATION, THE WORD THAT IS GENERATED AFTER CHOPPING OFF THE SUFFIX IS ALWAYS MEANINGFUL AND BELONGS TO THE DICTIONARY THAT MEANS IT DOES NOT PRODUCE ANY INCORRECT WORD. THE WORD GENERATED AFTER LEMMATIZATION IS ALSO CALLED A LEMMA.
+					
+					Example: ‘Bricks’ becomes ‘brick,’ ‘corpora’ becomes ‘corpus,’ etc.
+							Let’s implement lemmatization with the help of some nltk packages.
+							First, we will import the required packages.
+					
+					from nltk.stem import wordnet
+					from nltk.stem import WordnetLemmatizer
+					CREATING AN OBJECT FOR WORDNETLEMMATIZER()
+
+					  lemma= WordnetLemmatizer()
+					  list = [“Dogs”, “Corpora”, “Studies”]
+					  for n in list:
+					  print(n + “:” + lemma.lemmatize(n))
+					Output:
+							Dogs: Dog
+						  Corpora: Corpus
+						  Studies: Study
+					
+					
+					DIFFERENCE BETWEEN LEMMATIZATION AND STEMMING-
+							Lemmatization is a better way to obtain the original form of any given text rather than stemming because lemmatization returns the actual word that has some meaning in the dictionary.
+							Eg-
+									“increases” word will be converted to “increase” in case of lemmatization while “increas” in case of stemming.\
+					for more--   https://www.analyticsvidhya.com/blog/2021/06/pre-processing-of-text-data-in-nlp/#:~:text=Lemmatization%20is%20a%20better%20way,some%20meaning%20in%20the%20dictionary.&text=%E2%80%9Cincreases%E2%80%9D%20word%20will%20be%20converted,increase%E2%80%9D%20in%20case%20of%20stemming.
+					
+`							
+		4- POStagging---
+					IS A TECHNIQUE USED IN NATURAL LANGUAGE PROCESSING. IT CATEGORIZES THE TOKENS IN A TEXT AS NOUNS, VERBS, ADJECTIVES, AND SO ON. IN PYTHON, YOU CAN USE THE NLTK LIBRARY FOR THIS PURPOSE.
+					The parts-of-speech (POS) tagging is used to assign tags to words such as nouns, adjectives, verbs, and more. The software uses the POS tagging to first read the text and then differentiate the words by tagging. The software uses algorithms for the parts-of-speech tagging. POS tagging is one of the most essential tools in Natural Language Processing. It helps in making the machine understand the meaning of a sentence.
+					We will look at the implementation of the POS tagging using stop words.
+					Let’s import the required nltk packages.
+					
+						import nltk
+					  from nltk.corpus import stopwords
+					  from nltk.tokenize import word_tokenize, sent_tokenize
+					  stop_words = set(stopwords.words('english'))
+					  txt = "Sourav, Pratyush, and Abhinav are good friends."
+					TOKENIZING USING SENT_TOKENIZE
+
+					  tokenized_text = sent_tokenize(txt)
+					To find punctuation and words in a string, we will use word_tokenizer and then remove the stop words.
+
+					  for n in tokenized_text:
+						wordsList = nltk.word_tokenize(n)
+					  wordsList = [w for w in wordsList if w not in stop_words]
+					NOW, WE WILL USE THE POS TAGGER.
+
+					  tagged_words = nltk.pos_tag(wordsList)
+					  print(tagged_words)
+					Output:[('Sourav', 'NNP'), ('Pratyush', 'NNP'), ('Abhinav', 'NNP'), ('good',  'JJ'), ('friends', 'NNS')]
+					
+					OR
+									import nltk
+									from nltk import word_tokenize
+									text = "This is one simple example."
+									tokens = word_tokenize(text)
+									tags = nltk.pos_tag(tokens, tagset = "universal")
+				
+					OR
+					import spacy
+					from spacy import displacy
+					nlp = spacy.load("en_core_web_sm")
+					doc = nlp(text)
+					displacy.render(doc, style = "dep")
+					
+					FULL CODE SNIPPET -
+										from spacy import displacy
+										import nltk
+										from nltk.tokenize import TreebankWordTokenizer as twt
+
+										def visualize_pos(text):
+											pos_tags = ["PRON", "VERB", "NOUN", "ADJ", "ADP",
+														"ADV", "CONJ", "DET", "NUM", "PRT"]
+											
+											# Tokenize text and pos tag each token
+											tokens = twt().tokenize(text)
+											tags = nltk.pos_tag(tokens, tagset = "universal")
+
+											# Get start and end index (span) for each token
+											span_generator = twt().span_tokenize(text)
+											spans = [span for span in span_generator]
+
+											# Create dictionary with start index, end index, 
+											# pos_tag for each token
+											ents = []
+											for tag, span in zip(tags, spans):
+												if tag[1] in pos_tags:
+													ents.append({"start" : span[0], 
+																 "end" : span[1], 
+																 "label" : tag[1] })
+
+											doc = {"text" : text, "ents" : ents}
+
+											colors = {"PRON": "blueviolet",
+													  "VERB": "lightpink",
+													  "NOUN": "turquoise",
+													  "ADJ" : "lime",
+													  "ADP" : "khaki",
+													  "ADV" : "orange",
+													  "CONJ" : "cornflowerblue",
+													  "DET" : "forestgreen",
+													  "NUM" : "salmon",
+													  "PRT" : "yellow"}
+											
+											options = {"ents" : pos_tags, "colors" : colors}
+											
+											displacy.render(doc, 
+															style = "ent", 
+															options = options, 
+															manual = True,
+														   )
+														   
+							visualize_pos("It was a bright cold day in April, and the clocks were striking thirteen.")
+							
+		5- NER--(NAME ENTITY RECOGNITION)
+		
+						Named Entity Recognition (NER) is an information retrieval process. NER helps classify named entities such as monetary figures, location, things, people, time, and more. It allows the software to analyze and understand the meaning of the text. NER is mostly used in NLP, Artificial Intelligence, and Machine Learning. One of the real-life applications of NER is chatbots used for customer support.
+						Let’s implement NER using the spacy package.
+						Importing the spacy package:
+
+						  import spacy
+						  nlp = spacy.load('en_core_web_sm')
+						  Text = "The head office of Google is in California"
+						  document = nlp(text)
+						  for ent in document.ents:
+							print(ent.text, ent.start_char, ent.end_char, ent.label_)
+						Output:
+
+						  Office 9 15 Place
+						  Google 19 25 ORG
+						  California 32 41 GPE
+						  
+		7- IMP 	Bag-of-words(BoW)-: IS A STATISTICAL LANGUAGE MODEL USED TO ANALYZE TEXT AND DOCUMENTS BASED ON WORD COUNT. THE MODEL DOES NOT ACCOUNT FOR WORD ORDER WITHIN A DOCUMENT. BOW CAN BE IMPLEMENTED AS A PYTHON DICTIONARY WITH EACH KEY SET TO A WORD AND EACH VALUE SET TO THE NUMBER OF TIMES THAT WORD APPEARS IN A TEXT.
+				
+						Bag of Words is a commonly used model that depends on word frequencies or occurrences to train a classifier. This model creates an occurrence matrix for documents or sentences irrespective of its grammatical structure or word order.
+
+				A bag-of-words is a text representation that describes the frequency with which words appear in a document. It entails two steps:
+
+						A list of terms that are well-known.
+						A metric for determining the existence of well-known terms.
+						Because any information about the sequence or structure of words in the document is deleted, it is referred to as a "bag" of words. The model simply cares about whether or not recognised terms appear in the document, not where they appear.
+						  
+		HOW TO CHECK WORD SIMILARITY USING THE SPACY PACKAGE?
+							To find out the similarity among words, we use word similarity. We evaluate the similarity with the help of a number that lies between 0 and 1. We use the spacy library to implement the technique of word similarity.
+
+							  import spacy
+							  nlp = spacy.load('en_core_web_md')
+							  print("Enter the words")
+							  input_words = input()
+							  tokens = nlp(input_words)
+							  for i in tokens:
+								print(i.text, i.has_vector, i.vector_norm, i.is_oov)
+							  token_1, token_2 = tokens[0], tokens[1]
+							  print("Similarity:", token_1.similarity(token_2))
+							Output:
+
+							  hot  True 5.6898586 False
+							  cold True6.5396233 False
+							  Similarity: 0.597265
+				
+		
+		
+		
+		DEF OF COUNT VECT-
+		
+						COUNTVECTORIZER IS A GREAT TOOL PROVIDED BY THE SCIKIT-LEARN LIBRARY IN PYTHON. IT IS USED TO TRANSFORM A GIVEN TEXT INTO A VECTOR ON THE BASIS OF THE FREQUENCY (COUNT) OF EACH WORD THAT OCCURS IN THE ENTIRE TEXT. THIS IS HELPFUL WHEN WE HAVE MULTIPLE SUCH TEXTS, AND WE WISH TO CONVERT EACH WORD IN EACH TEXT INTO VECTORS (FOR USING IN FURTHER TEXT ANALYSIS).
+						
+						THE COUNTVECTORIZER PROVIDES A SIMPLE WAY TO BOTH TOKENIZE A COLLECTION OF TEXT DOCUMENTS AND BUILD A VOCABULARY OF KNOWN WORDS, BUT ALSO TO ENCODE NEW DOCUMENTS USING THAT VOCABULARY. AN ENCODED VECTOR IS RETURNED WITH A LENGTH OF THE ENTIRE VOCABULARY AND AN INTEGER COUNT FOR THE NUMBER OF TIMES EACH WORD APPEARED IN THE DOCUMENT.
+						
+						Because these vectors will contain a lot of zeros, we call them sparse.
+						
+								import pandas as pd
+								from sklearn.feature_extraction.text import CountVectorizer
+								text = [‘Hello my name is james’,
+								‘james this is my python notebook’]
+								coun_vect = CountVectorizer()#by default all the unique word converted into smaller otherwise u have to give lowercase=False in it.
+								we can also pass the stopwords="english" for removing stopwords in arguement in count_vect in above line.
+								count_matrix = coun_vect.fit_transform(text)
+								count_array = count_matrix.toarray()
+								df = pd.DataFrame(data=count_array,columns = coun_vect.get_feature_names())
+								print(df)
+												
+												
+						lowercase=False	:
+								coun_vect = CountVectorizer(lowercase=False)
+								#by default all the unique word converted into smaller otherwise u have to give lowercase=False in it.
+								
+						In text mining, converting text into tokens and then converting them into an integer or floating-point vectors can be done using COUNTVECTORIZER LIKE- 
+									text =["Rahul is an avid writer, he enjoys studying understanding and presenting. He loves to play"]
+									vectorizer = CountVectorizer()
+									vectorizer.fit(text)
+									vector = vectorizer.transform(text)
+									print(vector.toarray())
+									[[1 1 1 1 2 1 1 1 1 1 1 1 1 1]]
+						
+						Max_df:
+
+								Max_df stands for maximum document frequency. Similar to min_df, we can ignore words which occur frequently. These words could be like the word ‘the’ that occur in every document and does not provide and valuable information to our text classification or any other machine learning model and can be safely ignored. MAX_DF LOOKS AT HOW MANY DOCUMENTS CONTAIN THE WORD AND IF IT EXCEEDS THE MAX_DF THRESHOLD THEN IT IS ELIMINATED FROM THE SPARSE MATRIX. THIS PARAMETER CAN AGAIN 2 TYPES OF VALUES, PERCENTAGE AND ABSOLUTE.
+
+								Using absolute values:
+										coun_vect = CountVectorizer(max_df=1)
+										The words ‘is’, ‘to’, ‘james’, ‘my’ and ‘of’ have been removed from the sparse matrix as they occur in more than 1 document.
+								USING %:
+										coun_vect = CountVectorizer(max_df=0.75)
+										As you can see the word ‘james’ appears in 4 out of 5 documents(85%) and hence crosses the threshold of 75% and removed from the sparse matrix
+						Min_df:
+
+								MIN_DF STANDS FOR MINIMUM DOCUMENT FREQUENCY, AS OPPOSED TO TERM FREQUENCY WHICH COUNTS THE NUMBER OF TIMES THE WORD HAS OCCURRED IN THE ENTIRE DATASET, DOCUMENT FREQUENCY COUNTS THE NUMBER OF DOCUMENTS IN THE DATASET (AKA ROWS OR ENTRIES) THAT HAVE THE PARTICULAR WORD. WHEN BUILDING THE VOCABULARY MIN_DF IGNORES TERMS THAT HAVE A DOCUMENT FREQUENCY STRICTLY LOWER THAN THE GIVEN THRESHOLD. FOR EXAMPLE IN YOUR DATASET YOU MAY HAVE NAMES THAT APPEAR IN ONLY 1 OR 2 DOCUMENTS, NOW THESE COULD BE IGNORED AS THEY DO NOT PROVIDE ENOUGH INFORMATION ON THE ENTIRE DATASET AS A WHOLE BUT ONLY A COUPLE OF PARTICULAR DOCUMENTS. min_df can take absolute values(1,2,3..) or a value representing a percentage of documents(0.50, ignore words appearing in 50% of documents)
+								
+								ABSOLUTE AND % SAME AS ABOVE
+								
+						max_features
+								The CountVectorizer will select the words/features/terms which occur the most frequently. It takes absolute values so if you set the ‘max_features = 3’, it will select the 3 most common words in the data.
+								coun_vect = CountVectorizer(max_features=3)
+								
+						Binary
+								By setting ‘binary = True’, the CountVectorizer no more takes into consideration the frequency of the term/word. If it occurs it’s set to 1 otherwise 0. By default, binary is set to False. This is usually used when the count of the term/word does not provide useful information to the machine learning model.
+								coun_vect = CountVectorizer(binary=True)
+								EVEN THOUGH ALL THE WORDS OCCUR TWICE IN THE ABOVE INPUT OUR SPARSE MATRIX JUST REPRESENTS IT WITH 1
+								
+								
+					VOCABULARY
+								They are the collection of words in the sparse matrix WE CAN ACCESS THIS DICT BY  -   print(coun_vect.vocabulary_) after fitted on text but The numbers do not represent the count of the words but the position of the words in the matrix
+
+								If you just want the vocabulary without the position of the word in the sparse matrix, you can use the method ‘get_feature_names()’. If you notice this is the same method we use while creating our database and setting our columns.
+								print( coun_vect.get_feature_names())
+								
+								
+				CountVectorizer is just one of the methods to deal with textual data. Td-idf is a better method to vectorize data.
+						https://www.geeksforgeeks.org/using-countvectorizer-to-extracting-features-from-text/#:~:text=CountVectorizer%20is%20a%20great%20tool,occurs%20in%20the%20entire%20text.
+		
+					
+		DEF OF TF IDF VECT--
+		
+						tf =is the number of times a term appears in a particular document. So it’s specific to a document.
+									tf(term,doc) = count of term in doc / number of words in doc
+						idf= is a measure of how common or rare a term is across the entire corpus of documents. So the point to note is that it’s common to all the documents. If the word is common and appears in many documents, the idf value (normalized) will approach 0 or else approach 1 if it’s rare.
+						
+						TF-IDF VALUE OF A TERM IN A DOCUMENT IS THE PRODUCT OF ITS TF AND IDF. THE HIGHER IS THE VALUE, THE MORE RELEVANT THE TERM IS IN THAT DOCUMENT.
+						
+						When TF*IDF is high, the frequency of the term is less and vice versa.
+
+						Google uses TF-IDF to decide the index of search results according to the relevancy of pages. The design of the TF-IDF algorithm helps optimize the search results in Google. It helps quality content rank up in search results.
+						
+						
+						TF-IDF is an abbreviation for Term Frequency Inverse Document Frequency. This is a very common algorithm to transform the text into a meaningful representation of numbers which is used to fit machine learning algorithms for prediction.
+							Term Frequency: This summarizes how often a given word appears within a document.
+							Inverse Document Frequency: This downscales words that appear a lot across documents.
+							TF-IDF HELPS IN HIGHLIGHTING A WORD THAT IS FREQUENT IN A DOCUMENT BUT NOT ACROSS DOCUMENTS.
+							
+										df or Document Frequency :
+																This measures the importance of document in whole set of corpus, this is very similar to TF. The only difference is that TF is frequency counter for a term t in document d, where as DF is the count of occurrences of term t in the document set N. In other words, DF is the number of documents in which the word is present. We consider one occurrence if the term consists in the document at least once, we do not need to know the number of times the term is present.
+
+																df(term) = occurrence of term in documents
+							
+						IDF is the inverse of the document frequency which measures the informativeness of term t. When we calculate IDF, it will be very low for the most occurring words such as stop words (because stop words such as “is” is present in almost all of the documents, and N/df will give a very low value to that word). This finally gives what we want, a relative weightage.
+
+								idf(term) = count of corpus/df
+								
+								
+								 EXP-
+									Q-In a corpus of N documents, one randomly chosen document contains a total of T terms and the term “hello” appears K times.
+											What is the correct value for the product of TF (term frequency) and IDF (inverse-document-frequency), if the term “hello” appears in approximately one-third of the total documents?
+											a. KT * Log(3)
+											b. T * Log(3) / K
+											c. K * Log(3) / T
+											d. Log(3) / KT
+
+											Answer: (c)
+
+										SOL-	formula for TF is K/T
+												formula for IDF is log(total docs / no of docs containing “data”)
+												= log(1 / (⅓))
+												= log (3)
+
+											Hence, the correct choice is Klog(3)/T
+											
+											OR DETAIL ExPLAIN CHECK Q-27 HERE - https://www.mygreatlearning.com/blog/nlp-interview-questions/
+								
+					DISADVANTAGES of tf-idf:
+									1. Now there are few other problems with the IDF , in case of a large corpus,say 100,000,000 , THE IDF VALUE EXPLODES , TO AVOID THE EFFECT WE TAKE THE LOG OF IDF .
+
+									2. During the query time, when a word which is not in vocab occurs, the df will be 0. As we cannot divide by 0, we smoothen the value by adding 1 to the denominator.
+
+									that’s the final formula:
+
+									FORMULA :
+									idf(t) = log(N or count of corpus/(df + 1))
+									
+						now,  
+								tf-idf(term, doc) = tf(term, doc) * log(N/(df + 1))
+								
+						That’s all for TF formula , just i wanna talk about stop words that we should eliminate them because they are the most commonly occurring words which don’t give any additional value to the document vector .in-fact removing these will increase computation and space efficiency.
+						
+										#first step is to import the library
+											from sklearn.feature_extraction.text import TfidfVectorizer
+											#for the sentence, make sure all words are lowercase or you will run #into error. for simplicity, I just made the same sentence all #lowercase
+											firstV= "Data Science is the sexiest job of the 21st century"
+											secondV= "machine learning is the key for data science"
+											#calling the TfidfVectorizer
+											vectorize= TfidfVectorizer()
+											#fitting the model and passing our sentences right away:
+											response= vectorize.fit_transform([firstV, secondV])
+		
+							https://www.analyticsvidhya.com/blog/2021/11/how-sklearns-tfidfvectorizer-calculates-tf-idf-values/
+							
+			Explain the TF-IDF Vectorizer used in NLP? What does min_df in sklearn.tfidfvectorizer do?
+									Solution 
+											TF-IDF is a statistical measure that evaluates how relevant a word is to a document in a collection of documents. This is done by multiplying two metrics: how many times a word appears in a document, and the inverse document frequency of the word across a set of documents.
+											min_df is an argument in the sklearn implementation of TF-IDF Vectorizer which says that we will only consider those words for vectorization which are present in at least x% of the documents where x is the percentage value taken by min_df.
+											
+											
+											
+		defferent between count and tf-idf vectorizer
+		
+							TF-IDF IS BETTER THAN COUNT VECTORIZERS BECAUSE IT NOT ONLY FOCUSES ON THE FREQUENCY OF WORDS PRESENT IN THE CORPUS BUT ALSO PROVIDES THE IMPORTANCE OF THE WORDS. WE CAN THEN REMOVE THE WORDS THAT ARE LESS IMPORTANT FOR ANALYSIS, HENCE MAKING THE MODEL BUILDING LESS COMPLEX BY REDUCING THE INPUT DIMENSIONS.
+							
+							
+					for more details and implentation on count and tfidf----https://machinelearningmastery.com/prepare-text-data-machine-learning-scikit-learn/
+					
+					
+					OTHERS-
+							  1. TfidfVectorizer is used on sentences, while TfidfTransformer is used on an existing count matrix, such as one returned by CountVectorizer.
+							  2. With Tfidftransformer you will compute word counts using CountVectorizer and then compute the IDF values and only then compute the Tf-idf scores. With Tfidfvectorizer you will do all three steps at once.
+							  3. https://techstalking.com/solved-what-is-the-difference-between-tfidf-vectorizer-and-tfidf-transformer/
+							  
+					WHAT ARE UNIGRAMS, BIGRAMS, TRIGRAMS, AND N-GRAMS IN NLP?
+								When sentence parse a one word at a time, then it is called a unigram. The sentence parsed two words at a time is a bigram. When the sentence is parsed three words at a time, then it is a trigram. Similarly, n-gram refers to the parsing of n words at a time						
+		chop too much, and stem looks identical although they are not > overstemming
+		chop too little, and stem looks different although they are not > understemming
+		
+		
+		
+Topic Modeling :
+					
+				In natural language understanding (NLU) tasks, there is a hierarchy of lenses through which we can extract meaning — from words to sentences to paragraphs to documents. 
+				AT THE DOCUMENT LEVEL, ONE OF THE MOST USEFUL WAYS TO UNDERSTAND TEXT IS BY ANALYZING ITS TOPICS. THE PROCESS OF LEARNING, RECOGNIZING, AND EXTRACTING THESE TOPICS ACROSS A COLLECTION OF DOCUMENTS IS CALLED TOPIC MODELING.
+				Topic modelling refers to the task of identifying topics that best describes a set of documents. These topics will only emerge during the topic modelling process (therefore called latent). And one popular topic modeling technique is known as Latent Dirichlet Allocation (LDA).
+				
+				
+				Topic modeling is an unsupervised machine learning technique that’s capable of scanning a set of documents, detecting word and phrase patterns within them, and automatically clustering word groups and similar expressions that best characterize a set of documents.
+				It is an unsupervised approach used for finding and observing the bunch of words (called “topics”) in large clusters of texts.
+				
+				 ‘unsupervised’ meaning that no training is required. 
+				 
+			
+				
+				ALL TOPIC MODELS ARE BASED ON THE SAME BASIC ASSUMPTION:
+					1. each document consists of a mixture of topics, and
+					2. each topic consists of a collection of words.
+					
+				IN OTHER WORDS, TOPIC MODELS ARE BUILT AROUND THE IDEA THAT THE SEMANTICS OF OUR DOCUMENT ARE ACTUALLY BEING GOVERNED BY SOME HIDDEN, OR “LATENT,” VARIABLES THAT WE ARE NOT OBSERVING. AS A RESULT, THE GOAL OF TOPIC MODELING IS TO UNCOVER THESE LATENT VARIABLES — TOPICS — THAT SHAPE THE MEANING OF OUR DOCUMENT AND CORPUS.
+				
+				What is Latent Semantic Indexing (LSI)?
+								LATENT SEMANTIC INDEXING IS A MATHEMATICAL TECHNIQUE USED TO IMPROVE THE ACCURACY OF THE INFORMATION RETRIEVAL PROCESS. THE DESIGN OF LSI ALGORITHMS ALLOWS MACHINES TO DETECT THE HIDDEN (LATENT) CORRELATION BETWEEN SEMANTICS (WORDS). TO ENHANCE INFORMATION UNDERSTANDING, MACHINES GENERATE VARIOUS CONCEPTS THAT ASSOCIATE WITH THE WORDS OF A SENTENCE.
+
+								The technique used for information understanding is called singular value decomposition. It is generally used to handle static and unstructured data. The matrix obtained for singular value decomposition contains rows for words and columns for documents. This method best suits to identify components and group them according to their types.
+
+								THE MAIN PRINCIPLE BEHIND LSI IS THAT WORDS CARRY A SIMILAR MEANING WHEN USED IN A SIMILAR CONTEXT. COMPUTATIONAL LSI MODELS ARE SLOW IN COMPARISON TO OTHER MODELS. HOWEVER, THEY ARE GOOD AT CONTEXTUAL AWARENESS THAT HELPS IMPROVE THE ANALYSIS AND UNDERSTANDING OF A TEXT OR A DOCUMENT.
+				
+				Latent Semantic Analysis (LSA)
+								LATENT SEMANTIC ANALYSIS (LSA) IS ONE OF THE MOST FREQUENT TOPIC MODELING METHODS ANALYSTS MAKE USE OF. IT IS BASED ON what is known as the DISTRIBUTIONAL HYPOTHESIS which states that the semantics of words can be grasped by looking at the contexts the words appear in. IN OTHER WORDS, UNDER THIS HYPOTHESIS, THE SEMANTICS OF TWO WORDS WILL BE SIMILAR IF THEY TEND TO OCCUR IN SIMILAR CONTEXTS.
+
+
+								THAT SAID, LSA COMPUTES HOW FREQUENTLY WORDS OCCUR IN THE DOCUMENTS – AND THE WHOLE CORPUS – AND ASSUMES THAT SIMILAR DOCUMENTS WILL CONTAIN APPROXIMATELY THE SAME DISTRIBUTION OF WORD FREQUENCIES FOR CERTAIN WORDS. IN THIS CASE, SYNTACTIC INFORMATION (E.G. WORD ORDER) AND SEMANTIC INFORMATION (E.G. THE MULTIPLICITY OF MEANINGS OF A GIVEN WORD) ARE IGNORED AND EACH DOCUMENT IS TREATED AS A BAG OF WORDS.
+
+
+								THE STANDARD METHOD FOR COMPUTING WORD FREQUENCIES IS WHAT IS KNOWN AS TF-IDF. THIS METHOD COMPUTES FREQUENCIES BY TAKING INTO CONSIDERATION NOT ONLY HOW FREQUENT WORDS ARE IN A GIVEN DOCUMENT, BUT ALSO HOW FREQUENT WORDS ARE IN ALL THE CORPUS OF DOCUMENTS. WORDS WITH A HIGHER FREQUENCY IN THE FULL CORPUS WILL BE BETTER CANDIDATES FOR DOCUMENT REPRESENTATIONS THAN LESS FREQUENT WORDS, REGARDLESS OF HOW MANY TIMES THEY APPEAR IN INDIVIDUAL DOCUMENTS. AS A RESULT, TF-IDF REPRESENTATIONS ARE MUCH BETTER THAN THOSE THAT ONLY TAKE INTO CONSIDERATION WORD FREQUENCIES AT DOCUMENT LEVEL(COUNT VECTORIZER).
+
+
+								ONCE TF-IDF FREQUENCIES HAVE BEEN COMPUTED, WE CAN CREATE A DOCUMENT-TERM MATRIX WHICH SHOWS THE TF-IDF VALUE FOR EACH TERM IN A GIVEN DOCUMENT. THIS MATRIX WILL HAVE ROWS FOR EVERY DOCUMENT IN THE CORPUS AND COLUMNS FOR EVERY TERM CONSIDERED.
+
+
+				
+				Latent Dirichlet Allocation
+						LDA IS A GENERATIVE PROBABILISTIC PROCESS, DESIGNED WITH THE SPECIFIC GOAL OF UNCOVERING LATENT TOPIC STRUCTURE IN TEXT CORPORA.
+						
+						 LATENT DIRICHLET ALLOCATION (LDA) IS AN EXAMPLE OF TOPIC MODEL AND IS USED TO CLASSIFY TEXT IN A DOCUMENT TO A PARTICULAR TOPIC. IT BUILDS A TOPIC PER DOCUMENT MODEL AND WORDS PER TOPIC MODEL, MODELED AS DIRICHLET DISTRIBUTIONS.
+						
+						
+						LATENT DIRICHLET ALLOCATION (LDA) AND LSA ARE BASED ON THE SAME UNDERLYING ASSUMPTIONS: THE DISTRIBUTIONAL HYPOTHESIS, (I.E. SIMILAR TOPICS MAKE USE OF SIMILAR WORDS) and the statistical mixture hypothesis (i.e. documents talk about several topics) for which a statistical distribution can be determined. The purpose of LDA is mapping each document in our corpus to a set of topics which covers a good deal of the words in the document.
+
+
+						WHAT LDA DOES IN ORDER TO MAP THE DOCUMENTS TO A LIST OF TOPICS IS ASSIGN TOPICS TO ARRANGEMENTS OF WORDS, E.G. N-GRAMS SUCH AS BEST PLAYER FOR A TOPIC RELATED TO SPORTS. THIS STEMS FROM THE ASSUMPTION THAT DOCUMENTS ARE WRITTEN WITH ARRANGEMENTS OF WORDS AND THAT THOSE ARRANGEMENTS DETERMINE TOPICS. YET AGAIN, JUST LIKE LSA, LDA ALSO IGNORES SYNTACTIC INFORMATION AND TREATS DOCUMENTS AS BAGS OF WORDS. IT ALSO ASSUMES THAT ALL WORDS IN THE DOCUMENT CAN BE ASSIGNED A PROBABILITY OF BELONGING TO A TOPIC. THAT SAID, THE GOAL OF LDA IS TO DETERMINE THE MIXTURE OF TOPICS THAT A DOCUMENT CONTAINS.
+						
+				HOW LDA WORKS?
+							pic of this at the end of collab
+							From a dirichlet distribution  Dir(α) , we draw a random sample representing the topic distribution, or topic mixture, of a particular document. This topic distribution is  θ . From  θ , we select a particular topic  Z  based on the distribution.
+							Next, from another dirichlet distribution  Dir(β) , we select a random sample representing the word distribution of the topic  Z . This word distribution is  φ . From  φ , we choose the word  w .
+							
+							The normal distribution is a probability distribution over all the real numbers. It is described by a mean and a variance. The mean is the expected value of this distribution, and the variance tells us how much we can expect samples to deviate from the mean. If the variance is very high, then you’re going to see values that are both much smaller than the mean and much larger than the mean. If the variance is small, then the samples will be very close to the mean. If the variance goes close to zero, all samples will be almost exactly at the mean.
+							Similarly, the dirichlet distribution is a probability distribution as well - but it is not sampling from the space of real numbers. Instead it is sampling over a probability simplex.
+							
+						THERE ARE TWO HYPERPARAMETERS THAT CONTROL DOCUMENT AND TOPIC SIMILARITY, KNOWN AS ALPHA AND BETA, RESPECTIVELY. A LOW VALUE OF ALPHA WILL ASSIGN FEWER TOPICS TO EACH DOCUMENT WHEREAS A HIGH VALUE OF ALPHA WILL HAVE THE OPPOSITE EFFECT. A LOW VALUE OF BETA WILL USE FEWER WORDS TO MODEL A TOPIC WHEREAS A HIGH VALUE WILL USE MORE WORDS, THUS MAKING TOPICS MORE SIMILAR BETWEEN THEM.
+
+						A THIRD HYPERPARAMETER HAS TO BE SET WHEN IMPLEMENTING LDA, NAMELY, THE NUMBER OF TOPICS THE ALGORITHM WILL DETECT SINCE LDA CANNOT DECIDE ON THE NUMBER OF TOPICS BY ITSELF.
+							
+				Topic Modeling vs Topic Classification:
+								
+								Topic modeling and topic classification do have one thing in common. They’re the most commonly used topic analysis techniques. Apart from that, they’re both very different and the one you choose, well, that depends on several factors.
+								In theory, unsupervised machine learning algorithms such as topic modeling require less manual input than supervised algorithms. That’s because they don't need to be trained by humans with manually tagged data. However, they do need high-quality data, and not only that – they need it in bucket loads, which may not always be easy to come by.
+
+								At the end of your topic modeling analysis, you’ll receive collections of documents that the algorithm has grouped together, as well as clusters of words and expressions that it used to infer these relations.
+
+								Supervised machine learning algorithms, on the other hand, deliver neatly packaged results with topic labels such as Price and UX. Yes, they take longer to set up since you’ll need to train them by tagging datasets with a predefined list of topics. But, if you label your texts accurately and refine your criteria, you’ll be rewarded with a model that can accurately classify unseen texts according to their topics, as well as results that you can put to use.
+
+
+								AT THE END OF THE DAY, IT COMES DOWN TO THIS. IF YOU DON’T HAVE A LOT OF TIME TO ANALYZE TEXTS, OR YOU’RE NOT LOOKING FOR A FINE-GRAINED ANALYSIS AND JUST WANT TO FIGURE OUT WHAT TOPICS A BUNCH OF TEXTS ARE TALKING ABOUT, YOU’LL PROBABLY BE HAPPY WITH A TOPIC MODELING ALGORITHM.
+
+
+								HOWEVER, IF YOU HAVE A LIST OF PREDEFINED TOPICS FOR A SET OF TEXTS AND WANT TO LABEL THEM AUTOMATICALLY WITHOUT HAVING TO READ EACH ONE, AS WELL AS GAIN ACCURATE INSIGHTS, YOU’RE BETTER OFF USING A TOPIC CLASSIFICATION ALGORITHM.
+								
+		Topic classification:
+							Now that you’re knee-deep in machine learning, let’s meet some widely used algorithms for topic classification:
+							1. Naive Bayes	
+							2. SVM	
+							3. Deep Learning
+							
+		UNSUPERVISED LEARNING IS A MACHINE LEARNING TECHNIQUE IN WHICH THE USERS DO NOT NEED TO SUPERVISE THE MODEL. INSTEAD, IT ALLOWS THE MODEL TO WORK ON ITS OWN TO DISCOVER PATTERNS AND INFORMATION THAT WAS PREVIOUSLY UNDETECTED. IT MAINLY DEALS WITH THE UNLABELLED DATA.
+		
+		YOU DO NEED TRAINING DATA TO EVALUATE HOW WELL YOUR ALGORITHM PERFORMS. WHAT YOU DO NOT NEED IS LABELLED TRAINING DATA, WHICH SUPERVISED LEARNING METHODS NEEDS		
+		NO NEED TO GO - https://monkeylearn.com/blog/introduction-to-topic-modeling/#:~:text=Topic%20modeling%20is%20an%20unsupervised,characterize%20a%20set%20of%20documents.
+		
+		https://www.analyticsvidhya.com/blog/2016/08/beginners-guide-to-topic-modeling-in-python/
+		https://medium.com/opex-analytics/hierarchical-time-series-101-734a3da15426#:~:text=Hierarchical%20time%20series%20forecasting%20is,the%20relationships%20within%20the%20hierarchy.
+		
+		
+		
+		
+		
+		OTHERS-	 
+				1- IN NLP, WORDS REPRESENTED AS VECTORS ARE CALLED NEURAL WORD EMBEDDINGS
+				
+				2- BERT- Only BERT (Bidirectional Encoder Representations from Transformer) supports context modelling where the previous and next sentence context is taken into consideration. In Word2Vec, GloVe only word embeddings are considered and previous and next sentence context is not considered.
+				
+					Only BERT provides a bidirectional context. The BERT model uses the previous and the next sentence to arrive at the context.Word2Vec and GloVe are word embeddings, they do not provide any context.
+				
+					BERT Transformer architecture models the relationship between each word and all other words in the sentence to generate attention scores. These attention scores are later used as weights for a weighted average of all words’ representations which is fed into a fully-connected network to generate a new representation.
+				
+				4- Which one of the following Word embeddings can be custom trained for a specific subject in NLP
+					sol- BERT ALLOWS TRANSFORM LEARNING ON THE EXISTING PRE-TRAINED MODELS AND HENCE CAN BE CUSTOM TRAINED FOR THE GIVEN SPECIFIC SUBJECT, UNLIKE WORD2VEC AND GLOVE WHERE EXISTING WORD EMBEDDINGS CAN BE USED, NO TRANSFER LEARNING ON TEXT IS POSSIBLE.
+
+
+
+				5- Word embeddings capture multiple dimensions of data and are represented as vectors
+				
+				6- In NLP, Word embedding vectors help establish distance between two tokens
+					sol- One can use Cosine similarity to establish the distance between two vectors represented through Word Embeddings
+				
+				7- Language Biases are introduced due to historical data used during training of word embeddings, which one amongst the below is not an example of bias-
+						a. New Delhi is to India, Beijing is to China
+						b. Man is to Computer, Woman is to Homemaker
+						Answer: a)
+							Statement b) is a bias as it buckets Woman into Homemaker, whereas statement a) is not a biased statement.
+				8- OPEN AI’S GPT IS ABLE TO LEARN COMPLEX PATTERNS IN DATA BY USING THE TRANSFORMER MODELS ATTENTION MECHANISM AND HENCE IS MORE SUITED FOR COMPLEX USE CASES SUCH AS SEMANTIC SIMILARITY, READING COMPREHENSIONS, AND COMMON SENSE REASONING.
+				
+					`GPT is a bidirectional(UNIDIRECTIONAL) model and word embedding is produced by training on information flow from left to right. ELMo is bidirectional but shallow.
+				
+				9- ULMFit has an LSTM based Language modeling architecture. This got replaced into Transformer architecture with Open AI’s GPT. Transformer architectures were supported from GPT onwards and were faster to train and needed less amount of data for training too.
+				
+				10- EMLO- EMLo word embeddings support the same word with multiple embeddings, this helps in using the same word in a different context and thus captures the context than just the meaning of the word unlike in GloVe and Word2Vec.
+				
+					ELMo tries to train two independent LSTM language models (left to right and right to left) and concatenates the results to produce word embedding.
+				
+							TO KNOW ABOUT MORE VISIT THAT IMAGE- https://d1m75rqqgidzqn.cloudfront.net/wp-data/2019/11/19121313/NLP-Interview-questions-infographicsai-01.jpg
+				
+				11- For a given token, its input representation is the sum of embedding from the token, segment and position--- BERT uses token, segment and position embedding.
+				
+				12- List 10 use cases to be solved using NLP techniques?
+							Sentiment Analysis
+							Language Translation (English to German, Chinese to English, etc..)
+							Document Summarization
+							Question Answering
+							Sentence Completion
+							Attribute extraction (Key information extraction from the documents)
+							Chatbot interactions
+							Topic classification
+							Intent extraction
+							Grammar or Sentence correction
+							Image captioning
+							Document Ranking
+							Natural Language inference
+							
+				13- Transformer model pays attention to the most important word in Sentence. BCOZ Attention mechanisms in the Transformer model are used to model the relationship between all words and also provide weights to the most important word.
+				
+				14- XLNET HAS GIVEN BEST ACCURACY AMONGST ALL THE MODELS(BERT,GPT-2,ELMO). IT HAS OUTPERFORMED BERT ON 20 TASKS AND ACHIEVES STATE OF ART RESULTS ON 18 TASKS INCLUDING SENTIMENT ANALYSIS, QUESTION ANSWERING, NATURAL LANGUAGE INFERENCE, ETCBERT
+				
+					XLNET PROVIDES PERMUTATION-BASED LANGUAGE MODELLING AND IS A KEY DIFFERENCE FROM BERT. IN PERMUTATION LANGUAGE MODELING, TOKENS ARE PREDICTED IN A RANDOM MANNER AND NOT SEQUENTIAL. THE ORDER OF PREDICTION IS NOT NECESSARILY LEFT TO RIGHT AND CAN BE RIGHT TO LEFT. THE ORIGINAL ORDER OF WORDS IS NOT CHANGED BUT A PREDICTION CAN BE RANDOM.
+				
+				15- Instead of embedding having to represent the absolute position of a word, Transformer XL uses an embedding to encode the relative distance between the words. This embedding is used to compute the attention score between any 2 words that could be separated by n words before or after.
+
+
+				
+		
+		
+RECOMMENDATION SYSTEM:
+
+					THE OBJECTIVE OF A RECOMMENDER SYSTEM IS TO RECOMMEND RELEVANT ITEMS FOR USERS, BASED ON THEIR PREFERENCE. 
+					Preference and relevance are subjective, and they are generally inferred by items users have consumed previously.
+					
+					
+					Popular Recommender Systems widely used in Industries are :
+
+			1. Collaborative- 
+										COLLABORATIVE FILTERING IS ALSO KNOWN AS SOCIAL FILTERING
+	
+			
+										This method makes automatic predictions (filtering) about the interests of a user by collecting preferences or taste information from many users (collaborating). The underlying assumption of the collaborative filtering approach is that if a person A has the same opinion as a person B on a set of items, A is more likely to have B's opinion for a given item than that of a randomly chosen person.
+										
+										Example: If user A is similar to user B and user B likes a certain video, then this video is recommended to user A
+										Advantages: 
+													1. Doesn’t require domain knowledge
+													2. Help users to discover new interests
+										Disadvantages:
+													1. Cannot handle fresh items (cold-start)
+													2. Hard to include features beyond the query
+													
+						Collaborative Filtering (CF) has two main implementation strategies:
+
+
+						A. MEMORY-BASED (aka Neighborhood-based)---  
+						
+							THE TECHNIQUES WHERE WE DON’T USE PARAMETRIC MACHINE LEARNING APPROACH ARE CLASSIFIED AS MEMORY BASED TECHNIQUES. NON PARAMETRIC ML APPROACHES LIKE KNN CAN ALSO COME UNDER MEMORY BASED APPROACH. A COMMON DISTANCE MATRIC IS COSINE SIMILARITY. 
+							THEY ARE CALLED MEMORY BASED BECOZ THE ALGORITHM IS NOT THAT COMPLICATED , BUT REQUIRES A LOT OF MEMORY TO KEEP TRACKING OF THIS AND THERE IS  NO TRAINING OR OPTIMIZATION IS INVOLVED, IT IS AN EASY TO USE APPROACH.
+							
+							This approach uses the memory of previous users interactions to compute users similarities based on items they've interacted (user-based approach) or compute items similarities based on the users that have interacted with them (item-based approach).
+							A typical example of this approach is User Neighbourhood-based CF, in which the top-N similar users (usually computed using Pearson correlation) for a user are selected and used to recommend items those similar users liked, but the current user have not interacted yet. This approach is very simple to implement, but usually do not scale well for many users.
+							
+							
+									Memory-based collaborative filtering utilizes the entire user-item data to generate predictions. The system uses statistical methods to search for a set of users who have similar transactions history to the active user. This method is also called nearest-neighbor or user-based collaborative filtering. Bobadilla explained that there are three processes in nearest neighbor method: (1) choosing other users that are similar to a user; 
+													(2) predicting rating of the item i to a user by calculating the results of aggregating similar users, and (3) providing recommendations based on the results predicted in stage 2.
+												adv & disadv: 
+															1. THEY ARE CALLED MEMORY BASED BECOZ THE ALGORITHM IS NOT THAT COMPLICATED , BUT REQUIRES A LOT OF MEMORY TO KEEP TRACKING OF THIS AND THERE IS  NO TRAINING OR OPTIMIZATION IS INVOLVED, IT IS AN EASY TO USE APPROACH.
+															
+															2. the advantages of memory-based collaborative filtering are easy to implement and able to accommodate the new data with ease. However, memory-based collaborative filtering has decreasing performance in data with high sparsity and have limited scalability for large datasets [12]. 
+					
+									A. USER-ITEM-  
+											takes a particular user, find users that are similar to that user based on similarity of ratings, and recommend items that those similar users liked.
+											For user-based collaborative filtering, two users’ similarity is measured as the cosine of the angle between the two users’ vectors.
+													similar users which have similar ratings for similar items are found and then target user’s rating for the item which target user has never interacted is predicted. For example, say Alice and Bob have given similar ratings to (or liked) some movies;
+
+																Alice = {Terminator: 4, Predator: 2, Robocop: 3}
+
+																Bob = {Terminator: 4, Predator: 2, Robocop: ?}
+
+													Our aim is to predict the unobserved ratings for target user which is Bob’s rating of Robocop (which he has never watched so far) in this example. The steps we took in this technique are:
+													1. Specify the target user (which is bob in this example)
+													2. Find similar users who have similar ratings to target user (can be more than one)
+													3. Extract the items which target user never interacted
+													4. Predict the ratings of unobserved items for target user
+													5. If the predicted ratings are above the threshold, then recommend them to target user
+											
+									
+					
+					
+									B. ITEM-ITEM- :
+											
+											EASY APPROACH :
+														Item-based collaborative filtering suggests items similar to other items the active user liked. For example, if a user liked a Lord of the Rings book, then we would recommend another Lord of the Rings book.
+											
+														Here, we explore the relationship between the pair of items (the user who bought Y, also bought Z). We find the missing rating with the help of the ratings given to the other items by the user.
+														
+																In item-based CF, we find the same items that the target user has already viewed.
+
+																Jack: finding nemo=4, Moana= 3, Toy Story=4.
+
+																1. Identify the target user.
+																2. Find the matched items which have the same ratings as items the target user rated.
+																3. Forecast the rankings for the same items.
+																4. If the forecasted rankings are higher than the threshold, then suggest them to the target user.
+																THOUGH, THE ITEM-BASED MODEL SHOWS BETTER CONSEQUENCES AS COMPARED TO THE USER-BASED METHOD AS THE RESEMBLANCE BETWEEN ITEMS SEEMS TO BE CONSISTENT THAN THE USERS. 
+
+																A numerical measure using a similarity matrix is the most common technique. It involves Dot product, Cosine similarity, Pearson similarity, and Euclidean distance.
+														
+											
+											TOUGH APPROACH: 
+														will take an item, find users who liked that item, and find other items that those users or similar users also liked. It takes items and outputs other items as recommendations.(we have to apply nearestneighbour(metric=cosine) and truncatedSVD so little tough-
+											
+														Bob = {Matrix: 4, Kill Bill: 3, Terminator: 4}
+
+														items Bob not rated= {Robocop, Alien}
+
+																The steps we took in this technique are:
+																1. Specify an item
+																2. find users who liked that item
+																2. find other items that those users or similar users also liked.
+																3. Predict the ratings for this found items
+																4. If the predicted ratings are above the threshold, then recommend them to target user
+																	
+								
+									User-Item Collaborative Filtering: “Users who are similar to you also liked …”
+									Item-Item Collaborative Filtering: “Users who liked this item also liked …”
+							
+									THE ANSWER TO THE QUESTION: WHICH ONE TO PREFER IS UP TO THE CONTEXT. HOWEVER, ITEM-BASED METHODS HAVE BETTER RESULTS IN OVERALL SINCE THE SIMILARITY BETWEEN ITEMS ARE MORE RELIABLE THAN THE SIMILARITY BETWEEN USERS. IMAGINE THAT AFTER A WHILE ALICE CAN CHANGE HER PREFERENCES AND RATINGS AND THIS CAUSES THE POOR PERFORMANCE IN USER-BASED METHODS. SHORTLY, ITEM-BASED METHODS ARE MORE STABLE WITH CHANGES AND RELY ON THE ITEMS WHICH LESS TEND TO CHANGE THEN USERS.
+
+						 B. MODEL-BASED-:
+						 
+								In this approach, models are developed using different machine learning algorithms to recommend items to users. There are many model-based CF algorithms, like Neural Networks, Bayesian Networks, Clustering Techniques, and Latent Factor Models such as Singular Value Decomposition (SVD) and Probabilistic Latent Semantic Analysis.
+								
+								1. Non parametric approach (KNN): The idea is same as that of memory-based recommendation systems. IN MEMORY-BASED ALGORITHMS, WE USE THE SIMILARITIES BETWEEN USERS AND/OR ITEMS AND USE THEM AS WEIGHTS TO PREDICT A RATING FOR A USER AND AN ITEM. THE DIFFERENCE IS THAT THE SIMILARITIES IN THIS APPROACH ARE CALCULATED BASED ON AN UNSUPERVISED LEARNING MODEL, RATHER THAN PEARSON CORRELATION OR COSINE SIMILARITY. IN THIS APPROACH, WE ALSO LIMIT THE NUMBER OF SIMILAR USERS AS K, WHICH MAKES SYSTEM MORE SCALABLE.
+								2. Neural Nets/ Deep Learning: There is a ton of research material on collaborative filtering using matrix factorization or similarity matrix. But there is lack on online material to learn how to use deep learning models for collaborative filtering.
+								
+								
+												Model-based collaborative filtering provides recommendations by developing a model from user ratings. In addition to using explicit data such as ratings, collaborative filtering can also use implicit information by observing the habits of users, such as music played, applications downloaded, websites visited, or books read. To develop a model, there are two approaches that can be used, which are probability approach or rating prediction. The modeling process is conducted by machine learning techniques such as classification, clustering, and rule-based approach. Based on its characteristics, model-based also has its advantages and disadvantages.
+												
+												Adv & Disadv:
+															MODELBASED APPROACH HAS BETTER PREDICTIONS THAN MEMORY-BASED. IT IS ALSO CAPABLE OF HANDLING THE PROBLEM OF SPARSITY AND SCALABILITY BETTER THAN MEMORY-BASED. HOWEVER, MODEL-BASED APPROACH REQUIRES A GREAT RESOURCE, SUCH AS TIME AND MEMORY, TO DEVELOP THE MODEL AND MAY LOSE INFORMATION WHEN USING DIMENSIONALITY REDUCTION. 								
+								
+								
+							
+								https://www.cs.carleton.edu/cs_comps/0607/recommend/recommender/modelbased.html
+				
+							MATRIX FACTORIZATION
+									1. LATENT FACTOR MODELS COMPRESS USER-ITEM MATRIX INTO A LOW-DIMENSIONAL REPRESENTATION IN TERMS OF LATENT FACTORS. ONE ADVANTAGE OF USING THIS APPROACH IS THAT INSTEAD OF HAVING A HIGH DIMENSIONAL MATRIX CONTAINING ABUNDANT NUMBER OF MISSING VALUES WE WILL BE DEALING WITH A MUCH SMALLER MATRIX IN LOWER-DIMENSIONAL SPACE.
+									2. A REDUCED PRESENTATION COULD BE UTILIZED FOR EITHER USER-BASED OR ITEM-BASED NEIGHBORHOOD ALGORITHMS. THERE ARE SEVERAL ADVANTAGES WITH THIS PARADIGM. IT HANDLES THE SPARSITY OF THE ORIGINAL MATRIX BETTER THAN MEMORY BASED ONES. ALSO COMPARING SIMILARITY ON THE RESULTING MATRIX IS MUCH MORE SCALABLE ESPECIALLY IN DEALING WITH LARGE SPARSE DATASETS.
+									
+									WHAT IS SINGULAR VALUE DECOMPOSITION?
+												The Singular Value Decomposition of a matrix is a factorization of the matrix into three matrices. Thus, the singular value decomposition of matrix A can be expressed in terms of the factorization of A into the product of three matrices as A = U.D.V**T
+
+												Here, the columns of U and V are orthonormal, and the matrix D is diagonal with real positive entries.
+												
+												SVD AND NMF MODELS COMPARISON
+														Singular Value Decomposition (SVD) and Non-negative Matrix Factorization (NMF) are matrix factorization techniques used for dimensionality reduction. SURPRISE package provides implementation of those algorithms.
+									We will use a popular Latent Factor Model called Singular Value Decomposition or SVD
+									1. U  is an  n×n  unitary matrix
+									2. Σ or D is a diagonal  n×d  matrix with non-negative real numbers on the diagonal
+									3. V  is an  d×d  unitary matrix and  VT  is the transpose of  V .
+									
+									An important decision is choosing the number of factors to factor the user-item matrix. The higher the number of factors, THE MORE PRECISE IS THE FACTORIZATION IN THE ORIGINAL MATRIX RECONSTRUCTIONS. THEREFORE, IF THE MODEL IS ALLOWED TO MEMORIZE TOO MUCH DETAILS OF THE ORIGINAL MATRIX, IT MAY NOT GENERALIZE WELL FOR DATA IT WAS NOT TRAINED ON. REDUCING THE NUMBER OF FACTORS INCREASES THE MODEL GENERALIZATION
+									
+						Evaluation
+									In Recommender Systems, there are a set metrics commonly used for evaluation. mostly We choose to work with Top-N accuracy metrics, which evaluates the accuracy of the top recommendations provided to a user, comparing to the items the user has actually interacted in test set.
+									This evaluation method works as follows:
+									1. For each user
+											a. For each item the user has interacted in test set
+													1.Sample 100 other items the user has never interacted.
+													2.Ask the recommender model to produce a ranked list of recommended items, from a set composed of one interacted item and the 100 non-interacted items
+													3.Compute the Top-N accuracy metrics for this user and interacted item from the recommendations ranked list
+									2. Aggregate the global Top-N accuracy metric
+									
+									The Top-N accuracy metric choosen was Recall@N which evaluates whether the interacted item is among the top N items (hit) in the ranked list of 101 recommendations for a user.
+									
+							Recall@k or HitRatio@k
+										Recall@k is the proportion of relevant items found in the top-k recommendations to the user. 
+										
+										Please note that the larger k, the higher the hit ratio since there is a higher chance that the correct answer is covered in recommendations. 										
+										SUPPOSE THAT WE COMPUTED RECALL AT 10 AND FOUND IT IS 40% IN OUR TOP-10 RECOMMENDATION. THIS MEANS THAT 40% OF THE TOTAL NUMBER OF THE RELEVANT ITEMS APPEAR IN THE TOP-K RESULTS.
+										
+										-for example if 7 relevant items out of 10 are Found in your recommended items(k):
+															Recall@5 = tp/tp+fn ==7/7+3=0.70 or 70%
+
+										Mathematically recall@k is defined as follows:
+
+										Recall@k = (# of recommended items @k that are relevant) / (total # of relevant items)
+										
+
+							Precision@k
+										Precision @k is the proportion of recommended items in the top-k set that are relevant to the user
+										
+										-for example if we give 5 recommendation to a user and he interact with 3 in 5 of them then:
+															Precision@5 = tp/tp+fp ==3/3+2=0.60 or 60%
+															
+										
+
+										ITS INTERPRETATION IS AS FOLLOWS. SUPPOSE THAT MY PRECISION AT 10 IN A TOP-10 RECOMMENDATION IS 80%. THIS MEANS THAT 80% OF THE RECOMMENDATION I MAKE ARE RELEVANT TO THE USER.
+
+										Mathematically precision@k is defined as follows:
+
+										Precision@k = (# of recommended items @k that are relevant) / (# of recommended items @k)
+										
+							An Illustrative example for easyness----------
+												In this example we will illustrate the method to calculate precision@k and recall@k metrics
+												
+												
+																		items-----------/actual/     /predicted/
+																		item1			4				2.3
+																		item2			2				3.6
+																		item3			3				3.4
+																		item4			?				4.3
+																		item5			5				4.5
+																		item6			?				2.3
+																		item7			2				4.9
+																		item8			?				4.3
+																		item9			?				3.3
+																		item10			4				4.3
+
+												As a start we will ignore all the ratings where the actual value is not known. Values with no known true rating cannot be used.
+
+												We will sort the rest of the items by descending prediction rating. The results will be as follows:
+																	item/actual/predicted
+																	item7/2/4.9
+																	item5/5/4.5
+																	item10/4/4.3
+																	item2/2/3.6
+																	item3/3/3.4
+																	item1/4/2.3
+												Relevant items:
+
+																The number of relevant items are the items with actual rating greater or equal to 3.5.
+
+																Relevant items: item5, item10 and item1
+																total # of relevant items = 3
+												Recommended items @ 3:
+
+																The recommended items at 3 are item7, item5 and item10
+																(more items can also be there but we have to choose higher than 4 rating)  
+
+																Recommended items @ 3: item7, item5 and item10
+																# of recommended items at 3 = 3
+												Recommended and Relevant items @ 3
+
+																It is the intersection between Recommended@3 and Relevant@3 which are
+
+																Recommended@3 INTERSECTION Relevant= item5 and item10
+																# of recommended items that are relevant @3= 2
+												Precision @ 3:
+
+																We can compute the precision which is 66.67%. Here we can interpret that only 66.67% of my recommendations are actually relevant to the user.
+
+																Precision@3
+																=(# of recommended items that are relevant @3)/(# of recommended  items at 3)
+																= 2/3 
+																= 66.67%
+												Recall @ 3:
+
+																Here we can interpret that 66.67% percent of the relevant items were recommended in the top-k items
+
+																Recall@3 
+																= (# of recommended items that are relevant @3)/(total # of relevant items)
+																= 2/3
+																= 66.67%
+									Limit cases
+												In the computation of precision@k, we are dividing by the number of items recommended in the top-k recommendation. If there are no items recommended. i.e. number of recommended items at k is zero, we cannot compute precision at k since we cannot divide by zero. In that case we set precision at k to 1. This makes sense because in that case we do not have any recommended item that is not relevant.
+
+												Similarly, when computing recall@k we might face a similar situation when the total number of relevant items is zero. In that case we set recall at k to be 1. This also makes sense because we do not have any relevant item that is not identified in our top-k results.
+										
+										
+							F1@k
+										F1@k is a harmonic mean of precision@k and recall@k that helps to simplify them into a single metric. All the above metrics can be calculated based on the confusion matrix. The exact formulas are similar to f1 score.
+										
+						
+						
+						OTHERS METRICES: 
+									MAP@K (MEAN AVG PRECISION) and MAR@K (MEAN AVG RECALL):
+												A recommender system typically produces an ordered list of recommendations for each user in the test set. MAP@K gives insight into how relevant the list of recommended items are, 
+												whereas MAR@K gives insight into how well the recommender is able to recall all the items the user has rated positively in the test set. 
+												
+							source- https://neptune.ai/blog/recommender-systems-metrics
+							
+											
+				cold start: Recommender systems have a problem known as user cold-start, in which it is hard to provide personalized recommendations for users with none or a very few number of consumed items, due to the lack of information to model their preferences.
+				
+				------https://towardsdatascience.com/how-does-collaborative-filtering-work-da56ea94e331
+							
+			2. CONTENT-BASED FILTERING
+					THIS METHOD USES ONLY INFORMATION ABOUT THE DESCRIPTION AND ATTRIBUTES OF THE ITEMS USERS HAS PREVIOUSLY CONSUMED TO MODEL USER'S PREFERENCES. IN OTHER WORDS, THESE ALGORITHMS TRY TO RECOMMEND ITEMS THAT ARE SIMILAR TO THOSE THAT A USER LIKED IN THE PAST (OR IS EXAMINING IN THE PRESENT). IN PARTICULAR, VARIOUS CANDIDATE ITEMS ARE COMPARED WITH ITEMS PREVIOUSLY RATED BY THE USER AND THE BEST-MATCHING ITEMS ARE RECOMMENDED.
+					
+					Example: If a user likes comedy, another comedy is recommended
+					
+					Advantages: 
+								1. Doesn’t need any data about the other users
+								2. Can recommend niche items
+					Disadvantages:
+								1. Requires a lot of domain knowledge
+								2. Makes recommendations only based on the existing interests of the user
+								
+								
+								1. Content-based filtering approaches leverage description or attributes from items the user has interacted to recommend similar items. It depends only on the user previous choices, making this method robust to avoid the cold-start problem. For textual items, like articles, news and books, it is simple to use the raw text to build item profiles and user profiles.
+								2. HERE WE ARE USING A VERY POPULAR TECHNIQUE IN INFORMATION RETRIEVAL (SEARCH ENGINES) NAMED TF-IDF. THIS TECHNIQUE CONVERTS UNSTRUCTURED TEXT INTO A VECTOR STRUCTURE, WHERE EACH WORD IS REPRESENTED BY A POSITION IN THE VECTOR, AND THE VALUE MEASURES HOW RELEVANT A GIVEN WORD IS FOR AN ARTICLE. AS ALL ITEMS WILL BE REPRESENTED IN THE SAME VECTOR SPACE MODEL, IT IS TO COMPUTE SIMILARITY BETWEEN ARTICLES.
+								
+											VECTOR SPACE MODEL:
+													Vector space model or term vector model is an algebraic model for representing text documents (and any objects, in general) as vectors of identifiers (such as index terms). It is used in information filtering, information retrieval, indexing and relevancy rankings. Its first use was in the SMART Information Retrieval System.
+													
+											Obtain vector embeddings of each word in our corpus
+														To do this we use the TF-IDF Vectorizer technique
+															Term Frequency (TF) - How many times a particular word appears in a single document?
+															Inverse Document Frequency (IDF) - It is calculated by taking the log of {number of docs in your corpus divided by the number of docs in which this term appears}. This takes care of words which are present rarely across the corpus.
+								
+								
+								
+							
+							For Content Based Book Recommendation we have to use NLP techniques like Keyword extraction -> Extract keywords from title Cosine Similarity -> Find cosine similarity between all book titles.
+							KEYWORD EXTRACTION- KEYWORD EXTRACTION IS AUTOMATIC DETECTION OF TERMS THAT BEST DESCRIBE THE SUBJECT OF A DOCUMENT.
+							FOR KEYWORD EXTRACTION WE TRY 3 OF THE BELOW,
+							**CountVectorizer** - PROVIDES A SIMPLE WAY TO BOTH TOKENIZE A COLLECTION OF TEXT DOCUMENTS AND BUILD A VOCABULARY OF KNOWN WORDS, BUT ALSO TO ENCODE NEW DOCUMENTS USING THAT VOCABULARY.
+							**Tf-Idf Vectorizer** - TF-IDF FINDS THE NO. OF TIMES A WORD OCCURS IN A DOCUMENT AND THEN COMPARES THIS COUNT TO THE NO. OF TIMES THE WORD SHOWS UP IN A BUNCH OF OTHER DOCUMENTS IN A COLLECTION. IT THEN GENERATES A RANK FOR EACH WORD WHERE IT IS IMPORTANT TO A DOCUMENT IF IT SHOWS UP A LOT IN THAT PARTICULAR DOCUMENT BUT DOESN’T SHOW UP A LOT IN ALL THE OTHER DOCUMENTS. 
+							deff between count and tfidf-  https://machinelearningmastery.com/prepare-text-data-machine-learning-scikit-learn/
+							**Rake** - RAKE IS USED WHEN YOU WANT TO EXTRACT KEYWORDS WITHOUT ANY SPECIFIC CONTEXT (THOUGH IT DOES USE A GENERALIZED SET OF STOPWORDS) WONDERFUL ARTICLES -> COMPARISON OF RAKE & TF-IDF ALGORITHMS- https://nzmattgrant.wordpress.com/2018/01/31/a-comparison-of-rake-and-tf-idf-algorithms-for-finding-keywords-in-text/
+							project with them -https://www.kaggle.com/code/sasha18/recommend-books-using-count-tfidf-on-titles
+
+					
+
+								
+			3. Hybrid Approach
+					Recent research has demonstrated that a hybrid approach, combining collaborative filtering and content-based filtering could be more effective than pure approaches in some cases. These methods can also be used to overcome some of the common problems in recommender systems such as cold start and the sparsity problem.
+					
+					A hybrid recommendation system is a combination of content-based and collaborative filtering methods. These systems help to overcome issues that are faced in those two types of recommenders. It can be implemented in various ways:
+
+							1. The two components can be developed separately and can be combined. 
+							2. It can be also designed hierarchically based on conditions regarding the amount of user data available. As already mentioned, the “View together” strategy can be applied for new users and content-based item-centred filtering. This helps to overcome the cold-start problem. However, when there is more data available for past purchasers, we can implement collaborative filtering methods for them.
+
+				
+				why collabarative filtering failed?
+				
+				
+				what is COSINE SIMILARITY:-   
+										COSINE SIMILARITY IS USED TO DETERMINE THE SIMILARITY BETWEEN DOCUMENTS OR VECTORS. MATHEMATICALLY, IT MEASURES THE COSINE OF THE ANGLE BETWEEN TWO VECTORS PROJECTED IN A MULTI-DIMENSIONAL SPACE.THERE ARE OTHER SIMILARITY MEASURING TECHNIQUES LIKE EUCLIDEAN DISTANCE OR MANHATTAN DISTANCE AVAILABLE BUT WE WILL BE FOCUSING HERE ON THE COSINE SIMILARITY AND COSINE DISTANCE.
+
+										The relation between cosine similarity and cosine distance can be define as below.
+
+													1. Similarity decreases when distance between two vectors increases
+													2. Similarity increases when distance between two vectors decreases.
+													
+										Cosine Similarity and Cosine Distance:
+																Cosine similarity says that to find the similarity between two points or vectors we need to find Angle between them.
+
+																Formula to find the Cosine Similarity and Distance is as below:
+																			1-cosine similarity=cosine distance
+																			 where, 
+																			 cosine similarity= Cos theta()=A.B/||A|| ||B|| = AB/(ROOT OF A**2 * ROOT OF B**2)
+																							WHERE, A= point p1 and B= point p2
+																							
+																Lets see the various values of Cos Θ to understand cosine similarity and cosine distance between two data points(vectors) P1 & P2 considering two axis X and Y.
+
+																		Case 1: When WE measure angle between points P1 & P2 is 45 Degree then
+
+																				cosine_similarity= Cos 45 = 0.525 (nearly 50% similar)
+																				1–0.525= Cosine_Distance
+
+																		Case 2: When two points P1 & P2 are far from each other and angle between points is 90 Degree then
+
+																		cosine_similarity= Cos 90 = 0(min similarity)
+																		1-0 =Cosine_Distance
+
+																		Case 3: When two points P1 & P2 are very near and lies on same axis to each other and angle between points is 0 Degree then
+
+																		cosine_similarity= Cos 0 = 1(max similarity)
+																		1–1= Cosine_Distance
+																		
+																		Case 4: When points P1 & P2 lies opposite two each other and and angle between points is 180 Degree then
+
+																		cosine_similarity= Cos 180 = -1 (no similarity)
+																		1-(-1)= Cosine_Distance
+
+																		Case 5: When angle between points P1 & P2 is 270 Degree then
+
+																		cosine_similarity= Cos 270 = 0
+																		1–0= Cosine_Distance
+
+																		Case 6: When angle between points P1 & P2 is 360 Degree then
+
+																		cosine_similarity= Cos 360 = 1
+																		1–1= Cosine_Distance
+																		
+																		
+																		
+																		
+											We can clearly see that when distance is less the similarity is more(points are near to each other) and distance is more ,two points are dissimilar (far away from each other)
+
+											Cosine Similarity and Cosine Distance is heavily used in recommendation systems to recommend products to the users based on there likes and dislikes.
+
+											Few example where this is used are websites likes Amazon,Flipkart to recommend items to customers for personalized experience,Movies rating and recommendation etc.
+											
+								OTHER SIMILARITY METRICES:
+								Jaccard similarity
+											Jaccard similarity is the size of the intersection divided by the size of the union of two sets of items.
+
+											Jaccard similarity OR J(A,B)=|AUB|/|A (intersection) B|
+											The difference from other similarity metrics in this article is that Jaccard similarity takes sets or binary vectors as an input. If vectors contain rankings or ratings, it is not applicable. In the case of movie recommendation, let’s say we have 3 movies with 3 top tags.
+
+											Movie A tags = (adventure, romantic, action)
+											Movie B tags = (adventure, space, action)
+											Movie C tags = (romantic, comedy, friendship)
+											Based on the data we may say that movie A is more similar to movie B than to movie C. This is because A and B share 2 tags (adventure, action) and A and C share one tag (romantic). 
+
+								Euclidean distance
+											It is the distance between two users in a user-centered system is the length of the line segments connecting them. The preference space is available items and the axes are items rated by the user. Based on user ratings we search for items liked by users with similar tastes. The lower the distance between two persons, the higher the chance they like similar items.
+											
+											THE EUCLIDEAN DISTANCE BETWEEN TWO POINTS IS THE LENGTH OF THE SHORTEST PATH CONNECTING THEM. USUALLY COMPUTED USING PYTHAGORAS THEOREM FOR A TRIANGLE.
+
+											Euclidean distance OR d(person-i,person-j)=root of (X1-X2)**2+(Y1-Y2)**2
+											A potential disadvantage of this metric is that when person A tends to give higher scores in general (whole rankings distribution is higher) than person B, a Euclidean similarity will be large without any regard to the correlation between person A and person B.
+
+								PEARSON CORRELATION COEFFICIENT
+											PCC is a measure of the slope of the line that represents the relation between two vectors of users ratings. It can range from -1 to 1, 0 means no linear correlation. 
+
+											PCC
+											For example, let’s consider ratings given by user A and user B:
+
+											Ratings by user A = [5, 6, 8, 5, 7]
+											Ratings by user B = [5, 8, 6, 5, 5]
+											The best fit line has a positive slope, which means a positive correlation between user A and user B :
+											
+											By using this approach, we can predict how person A would rate a product not rated yet. To do that, we simply take the weighted average of ratings of other users (including user B), where weights are calculated using PCC similarities.
+
+
+				
+						
+						
+						
+				
+				
+Time Series Analysis I:
+
+						Time series is a series of data points indexed (or listed or graphed) in time order.
+						OR A SET OF OBSERVATIONS RECORDED AT AN EQUAL INTERVAL OF TIME IS CALLED TIME SERIES DATA.
+						Therefore, the data is organized by relatively deterministic timestamps, and may, compared to random sample data, contain additional information that we can extract.
+						
+						THE AIM OF FORECASTING TIME SERIES DATA IS TO UNDERSTAND HOW THE SEQUENCE OF OBSERVATIONS WILL CONTINUE IN THE FUTURE.
+						
+						FORECASTING IS THE PROCESS OF MAKING PREDICTIONS OF THE FUTURE BASED ON PAST AND PRESENT DATA. FOR EXAMPLE, ESTIMATING THE NUMBER OF GALLONS OF ICE CREAM SOLD BY A SINGLE ICE CREAM STORE PER MONTH FOR THE NEXT TWELVE MONTHS DEFINITELY COUNTS AS FORECASTING
+						
+						ADDITIVE AND MULTIPLICATIVE TIME SERIES: 
+										ADDITIVE TIME SERIES IS ONE IN WHICH THE MAGNITUDE OF TREND AND SEASONALITY DOES NOT INCREASE WITH TIME. THEY REMAIN FAIRLY CONSTANT. MULTIPLICATIVE TIME SERIES IS ONE IN WHICH THE MAGNITUDE OF TREND AND SEASONALITY INCREASES AS TIME PERIOD INCREASES.
+						
+						Ways to approach a Time Series Prediction Problem
+						1. Time Series Approach
+						2. Machine Learning Approach
+						
+						Let's start with a naive hypothesis: "tomorrow will be the same as today". However, instead of a model like y^t=yt−1 (which is actually a great baseline for any time series prediction problems and sometimes is impossible to beat), WE WILL ASSUME THAT THE FUTURE VALUE OF OUR VARIABLE DEPENDS ON THE AVERAGE OF ITS K PREVIOUS VALUES. THEREFORE, WE WILL USE THE MOVING AVERAGE.
+								y^t=1/k∑k-up n=1-down yt−n
+								
+						Double exponential smoothing (HOLT’S LINEAR trend method):
+											Up to now, the methods that we've discussed have been for a single future point prediction (with some nice smoothing). That is cool, but it is also not enough.
+											HOLT (1957) EXTENDED SIMPLE EXPONENTIAL SMOOTHING TO ALLOW THE FORECASTING OF DATA WITH A TREND. THIS METHOD INVOLVES A FORECAST EQUATION AND TWO SMOOTHING EQUATIONS (ONE FOR THE LEVEL AND ONE FOR THE TREND):
+											
+											Series decomposition will help us -- we obtain two components: intercept (i.e. level)  ℓ  and slope (i.e. trend)  b . We have learnt to predict intercept (or expected series value) with our previous methods; now, WE WILL APPLY THE SAME EXPONENTIAL SMOOTHING TO THE TREND BY ASSUMING THAT THE FUTURE DIRECTION OF THE TIME SERIES CHANGES DEPENDS ON THE PREVIOUS WEIGHTED CHANGES.
+						
+						Econometric approach:
+											STATIONARITY:
+														Before we start modeling, we should mention such an important property of time series: stationarity.
+														IF A PROCESS IS STATIONARY, THAT MEANS IT DOES NOT CHANGE ITS STATISTICAL PROPERTIES OVER TIME, NAMELY ITS MEAN AND VARIANCE. (The constancy of variance is called homoscedasticity)The covariance function does not depend on time; it should only depend on the distance between observations.
+														
+														So why is stationarity so important? Because it is easy to make predictions on a stationary series since we can assume that the future statistical properties will not be different from those currently observed. Most of the time-series models, in one way or the other, try to predict those properties (mean or variance, for example). FUTURE PREDICTIONS WOULD BE WRONG IF THE ORIGINAL SERIES WERE NOT STATIONARY. UNFORTUNATELY, MOST OF THE TIME SERIES THAT WE SEE OUTSIDE OF TEXTBOOKS ARE NON-STATIONARY, BUT WE CAN (AND SHOULD) CHANGE THIS.
+														So, in order to combat non-stationarity, we have to know our enemy, so to speak. Let's see how we can detect it. We will look at white noise and random walks to learn how to get from one to another for free.
+														
+														WHY DO WE NEED STATIONARY TIME SERIES? BECAUSE IF THE TIME SERIES IS NOT STATIONARY, WE CAN STUDY ITS BEHAVIOR ONLY FOR THAT TIME PERIOD. EACH PERIOD OF THE TIME SERIES WILL HAVE ITS OWN DISTINCT BEHAVIOR AND IT IS NOT POSSIBLE TO PREDICT OR GENERALIZE FOR FUTURE TIME PERIODS IF THE SERIES IS NOT STATIONARY.
+														
+														A STATIONARY TIME SERIES WILL TEND TO RETURN TO ITS MEAN VALUE AND THE FLUCTUATIONS AROUND THIS MEAN WILL HAVE A CONSTANT MAGNITUDE. THUS, A STATIONARY TIME SERIES WILL NOT DRIFT TOO MUCH FROM ITS MEAN VALUE BECAUSE OF THE FINITE VARIANCE.
+														One example of a stationary time series is ‘White Noise’. Cause of its inherent stationarity, it has no predictable pattern in the long term. It is thus memoryless.
+														HOW DO WE CHECK FOR STATIONARITY?
+																	Two popular tests used to check for stationarity are Augmented Dickey Fuller Test (ADF) and Kwiatkowski-Phillips-Schmidt-Shin Test (KPSS). Let us look at each test in detail. see 2nd blog.
+																ADF-	
+																		if in the ADF test the p value is greater than 0.05, thus we fail to reject the Null Hypothesis. Therefore, the series has a unit root and is non stationary.
+																	
+																KPSS- 	
+																		And if in KPSS test we found that Here, the p value in kpss test is less than 0.05. However, the Null Hypothesis of KPSS test is opposite of the ADF test. Thus here, we will reject the Null Hypothesis of stationary series and conclude that the series is non stationary.
+														
+									Building SARIMA-
+													Surprisingly, the initial series are stationary; the Dickey-Fuller test rejected the null hypothesis that a unit root is present. Actually, we can see this on the plot itself -- we do not have a visible trend, so the mean is constant and the variance is pretty much stable. The only thing left is seasonality, which we have to deal with prior to modeling. To do so, let's take the "seasonal difference", which means a simple subtraction of the series from itself with a lag that equals the seasonal period.
+													
+									Buildig ARIMA:
+													We will explain this model by building up letter by letter. SARIMA(p,d,q)(P,D,Q,s), Seasonal Autoregression Moving Average model:
+														1. AR(p) - autoregression model i.e. regression of the time series onto itself. The basic assumption is that the current series values depend on its previous values with some lag (or several lags). The maximum lag in the model is referred to as p. To determine the initial p, you need to look at the PACF plot and find the biggest significant lag after which most other lags become insignificant.
+														2. MA(q) - moving average model. Without going into too much detail, this models the error of the time series, again with the assumption that the current error depends on the previous with some lag, which is referred to as q. The initial value can be found on the ACF plot with the same logic as before.
+													Let's combine our first 4 letters:
+
+													AR(p)+MA(q)=ARMA(p,q)
+													What we have here is the Autoregressive–moving-average model! If the series is stationary, it can be approximated with these 4 letters. Let's continue.
+
+														1. I(d) - order of integration. This is simply the number of nonseasonal differences needed to make the series stationary. In our case, it's just 1 because we used first differences.
+														ADDING THIS LETTER TO THE FOUR GIVES US THE ARIMA MODEL WHICH CAN HANDLE NON-STATIONARY DATA WITH THE HELP OF NONSEASONAL DIFFERENCES. GREAT, ONE MORE LETTER TO GO!
+
+														2. S(s) - this is responsible for seasonality and equals the season period length of the series
+														With this, we have three parameters: (P,D,Q)
+
+														3. P - order of autoregression for the seasonal component of the model, which can be derived from PACF. But you need to look at the number of significant lags, which are the multiples of the season period length. For example, if the period equals 24 and we see the 24-th and 48-th lags are significant in the PACF, that means the initial P should be 2.
+														4. Q - similar logic using the ACF plot instead.
+														5. D - order of seasonal integration. This can be equal to 1 or 0, depending on whether seasonal differeces were applied or not.
+														
+														Now that we know how to set the initial parameters, let's have a look at the final plot once again and set the parameters:
+																			ARIMA - Parameters:
+																								p: Trend autoregression order-- is most probably 4 since it is the last significant lag on the PACF, after which, most others are not significant. 
+																								d: Trend difference order-- D equals 1 because we had first differences
+																								q: Trend moving average order-- q  should be somewhere around 4 as well as seen on the ACF
+																								
+																			SEASONAL - Parameters:
+																								P: Seasonal autoregressive order-- P  might be 2, since 24-th and 48-th lags are somewhat significant on the PACF
+																								D: Seasonal difference order-- D  again equals 1 because we performed seasonal differentiation
+																								Q: Seasonal moving average order-- Q  is probably 1. The 24-th lag on ACF is significant while the 48-th is not.				
+						
+we cant feed non stationary data to SARIMAX.
+
+
+				A HIERARCHICAL TIME SERIES-
+										A HIERARCHICAL TIME SERIES (HTS) IS A COLLECTION OF TIME SERIES THAT FOLLOWS A HIERARCHICAL AGGREGATION STRUCTURE. AS AN EXAMPLE, ASSUME THAT THERE ARE THREE STORES (BUCKHEAD, MIDTOWN, AND DOWNTOWN) THAT SELL SCOOPEX ICE CREAM IN ATLANTA. A GIVEN STORE’S MONTHLY ICE CREAM SALES IS, ITSELF, A TIME SERIES. THE TOTAL GALLONS OF ICE CREAM SOLD ACROSS ALL THREE STORES IS ALSO A TIME SERIES. CRUCIALLY, THIS COLLECTION OF FOUR TIME SERIES HAS A HIERARCHICAL AGGREGATION STRUCTURE (SPECIFICALLY, A TWO-LEVEL GEOGRAPHICAL HIERARCHY).
+										
+										Other common hierarchies include product hierarchies (e.g., SKU sales aggregate up to product subcategory sales, which further aggregate to product categories, and so on), temporal hierarchies (e.g., forecasts for the next seven days must add up to the week’s individual forecast), and more.
+										FOR E.G. DATA COLLECTED ON THE SALE OF SMARTPHONES OVER SEVERAL TIME INTERVALS, THE GDP OF A NATION EACH YEAR, ELECTRICITY PRODUCTION EVERY YEAR/MONTH ETC. ARE ALL EXAMPLES OF TIME SERIES DATA.
+										
+										
+										
+										Hierarchical time series forecasting is the process of generating coherent forecasts (or reconciling incoherent forecasts), allowing individual time series to be forecast individually, but preserving the relationships within the hierarchy.
+										HTS forecasting is not a time series forecasting methodology per se, like exponential smoothing or ARIMA. It’s actually a collection of techniques that make forecasts coherent across a time series hierarchy.
+										
+										THESE METHODS COULD ALSO BE USED TO ALIGN SHORT- AND LONG-TERM FORECASTS FOR CONSISTENCY OF FINANCIAL PLANNING AND BUDGETING. FOR EXAMPLE, IN RETAIL, YOU MAY NEED A WEEKLY SALES FORECAST FOR THE NEXT MONTH TO MAKE TACTICAL INVENTORY DECISIONS, BUT ALSO A MONTHLY SALES FORECAST FOR THE NEXT YEAR FOR LONG-TERM PROCUREMENT PLANNING.
+										
+										In practice, the best choice is oftentimes a combination of hierarchies, as forecast accuracy tends to improve if the model can learn from multiple relationships. For example, weekly sales for a SKU at a store can roll up into both product and geographical hierarchies. This is called a grouped time series (GTS), which is an extension of a hierarchical time series.
+										
+										There are four common HTS forecasting methods
+														1) The bottom-up approach;
+																	AS THE NAME SUGGESTS, BOTTOM-UP FORECASTING INVOLVES FORECASTING THE MOST GRANULAR LEVEL OF THE HIERARCHY, THEN AGGREGATING UP TO CREATE ESTIMATES FOR THE HIGHER LEVELS.
+																	APPLYING BOTTOM-UP FORECASTING TO OUR ICE CREAM EXAMPLE REQUIRES FORECASTING THE INDIVIDUAL STORE SALES FOR THE BUCKHEAD, MIDTOWN, AND DOWNTOWN LOCATIONS FIRST. TOTAL ATLANTA ICE CREAM SALES CAN THEN BE CALCULATED BY SIMPLY ADDING UP THESE STORE-LEVEL FORECASTS. RINSE AND REPEAT FOR THE CHICAGOLAND LOCATIONS, AND THEN NATIONAL SALES WILL FOLLOW.
+																	The main advantage of this method is that, because forecasts are obtained at the lowest level of the hierarchy, no information is lost due to aggregation. However, it ignores the relationships between the series (e.g., doesn’t take any Atlanta-area forecasts into account when forecasting Chicagoland locations, and vice versa), and usually performs poorly on highly aggregated data. It’s also computationally intensive, since you have to forecast the most granular time series in the hierarchy, meaning more data points (and therefore more horsepower and/or runtime is required). Furthermore, information at lower levels of a hierarchy tends to be noisier, potentially resulting in a reduced overall forecast accuracy.
+																	
+														2) The top-down approach
+																	IN THE TOP-DOWN APPROACH, YOU FIRST FORECAST THE HIGHEST LEVEL OF THE HIERARCHY, THEN SPLIT UP THE FORECASTS TO GET ESTIMATES FOR THE LOWER LEVELS (TYPICALLY USING HISTORICAL PROPORTIONS).
+																	FOR EXAMPLE, ASSUME THE FORECAST FOR NEXT MONTH’S NATIONWIDE ICE CREAM SALES IS 30,000 GALLONS. LET’S ALSO SAY THAT THE HISTORICAL PROPORTION OF MONTHLY ICE CREAM SALES IS ABOUT ⅓ FOR ATLANTA AND ⅔ FOR CHICAGO. THE TOP-DOWN APPROACH TELLS US THAT ATLANTA IS PROJECTED TO SELL ABOUT 10,000 GALLONS OF ICE CREAM IN THE NEXT MONTH. RINSE AND REPEAT FOR THE LOWER LEVELS OF THE HIERARCHY.
+																	
+																	Due to its simplicity, this is one of the most commonly used methods for HTS forecasting. It provides reliable forecasts for higher levels in the hierarchy, and only a single true forecasting model is required.
+																	However, the top-down approach tends to produce less accurate forecasts at lower levels of the hierarchy due to a loss of information (historical proportions don’t always fully capture the true behavior of the lower levels), especially for individual series with difficult distributions.
+														3) The middle-out approach
+																	The middle-out approach is a combination of the bottom-up and top-down approaches, and can BE USED ON HIERARCHIES WITH AT LEAST THREE LEVELS.
+																	IN THIS APPROACH, YOU START BY FORECASTING THE MIDDLE LEVEL (NEITHER THE MOST GRANULAR NOR THE MOST AGGREGATED). AFTER THESE NUMBERS ARE CALCULATED, YOU CAN FORECAST THE HIGHER LEVELS in the hierarchy using the bottom-up approach and the lower levels with the top-down approach.
+																	
+																	FOR EXAMPLE, IN THE HIERARCHY SHOWN BELOW, FORECASTS WILL BE GENERATED FOR ATLANTA AND CHICAGO. THE NATIONAL SALES FORECAST CAN BE CALCULATED BY ADDING UP THE INDIVIDUAL FORECASTS FOR BOTH, AND THE LOCATION-LEVEL FORECASTS ARE ESTIMATED USING HISTORICAL PROPORTIONS.
+																	
+																	The middle-out approach is a healthy compromise between the bottom-up and top-down approach. Resulting forecasts don’t lose too much information, yet computational time does not explode.
+																	
+														4) The optimal combination/reconciliation approach
+																	ALL THE APPROACHES MENTIONED ABOVE ONLY REALLY FORECAST ONE LEVEL OF THE HIERARCHY, BUT THE OPTIMAL COMBINATION APPROACH (PROPOSED BY HYNDMAN ET AL. IN 2011) FORECASTS INDEPENDENTLY AT ALL LEVELS, USING ALL THE INFORMATION AND RELATIONSHIPS A HIERARCHY CAN OFFER.
+																	
+																	Assuming the base forecasts approximately satisfy the hierarchical aggregation structure (i.e., they’re not off by a half a million gallons of ice cream), the individual forecasts are then reconciled using a linear regression model. The newly coherent forecasts are a weighted sum of the forecasts from all levels, with the weights found by solving a system of equations that ensure the natural relationships between the different levels of the hierarchy are satisfied.
+																	
+																	The optimal reconciliation approach can give more accurate forecasts than the other methods we’ve covered so far, providing unbiased forecasts at all levels with minimal loss of information, taking advantage of the relationships between time series to find patterns (e.g., seasonal variations at higher levels can better inform forecasts at lower levels of hierarchy). In addition, each forecast is created independently, meaning different forecasting methods (e.g., ARIMA, ETS, naive methods, etc.) can be used at each level. Though it’s potentially the most accurate option, this method is also the most complex and computationally intensive approach, which means that it doesn’t scale well for a large number of time series.
+																	
+								How do I decide which approach to use?
+														The best approach typically depends on your goals and constraints. Our general advice would be to start with simpler approaches, then move to more complex and computationally intensive methods if you’re unsatisfied with your results. In short, IF A FASTER AND SIMPLER APPROACH PROVIDES A FORECAST THAT SUITS YOUR NEEDS, YOU CAN START WITH A TOP-DOWN APPROACH AND SKIP THE MORE COMPLEX STUFF. To figure out what’s good enough for you, figure out if you need certain degrees of accuracy at certain levels of the hierarchy, if you’re limited by the available computing or time resources, or if you’re constrained in any other way (e.g., your stakeholders must be able to interpret the model instead of just using the results).
+														
+														THE BOTTOM-UP, TOP-DOWN, AND MIDDLE-OUT APPROACHES ARE TYPICALLY BIASED TOWARD THE LEVEL THEY’RE FORECASTING. IF GETTING AN ACCURATE FORECAST FOR THAT LEVEL IS THE MAIN GOAL, THEN USING ONE OF THESE THREE MIGHT BE BEST. If not, the optimal reconciliation method provides unbiased forecasts that typically work at all levels of the hierarchy, but may be computationally restrictive when working with too many time series. If there are no constraints on computational time (we can all dream), the best strategy is to evaluate each method using back-testing, also known as time series cross-validation.
+														Conclusion
+																HIERARCHICAL TIME SERIES FORECASTING IS A COLLECTION OF TECHNIQUES THAT MAKES FORECASTS COHERENT ACROSS A TIME SERIES HIERARCHY. IT IS MOST VALUABLE WHEN DIFFERENT PARTS OF THE BUSINESS USE INTERCONNECTED FORECASTS THAT NEED TO ADD UP. IT ENSURES THAT A HIERARCHY’S FORECASTS ARE COHERENT, RESULTING IN BETTER PLANNING, BUDGETING, AND EXECUTION ACROSS THE BUSINESS.
+																all from -  https://medium.com/opex-analytics/hierarchical-time-series-101-734a3da15426#:~:text=Hierarchical%20time%20series%20forecasting%20is,the%20relationships%20within%20the%20hierarchy.
+
+				Following are the various components of the time series:
+						1. Secular Trend or Simple trend or Long term movement: 
+										Secular trend refers to the general tendency of data to increase or decrease or stagnate over a long period of time. Time series relating to Economic, Business, and Commerce may show an upward or increasing tendency. Whereas, the time series relating to death rates, birth rates, share prices, etc. may show a downward or decreasing tendency.
+						2. Seasonal variations: 
+										Seasonal variations refer to the changes that take place due to the rhythmic forces which operate in a regular and periodic manner. These forces usually have the same or most similar pattern year after year. When we record data weekly, monthly or quarterly, we can see and calculate seasonal variations. Thus, when a time series consists of data only based on annual figures, there will be seen no seasonal variations. These variations may be due to seasons, weather conditions, habits, customs or traditions. For example, in summers the sale of ice-cream increases and at the time of Diwali the sale of diyas, crackers, etc. go up.
+						3. Cyclical variations: 
+										Cyclical variations are due to the ups and downs recurring after a period from time to time. These are due to the business cycle and every organization has to phase all the four phases of a business cycle some time or the other. Prosperity or boom, recession, depression, and recovery are the four phases of a business cycle.
+						4. Random or irregular variations: 
+										Random variations are fluctuations which are a result of unforeseen and unpredictable forces. These forces operate in an absolutely random or erratic manner and do not have any definite pattern. Thus, these variations may be due to floods, famines, earthquakes, strikes, etc.
+										
+				The advantages of time series analysis are as follows:
+									1. Reliability: Time series analysis uses historical data to represent conditions along with a progressive linear chart. The information or data used is collected over a period of time say, weekly, monthly, quarterly or annually. This makes the data and forecasts reliable.
+									2. Seasonal Patterns: As the data related to a series of periods, it helps us to understand and predict the seasonal pattern. For example, the time series may reveal that the demand for ethnic clothes not only increases during Diwali but also during the wedding season.
+									3. Estimation of trends: The time series analysis helps in the identification of trends. The data tendencies are useful to managers as they show an increase or decrease in sales, production, share prices, etc.
+									4. Growth: Time series analysis helps in the measurement of financial growth. It also helps in measuring the internal growth of an organization that leads to economic growth.
+									
+							Holt-Winters Forecasting-  https://grisha.org/blog/2016/02/17/triple-exponential-smoothing-forecasting-part-iii/
+
+
+The best method for finding out seasonal variation is: Ratio to moving average method
+In moving average method we cannot find trend values of some:  Starting and End Periods
+A set of observations recorded at an equal interval of time is called: Time series data
+A rise in prices before Eid is an example of:  Seasonal Trend
+Prosperity, Recession, and depression in a business is an example of:  Cyclical Trend
+Irregular variations in a time series are caused by: by strike , epidemic, flood, draughts, famines, earthquakes etc
+irregular trend:  a fire in a factory etc
+Is trend and variation same?
+							VARIANCE ANALYSIS IS A QUANTITATIVE REVIEW OF THE DIFFERENCES BETWEEN WHAT WE THOUGHT WOULD HAPPEN VERSUS WHAT ACTUALLY HAPPENED. WHILE TREND ANALYSIS IS A QUANTITIVE REVIEW OF WHAT HAPPENS OVER A PERIOD OF TIME. IN MOST CASES, VARIANCE AND TRENDS GO HAND IN HAND AND ARE REPORTED AT THE SAME TIME FOR THE SAME METRICS.
+The following are the movement(s) in the secular trend:  Growth of population in a locality over decades
+
+							TIME SERIES CROSS VALIDATION:
+									temporal cross-validation:
+									
+									WHAT CROSS-VALIDATION TECHNIQUE WOULD YOU USE ON A TIME SERIES DATA SET?
+												Solution 
+															INSTEAD OF USING K-FOLD CROSS-VALIDATION, YOU SHOULD BE AWARE OF THE FACT THAT A TIME SERIES IS NOT RANDOMLY DISTRIBUTED DATA, IT IS INHERENTLY ORDERED BY CHRONOLOGICAL ORDER. IN CASE OF TIME SERIES DATA, YOU SHOULD USE TECHNIQUES LIKE FORWARD-CHAINING, WHERE YOU WILL BE MODEL ON PAST DATA THEN LOOK AT FORWARD-FACING DATA. 
+															exp--
+																fold 1: training[1], test[2] 
+																fold 2: training[1 2], test[3] 
+																fold 3: training[1 2 3], test[4] 
+																fold 4: training[1 2 3 4], test[5]
+										Before we start building a model, let's first discuss how to estimate model parameters automatically.
+										
+										There is nothing unusual here; as always, we have to choose a loss function suitable for the task that will tell us how closely the model approximates the data. Then, using cross-validation, we will evaluate our chosen loss function for the given model parameters, calculate the gradient, adjust the model parameters, and so on, eventually descending to the global minimum.
+										You may be asking how to do cross-validation for time series because time series have this temporal structure and ONE CANNOT RANDOMLY MIX VALUES IN A FOLD WHILE PRESERVING THIS STRUCTURE. WITH RANDOMIZATION, ALL TIME DEPENDENCIES BETWEEN OBSERVATIONS WILL BE LOST. THIS IS WHY WE WILL HAVE TO USE A MORE TRICKY APPROACH IN OPTIMIZING THE MODEL PARAMETERS. WE CALL THIS TEMPORAL CROSS-VALIDATION.
+										The idea is rather simple -- we train our model on a small segment of the time series from the beginning until some  t , make predictions for the next  t+n  steps, and calculate an error. Then, we expand our training sample to  t+n  value, make predictions from  t+n  until  t+2∗n , and continue moving our test segment of the time series until we hit the last available observation. As a result, we have as many folds as  n  will fit between the initial training sample and the last observation.
+
+
+https://towardsdatascience.com/introduction-to-time-series-forecasting-part-1-average-and-smoothing-models-a739d832315
+
+https://towardsdatascience.com/introduction-to-time-series-forecasting-part-2-arima-models-9f47bf0f476b
+
+
+DS IN healthcare in detail study- https://www.altexsoft.com/blog/datascience/7-ways-data-science-is-reshaping-healthcare/
+
+
+
+				
+				
+		
+		
+
+
+
+
+
+
+
+
+
+
+
+
+

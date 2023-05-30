@@ -1,0 +1,1410 @@
+if test r2 is lower than train r2 that means it is overfitting(means high variance,low bias)
+if test r2 is low as well as train r2 that means it is underfitting(means high bias,low variance)
+if test r2 is high and balanced as well as train r2 that means it is balanced fit(means low variance and low bias)
+train test split in detail-
+https://machinelearningmastery.com/train-test-split-for-evaluating-machine-learning-algorithms/
+
+Assumption & limitations of models-   https://medium.com/swlh/its-all-about-assumptions-pros-cons-497783cfed2d
+
+#choosen hyperparameters for gridsearch-
+        # Number of trees
+        n_estimators = [50,80,100]
+
+        # Maximum depth of trees
+        max_depth = [4,6,8]
+
+        # Minimum number of samples required to split a node
+        min_samples_split = [50,100,150]
+
+        # Minimum number of samples required at each leaf node
+        min_samples_leaf = [40,50]
+
+        # HYperparameter Grid
+        param_dict = {'n_estimators' : n_estimators,
+                      'max_depth' : max_depth,
+                      'min_samples_split' : min_samples_split,
+                      'min_samples_leaf' : min_samples_leaf}
+					  
+					  
+
+
+
+NOTE:    Random forests are generally preferred over decision trees as they prevent overfitting.
+
+
+
+
+Scaling or transformation:
+
+					Feature scaling is essential for machine learning algorithms that calculate distances between data. If not scale, the feature with a higher value range starts dominating when calculating distances
+					
+					The ultimate choice depends on either domain knowledge of the dataset or trial and error. it can be seen BY printing of distribution after applying technique tht which one tech. returns a nice distribution.
+					
+					we scale x_train and x_test only and PCA also on that only after scaling.
+
+					The most common techniques of feature scaling are Normalization and Standardization.
+
+					Normalization-:  
+										Normalization is used when we want to bound our values between two numbers, typically, between [0,1] or [-1,1]. 
+										It is also known as Min-Max scaling.
+											
+											scaler = MinMaxScaler()
+					
+					Standardization-: 
+										Standardization transforms the data to have zero mean and a variance of 1, they make our data unitless. Refer to the below diagram, which shows how data looks after scaling in the X-Y plane.
+											scaler = StandardScaler()
+											X_train=ss.fit_transform(X_train)
+											X_test=ss.transform(X_test)
+
+					Suppose we have two features of weight and price, and weight value is greater than price. in that scenario The “Weight” cannot have a meaningful comparison with the “Price.” So the assumption algorithm makes that since “Weight” > “Price,” thus “Weight,” is more important than “Price.”
+					For Example, A Model Will Give More Weightage To 100cm Over 2m, Even Though The Latter Is Greater In Length.
+
+					ANOTHER REASON WHY FEATURE SCALING IS APPLIED IS THAT FEW ALGORITHMS LIKE NEURAL NETWORK,SVMS, GRADIENT DESCENT CONVERGE MUCH FASTER WITH FEATURE SCALING THAN WITHOUT IT.
+
+					Since the range of values of raw data varies widely, in some machine learning algorithms, objective functions do not work correctly without normalization. For example, the majority of classifiers calculate the distance between two points. If one of the features has a broad range of values, the distance governs this particular feature. Therefore, the range of all features should be normalized so that each feature contributes approximately proportionately to the final distance.
+							Rule of thumb we may follow here is an algorithm that computes distance or assumes normality, scales your features.
+							
+							1. K-nearest neighbors (KNN) with a Euclidean distance measure is sensitive to magnitudes and hence should be scaled for all features to weigh in equally.
+							2. K-Means uses the Euclidean distance measure here feature scaling matters.
+							3. Scaling is critical while performing Principal Component Analysis(PCA). bcoz PCA tries to get the features with maximum variance, and the variance is high for high magnitude features if not scales then it skews the PCA towards high magnitude features.
+							4. WE CAN SPEED UP GRADIENT DESCENT BY SCALING BECAUSE Θ DESCENDS QUICKLY ON SMALL RANGES AND SLOWLY ON LARGE RANGES, AND OSCILLATES INEFFICIENTLY DOWN TO THE OPTIMUM WHEN THE VARIABLES ARE VERY UNEVEN.
+		
+		
+			EFFECT ON MACHINE LEARNING ALGORITHMS 
+						ALGOS THAT REQUIRED SCALING:
+
+												Feature Scaling Has The Ability To Dramatically Increase The Accuracy Of A Model. It Works Extremely Well On Some Algorithms But Has No Effect On Others. Let’s Take A Look At Some  Algorithms.
+
+												ALGORITHMS THAT USE GRADIENT DESCENT (LINEAR REGRESSION, LOGISTIC REGRESSION(NOT THAT MUCH EFFECT), AND NEURAL NETWORK) ALONG WITH ALGORITHMS THAT USE EUCLIDEAN DISTANCE (K NEAREST NEIGHBORS, K-MEANS CLUSTERING, AND SUPPORT VECTOR MACHINE) REQUIRE THE FEATURES TO BE SCALED.PCA also need that
+
+										FOR ALGORITHMS THAT USE GRADIENT DESCENT, THE OBJECTIVE IS TO FIND A SMOOTH CURVE TO THE GLOBAL MINIMA. HOWEVER, IF THE FEATURES ARE INDEPENDENT OF EACH OTHER, THE DIFFERENCE IN THE RANGE OF VALUES WILL CAUSE THE STEP-SIZE TO VARY. AS A RESULT, THE CURVE WILL BE FAR FROM SMOOTH. 
+
+										ALGORITHMS THAT USE EUCLIDEAN DISTANCE ARE MOST SENSITIVE TO THE RANGE OF FEATURES. THIS IS BECAUSE, IF THE RANGE IS HUGE, THE DISTANCE BETWEEN DATA POINTS WILL BE HUGE AS WELL, WHICH IN TURN WILL BE DETRIMENTAL TO THE MODEL’S PERFORMANCE. 
+						Algos that doesn't required scaling:
+
+												Algorithms Like Decision Trees, Random Forest, (Gradient Boosting,) Etc, Are Not Significantly Affected By Feature Scaling Since The Trees In These Algorithms Are Constructed Based On Conditions And Are Not Dependent On The Range Of Values. Algorithms Like Linear Discriminant Analysis And Naive Bayes Also Do Not Require Feature Scaling.
+
+				Few key points to note :
+
+							Mean centering does not affect the covariance matrix
+							Scaling of variables does affect the covariance matrix
+							Standardizing affects the covariance
+			
+			
+
+				1) Min-Max scaler(Normalization)
+								x(new)=x-x(min)/x(max)-x(min)
+								
+							Transform features by scaling each feature to a given range. This estimator scales and translates each feature individually such that it is in the given range on the training set, e.g., between zero and one. THIS SCALER SHRINKS THE DATA WITHIN THE RANGE OF -1 TO 1 IF THERE ARE NEGATIVE VALUES. WE CAN SET THE RANGE LIKE [0,1] OR [0,5] OR [-1,1].
+
+							THIS SCALER RESPONDS WELL IF THE STANDARD DEVIATION IS SMALL AND WHEN A DISTRIBUTION IS NOT GAUSSIAN. THIS SCALER IS SENSITIVE TO OUTLIERS.
+							from sklearn.preprocessing import MinMaxScaler
+								scaler = MinMaxScaler()
+								df1 = pd.DataFrame(scaler.fit_transform(df),columns=['WEIGHT','PRICE'],index = ['Orange','Apple','Banana','Grape'])
+								
+				2) Standard Scaler (also called as z-score) or STANDARDIZATION:
+				
+								x(new)=x-mu/sigma
+								
+								And we know std dev(sigma)=root of variance which we are setting here is 1, so std dev will also be 1.
+																						where variance =(x-mu)**2/N 
+								
+								where, X represents the data point of interest. Mu and sigma represent the mean and standard deviation for the population from which you drew your sample. Alternatively, use the sample mean and standard deviation when you do not know the population values. STANDARDIZATION TRANSFORMS THE DATA TO HAVE ZERO MEAN AND A VARIANCE OF 1, THEY MAKE OUR DATA UNITLESS.
+								
+								scaler = StandardScaler()
+											X_train=ss.fit_transform(X_train)
+											X_test=ss.transform(X_test)
+							
+				THE STANDARD SCALER ASSUMES DATA IS NORMALLY DISTRIBUTED WITHIN EACH FEATURE AND SCALES THEM SUCH THAT THE DISTRIBUTION CENTERED(MEAN) AROUND 0, WITH A STANDARD DEVIATION OF 1.
+
+				CENTERING AND SCALING HAPPEN INDEPENDENTLY ON EACH FEATURE BY COMPUTING THE RELEVANT STATISTICS ON THE SAMPLES IN THE TRAINING SET. IF DATA IS NOT NORMALLY DISTRIBUTED, THIS IS NOT THE BEST SCALER TO USE.
+				from sklearn.preprocessing import StandardScaler
+				scaler = StandardScaler()
+				df2 = pd.DataFrame(scaler.fit_transform(df),columns=['WEIGHT','PRICE'],index = ['Orange','Apple','Banana','Grape'])
+
+
+				3)Max Abs Scaler
+				Scale each feature by its maximum absolute value. This estimator scales and translates each feature individually such that the maximal absolute value of each feature in the training set is 1.0. It does not shift/center the data and thus does not destroy any sparsity.
+
+				ON POSITIVE-ONLY DATA, THIS SCALER BEHAVES SIMILARLY TO MIN MAX SCALER AND, THEREFORE, ALSO SUFFERS FROM THE PRESENCE OF SIGNIFICANT OUTLIERS.
+				
+				from sklearn.preprocessing import MaxAbsScaler
+				scaler = MaxAbsScaler()
+				df4 = pd.DataFrame(scaler.fit_transform(df),columns=['WEIGHT','PRICE'],index = ['Orange','Apple','Banana','Grape'])
+
+
+				4) Robust Scaler
+				AS THE NAME SUGGESTS, THIS SCALER IS ROBUST TO OUTLIERS. IF OUR DATA CONTAINS MANY OUTLIERS, SCALING USING THE MEAN AND STANDARD DEVIATION OF THE DATA WON’T WORK WELL.
+
+				THIS SCALER REMOVES THE MEDIAN AND SCALES THE DATA ACCORDING TO THE QUANTILE RANGE (DEFAULTS TO IQR: INTERQUARTILE RANGE). THE IQR IS THE RANGE BETWEEN THE 1ST QUARTILE (25TH QUANTILE) AND THE 3RD QUARTILE (75TH QUANTILE). THE CENTERING AND SCALING STATISTICS OF THIS SCALER ARE BASED ON PERCENTILES AND ARE THEREFORE NOT INFLUENCED BY A FEW NUMBERS OF HUGE MARGINAL OUTLIERS. NOTE THAT THE OUTLIERS THEMSELVES ARE STILL PRESENT IN THE TRANSFORMED DATA. IF A SEPARATE OUTLIER CLIPPING IS DESIRABLE, A NON-LINEAR TRANSFORMATION IS REQUIRED.
+				from sklearn.preprocessing import RobustScaler
+				scaler = RobustScaler()
+				df3 = pd.DataFrame(scaler.fit_transform(df),columns=['WEIGHT','PRICE'],index = ['Orange','Apple','Banana','Grape'])
+				
+
+				4. QuantileTransformer: 
+				Matches a Gaussian distribution instead of a uniform distribution and introduces saturation artifacts for extreme values.
+									
+						
+				https://medium.com/analytics-vidhya/why-scaling-is-important-in-machine-learning-aee5781d161a        for easyness
+		
+	Principal Component Analysis (PCA) : PCA full in week 5 a whole chapter is there on line 350
+								PRINCIPAL COMPONENT ANALYSIS, OR PCA, IS A DIMENSIONALITY-REDUCTION TECHNIQUE IN WHICH HIGH DIMENSIONAL CORRELATED DATA IS TRANSFORMED TO A LOWER DIMENSIONAL SET OF UNCORRELATED COMPONENTS, REFERRED TO AS PRINCIPAL COMPONENTS. THE LOWER DIMENSIONAL PRINCIPLE COMPONENTS CAPTURE MOST OF THE INFORMATION IN THE HIGH DIMENSIONAL DATASET.
+								An ‘n’ dimensional data is transformed into ‘n’ principle components and a subset of these ‘n’ principle components is selected based on the percentage of variance in the data intended to be captured through the principle components. Figure 5 shows a simple example in which a 10-dimensional data is transformed to 10-principle components. To capture 90% of the variance in the data only 3 principle components are needed. Hence, we have reduced a 10-dimensional data to 3-dimensions.
+								
+								
+								we scale x_train and x_test only and PCA also on that only after scaling.
+								Finally, the last point to remember before we start coding is that PCA is a statistical technique and can only be applied to numeric data. Therefore, categorical features are required to be converted into numerical features before PCA can be applied.
+
+								
+								
+								STEPS OF PRINCIPAL COMPONENT ANALYSIS:
+
+										1. Normalize the data- STANDARDIZE the data before performing PCA.This will ensure that each feature has a mean = 0 and variance = 1.
+										2. Build the covariance matrix-Construct a square matrix to express the correlation between two or more features in a multidimensional dataset.
+										3. Find the Eigenvectors and Eigenvalues- Calculate the eigenvectors/unit vectors and eigenvalues. Eigenvalues are scalars by which we multiply the eigenvector of the covariance matrix.
+										4. Sort the eigenvectors in highest to lowest order and select the number of principal components.
+										
+								Can PCA be used for regression-based problem statements? If Yes, then explain the scenario where we can use it"
+											we can use can use Principal Components for regression problem statements.PCA in regression has been used to serve two basic goals. The first one is performed on datasets where the number of predictor variables is too high. It has been a method of dimensionality reduction along with Partial Least Squares Regression.
+
+											PCA WOULD PERFORM WELL IN CASES WHEN THE FIRST FEW PRINCIPAL COMPONENTS ARE SUFFICIENT TO CAPTURE MOST OF THE VARIATION IN THE INDEPENDENT VARIABLES AS WELL AS THE RELATIONSHIP WITH THE DEPENDENT VARIABLE.
+
+											THE ONLY PROBLEM WITH THIS APPROACH IS THAT THE NEW REDUCED SET OF FEATURES WOULD BE MODELED BY IGNORING THE DEPENDENT VARIABLE Y WHEN APPLYING A PCA AND WHILE THESE FEATURES MAY DO A GOOD OVERALL JOB OF EXPLAINING THE VARIATION IN X, THE MODEL WILL PERFORM POORLY IF THESE VARIABLES DON’T EXPLAIN THE VARIATION IN Y.
+											
+											
+								Can we use PCA for feature selection?
+											A feature selection method is proposed to select a subset of variables in principal component analysis (PCA) that preserves as much information present in the complete data as possible. The information is measured by means of the percentage of consensus in generalised Procrustes analysis.
+
+											BUT THE ONLY PROBLEM HERE IS THAT THE ONLY WAY PCA IS A VALID METHOD OF FEATURE SELECTION IS IF THE MOST IMPORTANT VARIABLES ARE THE ONES THAT HAPPEN TO HAVE THE MOST VARIATION IN THEM.
+	Independent Component Analysis (ICA)
+								ICA assumes that all the attributes are essentially a mixture of independent components and resolves the variables into a combination of these independent components. ICA is perceived to be more robust than PCA and is generally used when PCA and FA fail. 
+								
+								more- https://www.simplilearn.com/tutorials/machine-learning-tutorial/principal-component-analysis
+								PCA full in week 5 a whole chapter is there
+
+
+
+
+
+GRADIENT DESCENT-
+				MAIN OBJECTIVE OF USING A GRADIENT DESCENT ALGORITHM IS TO MINIMIZE THE COST FUNCTION OR ERROR USING ITERATION BETWEEN EXPECTED AND ACTUAL. TO ACHIEVE THIS GOAL, IT PERFORMS TWO STEPS ITERATIVELY:
+
+				1. Calculates the first-order derivative of the function to compute the gradient or slope of that function.
+				2. Move away from the direction of the gradient, which means slope increased from the current point by alpha times, where Alpha is defined as Learning Rate. It is a tuning parameter in the optimization process which helps to decide the length of the steps.
+				
+				What is Cost-function?
+							THE COST FUNCTION IS DEFINED AS THE MEASUREMENT OF DIFFERENCE OR ERROR BETWEEN ACTUAL VALUES AND EXPECTED VALUES AT THE CURRENT POSITION AND PRESENT IN THE FORM OF A SINGLE REAL NUMBER. IT HELPS TO INCREASE AND IMPROVE MACHINE LEARNING EFFICIENCY BY PROVIDING FEEDBACK TO THIS MODEL SO THAT IT CAN MINIMIZE ERROR AND FIND THE LOCAL OR GLOBAL MINIMUM. 
+							
+							FURTHER, IT CONTINUOUSLY ITERATES ALONG THE DIRECTION OF THE NEGATIVE GRADIENT UNTIL THE COST FUNCTION APPROACHES ZERO. AT THIS STEEPEST DESCENT POINT, THE MODEL WILL STOP LEARNING FURTHER. 
+							
+				DIFFERENCE BETWEEN COST AND LOST FUNCTION:
+				
+								Although cost function and loss function are considered synonymous, but also there is a minor difference between them. The slight difference between the loss function and the cost function is about the error within the training of machine learning models, as LOSS FUNCTION REFERS TO THE ERROR OF ONE TRAINING EXAMPLE, WHILE A COST FUNCTION CALCULATES THE AVERAGE ERROR ACROSS AN ENTIRE TRAINING SET.
+
+				Direction & Learning Rate
+										These two factors are used to determine the partial derivative calculation of future iteration and allow it to the point of convergence or local minimum or global minimum. Let's discuss learning rate factors in brief;
+
+										Learning Rate:
+										IT IS DEFINED AS THE STEP SIZE TAKEN TO REACH THE MINIMUM OR LOWEST POINT. THIS IS TYPICALLY A SMALL VALUE THAT IS EVALUATED AND UPDATED BASED ON THE BEHAVIOR OF THE COST FUNCTION. If the learning rate is high, it results in larger steps but also leads to risks of overshooting the minimum. At the same time, a low learning rate shows the small step sizes, which compromises overall efficiency but gives the advantage of more precision.
+										
+				Challenges with the Gradient Descent
+				ALTHOUGH WE KNOW GRADIENT DESCENT IS ONE OF THE MOST POPULAR METHODS FOR OPTIMIZATION PROBLEMS, IT STILL ALSO HAS SOME CHALLENGES. THERE ARE A FEW CHALLENGES AS FOLLOWS:
+
+				1. LOCAL MINIMA AND SADDLE POINT:
+												For convex problems, gradient descent can find the global minimum easily, while for non-convex problems, it is sometimes difficult to find the global minimum, where the machine learning models achieve the best results.
+
+												WHENEVER THE SLOPE OF THE COST FUNCTION IS AT ZERO OR JUST CLOSE TO ZERO, THIS MODEL STOPS LEARNING FURTHER. APART FROM THE GLOBAL MINIMUM, THERE OCCUR SOME SCENARIOS THAT CAN SHOW THIS SLOP, WHICH IS SADDLE POINT AND LOCAL MINIMUM. LOCAL MINIMA GENERATE THE SHAPE SIMILAR TO THE GLOBAL MINIMUM, WHERE THE SLOPE OF THE COST FUNCTION INCREASES ON BOTH SIDES OF THE CURRENT POINTS.
+
+												IN CONTRAST, WITH SADDLE POINTS, THE NEGATIVE GRADIENT ONLY OCCURS ON ONE SIDE OF THE POINT, WHICH REACHES A LOCAL MAXIMUM ON ONE SIDE AND A LOCAL MINIMUM ON THE OTHER SIDE. THE NAME OF A SADDLE POINT IS TAKEN BY THAT OF A HORSE'S SADDLE.
+
+												The name of local minima is because the value of the loss function is minimum at that point in a local region. In contrast, the name of the global minima is given so because the value of the loss function is minimum there, globally across the entire domain the loss function.
+
+				2. VANISHING AND EXPLODING GRADIENT
+												In a deep neural network, if the model is trained with gradient descent and backpropagation, there can occur two more issues other than local minima and saddle point.
+
+												Vanishing Gradients:
+												Vanishing Gradient occurs when the gradient is smaller than expected. During backpropagation, this gradient becomes smaller that causing the decrease in the learning rate of earlier layers than the later layer of the network. Once this happens, the weight parameters update until they become insignificant.
+
+												Exploding Gradient:
+												Exploding gradient is just opposite to the vanishing gradient as it occurs when the Gradient is too large and creates a stable model. Further, in this scenario, model weight increases, and they will be represented as NaN. This problem can be solved using the dimensionality reduction technique, which helps to minimize complexity within the model.
+										
+										
+DECISION TREE-
+
+				DECISION TREE IS A TYPE OF SUPERVISED LEARNING ALGORITHM THAT IS MOSTLY USED IN CLASSIFICATION PROBLEMS. IT WORKS FOR BOTH CATEGORICAL AND CONTINUOUS INPUT AND OUTPUT VARIABLES.
+
+				Example:-
+
+				Let’s say we have a sample of 30 students with three variables Gender (Boy/Girl), Class(IX/X) and Height (5 to 6 ft). 15 out of these 30 play cricket in leisure time. Now, I want to create a model to predict who will play cricket during leisure period? In this problem, we need to segregate students who play cricket in their leisure time based on highly significant input variable among all three.
+
+				This is where decision tree helps, it will segregate the students based on all values of three variable and identify the variable, which creates the best homogeneous sets of students (which are heterogeneous to each other). In the snapshot below, you can see that variable Gender is able to identify best homogeneous sets compared to the other two variables.
+
+						Root Node: It represents entire population or sample and this further gets divided into two sets.
+
+						Splitting: It is a process of dividing a node into two sub-nodes(it only happens if success and failure both is there in a node in binary classif otherwise that is our terminal node so no splitting will place there) .
+
+						Decision Node: When a sub-node splits into further sub-nodes, then it is called decision node.
+
+						Leaf/ Terminal Node: Nodes do not split is called leaf or terminal node(if only success or failure is there in a node in binary classif).
+
+						Pruning: When we remove sub-nodes of a decision node, this process is called pruning. You can say opposite process of splitting.
+
+						Branch / Sub-Tree: A sub section of entire tree is called branch or sub-tree.
+
+						Parent and Child Node: A node, which is divided into sub-nodes is called parent node of sub-nodes where as sub-nodes are the child of parent node.
+						
+						It consists of 3 components which are the root node, decision node, leaf node. The node from where the population starts dividing is called a root node. The nodes we get after splitting a root node are called decision nodes and the node where further splitting is not possible is called a leaf node.
+				
+				we can say that purity of the node increases with respect to the target variable.
+				
+				
+
+				3. METHODS TO DETERMINE BEST SPLIT:
+							loss Function OF DT-	1- entropy (0 to 1)
+												    2- gini impurity or gini index(0 to 0.5)
+													and wee have to minimize the both
+
+
+				1. INFORMATION GAIN - 
+									THE INFORMATION GAIN IS THE AMOUNT OF INFORMATION GAINED ABOUT A RANDOM VARIABLE OR SIGNAL FROM OBSERVING ANOTHER RANDOM VARIABLE. IT’S BASED ON THE DECREASE IN ENTROPY AFTER A DATASET IS SPLIT ON AN ATTRIBUTE. IT KEEPS ON INCREASING AS YOU GET CLOSER TO THE LEAF NODE.
+									
+					Entropy- 
+							ENTROPY IS THE AVERAGE RATE AT WHICH INFORMATION IS PRODUCED BY A STOCHASTIC SOURCE OF DATA. IT’S AN INDICATOR OF HOW DIRTY YOUR DATA IS. IT DECREASES AS YOU REACH CLOSER TO THE LEAF NODE.
+									we can say that less impure node requires less information to describe it. And, more impure node requires more information.
+									
+									(What is entropy loss function- Also called logarithmic loss, log loss or logistic loss)
+								
+						YOU MUST HAVE HEARD ABOUT ANOTHER METRIC CALLED “ENTROPY” WHICH IS ALSO USED TO MEASURE THE IMPURITY OF THE SPLIT. THE MATHEMATICAL X FOR ENTROPY IS:
+						
+									similarly to gini impurity, Entropy is a chaos within the node 
+											where chaos means having a node where all clsses are equally present in the data
+											Entropy can be calculated using formula:- ENTROPY= -plog2p-qlog2q
+											
+											Here p and q is probability of success and failure respectively in that node. Entropy is also used with categorical target variable. It chooses the split which has lowest entropy compared to parent node and other splits. THE LESSER THE ENTROPY, THE BETTER IT IS.
+
+						INFORMATION THEORY TRIES TO MEASURE AND DEFINE THIS DEGREE OF DISORGANIZATION IN A SYSTEM KNOWN AS ENTROPY. IF THE SAMPLE IS COMPLETELY HOMOGENEOUS, THEN THE ENTROPY IS ZERO(IF ONLY SUCCESS OR ONLY FAILURE IS THERE IN A NODE IN BINARY CLASSIF) AND IF THE SAMPLE IS AN EQUALLY DIVIDED (50% – 50%), IT HAS ENTROPY OF ONE (LIKE IF 50% SUCCESS AND 50% FAILURE IS THERE IN A NODE IN BINARY CLASSIF).
+							ENTROPY OF 1 MEANS HIGH OR MAX IMPURITY(FOR EXMPLE WE HAVE  50% YES AND 50% NO)
+							ENTROPY OF 0 IS MIN IMPURITY OR NO IMPURITY OR PURE 
+													
+													INFORMATION GAIN FOR SPLIT CLASS = ENTROPY BEFORE SPLIT - ENTROPY AFTER SPLIT
+													
+																						where ENTROPY AFTER SPLIT is calculated via weighted average--
+																							is--> (n1/N)*split1 entropy + (n2/N)*split2 entropy
+																									where	
+																									N= Observation in parent node(in binary count of yes and no)
+																									n1= in split1 count of total observation(yes+no)
+																									n2= in split2 ,,      ,,         ,,        ,,
+																								it goes like that till terminal node(or till we get pure node) this is the weighted avg of entropy.
+																						and entropy before split is = the entropy of parent node
+
+						THE DECREASE IN ENTROPY AFTER SPLIT IS CALLED INFORMATION GAIn. Steps to calculate information split for a split:
+
+								1. Calculate entropy of parent node
+								2. Calculate entropy of each individual node of split and calculate weighted average of all sub-nodes available in split.
+								3. Calculate the difference in entropy before and after split. ex- in collab
+									WHICH FEATURES HAVE HIGHER INFORMATION GAIN(OR LESSS ENTROPY(in wieghted avg)- SPLIT WILL TAKE PLACE ON THAT.(for gender in our example)
+									
+									
+																	example:
+																			if in a group we have total 30 students in which 10(2 or 20% plays cricket) are females and 20(13 or 65% play) are males also in these 30 we have 14(6 or 43 % pley cricket) from 9th class and 16(9 or 56% play cricket) from 10th class. u have to look on which feature split will take on?
+																			
+																						Entropy for parent node = - (15/30) log(15/30) – (15/30) log(15/30) = 1.
+
+																						Here 1 shows that it is a impure node.
+
+																			Split on Gender:
+
+																						Entropy for Female node = -(2/10) log(2/10) – (8/10) log(8/10) = 0.72 and for male node, -(13/20) log(13/20) – (7/20) log(7/20) = 0.93
+
+																						Entropy for split Gender = Weighted entropy of sub-nodes = (10/30)*0.72 + (20/30)*0.93 = 0.86
+
+																						Information Gain for split Gender = Entropy before split - Entropy after split = 1 - 0.86 = 0.14
+
+																			Split on Class:
+
+																						Entropy for Class IX node, -(6/14) log(6/14) – (8/14) log(8/14) = 0.99 and for Class X node, -(9/16) log(9/16) – (7/16) log(7/16) = 0.99.
+
+																						Entropy for split Class = Weighted entropy of sub-nodes= (14/30)*0.99 + (16/30)*0.99 = 0.99
+
+																						Information Gain for split Class = Entropy before split - Entropy after split = 1 - 0.99 = 0.01
+
+																			Decision:
+
+																				ABOVE, WE CAN SEE THAT INFORMATION GAIN FOR SPLIT ON GENDER IS THE HIGHEST AMONG ALL(means that it has lesser entropy hence it is lesser impure node), SO THE TREE WILL SPLIT ON GENDER.
+							
+					
+						
+						One more important thing to note here is that if there are an equal number of both the classes in a particular node then Gini Index will have its maximum value, which means that the node is highly impure. You can understand this with the help of an example, suppose you have a group of friends, and you all take a vote on which movie to watch. You get 5 votes for ‘lucy’ and 5 for ‘titanic’. Wouldn’t it be harder for you to choose a movie now since both the movies have an equal number of votes, hence we can say that it is a very difficult situation?
+
+				2. Gini- by default ---		GINI IMPURITY IS A MEASURE OF VARIANCE ACROSS THE DIFFERENT CLASSES
+				
+											We usually use thE GINI INDEX SINCE IT IS COMPUTATIONALLY EFFICIENT, IT TAKES A SHORTER PERIOD OF TIME FOR EXECUTION BECAUSE THERE IS NO LOGARITHMIC TERM LIKE THERE IS IN ENTROPY HERE. Usually, if you want to do logarithmic calculations it takes some amount of time. That’s why many boosting algorithms use the Gini index as their default parameter.
+											
+							WE BASICALLY NEED TO KNOW THE IMPURITY OF OUR DATASET AND WE’LL TAKE THAT FEATURE AS THE ROOT NODE WHICH GIVES THE LOWEST Gini IMPURITY(1-gini score) OR SAY WHICH HAS THE higher GINI score(weighted). Mathematically Gini index can be written as:
+							
+												
+												Gini score=summation of (p**2+q**2)  (in this case choose that features which have higher gini score)
+												
+												Gini impurity= 1-gini score (in this case choose that features which have lesser gini impurity)  
+												
+												Gini impurity=1- summation of (p**2+q**2)
+												Where p is the probability of a positive class and q is the probability of a negative class.
+														
+																	example:
+																			if in a group we have total 30 students in which 10(2 or 20% play cricket) are females and 20(13 or 65% play) are males also in these 30 we have 14(6 or 43 % pley cricket) from 9th class and 16(9 or 56% play cricket) from 10th class. u have to look on which feature split will take on?
+																			
+																			
+																			Let’s use Gini method to identify best split for student example.
+
+																				Split on Gender:
+																				
+																							from gini=p*2+q**2....
+																								Calculate, Gini for sub-node Female = (0.2)(0.2)+(0.8)(0.8)=0.68
+
+																								Gini for sub-node Male = (0.65)(0.65)+(0.35)(0.35)=0.55
+
+																								Calculate weighted Gini score for Split Gender = (10/30)0.68+(20/30)0.55 = 0.59
+
+																				Similar for Split on Class:
+
+																									Gini acore for sub-node Class IX = (0.43)(0.43)+(0.57)(0.57)=0.51
+
+																									Gini scorefor sub-node Class X = (0.56)(0.56)+(0.44)(0.44)=0.51
+
+																									Calculate weighted Gini score for Split Class = (14/30)0.51+(16/30)0.51 = 0.51
+
+																				Above, YOU CAN SEE THAT GINI SCORE FOR SPLIT ON GENDER IS HIGHER THAN SPLIT ON CLASS, HENCE, THE NODE SPLIT WILL TAKE PLACE ON GENDER.
+
+																				You might often come across the term ‘Gini Impurity’ OR 'Gini Index' which is determined by subtracting the sum of the squared probabilities of each class from one OR WE CAN SAY subtracting the gini value from 1.So mathematically we can say,
+
+																				Gini Impurity = 1 - Gini score
+																						we can also solve above questions by this gini impurity formula all we need is to substract p**2+q**2 from 1(or we can directly sustract weigted gini from 1) and select that feature which have lesser gini impurity.(obviously gender have lesser gini impurity).
+																						
+																						 for more - http://www.ee.nchu.edu.tw/Pic/CourseItem/2388_HW2%20answer.pdf
+							
+							Gini says, if we select two items from a population at random then, if the population is pure, they must be of same class and probability for this is 1.
+							
+							THE GINI SCORE VARIES BETWEEN 0 AND 1, WHERE 0 REPRESENTS PURITY OF THE CLASSIFICATION AND 1 DENOTES RANDOM DISTRIBUTION OF ELEMENTS AMONG VARIOUS CLASSES.BUT A GINI INDEX OR IMPURITY VARIES BETWEEN 0 TO 0.5 ONLY AND GINI IMPURITY OF 0.5 SHOWS THAT THERE IS EQUAL DISTRIBUTION OF ELEMENTS ACROSS SOME CLASSES.
+							
+							THE GINI INDEX'S MAIN WEAKNESS AS A MEASURE OF INCOME DISTRIBUTION IS THAT IT IS INCAPABLE OF DIFFERENTIATING DIFFERENT KINDS OF INEQUALITIES.
+
+							It works with categorical target variable “Success” or “Failure”.
+							It performs only binary splits.
+							Higher the value of Gini score higher the homogeneity.
+							CART (Classification and Regression Tree) uses Gini method to create binary splits.
+							Steps to calculate Gini for a split
+								
+
+
+
+							Calculate Gini for sub-nodes, using formula sum of square of probability for success and failure (p^2+q^2).
+							Calculate Gini for split using weighted Gini score of each node of that split Ex- in collab
+							Similarly, this algorithm will try to find the Gini index(gini impurity) of all the splits possible and will choose that feature for the root node which will give the lowest Gini index. The lowest Gini index means low impurity.
+										which features have higher gini score- split will take place on that.(for gender in our example)
+										
+										
+					  Information Gain vs Gini Index:
+
+								Following are the fundamental differences between gini index and information gain;
+
+										1. Gini index is measured by subtracting the sum of squared probabilities of each class from one, in opposite of it, information gain is obtained by multiplying the probability of the class by log ( base= 2) of that class probability.  
+
+										2. Gini index favours larger partitions (distributions) and is very easy to implement whereas information gain supports smaller partitions (distributions) with various distinct values, i.e there is a need to perform an experiment with data and splitting criterion.
+
+										3. The gini index approach is used by CART algorithms, in opposite to that, information gain is deployed in ID3, C4.5 algorithms.
+
+										4. While working on categorical data variables, gini index gives results either in “success” or “failure” and performs binary splitting only, in contrast to this, information gain measures the entropy differences before and after splitting and depicts the impurity in class variables.
+										
+										
+							NOTE:
+									HIGHER INFORMATION GAIN, LESSER ENTROPY, LESS IMPURE
+									LESSER GINI IMPURITY (OR GINI INDEX), HIGHER GINI SCORE, less impure
+									
+									
+							humidity_classifier = DecisionTreeClassifier(criterion='entropy', max_leaf_nodes=10, random_state=0)
+							humidity_classifier.fit(X_train, y_train)
+									
+				IN REGRESSION CASE:			
+							
+						Mean Square Error:
+									In Decision Trees for Classification, we saw how the tree asks right questions at the right node in order to give accurate and efficient classifications. The way this is done in Classification Trees is by using 2 measures , namely Entropy and Information Gain. But since we are predicting continuous variables, we cannot calculate the entropy and go through the same process. WE NEED A DIFFERENT MEASURE NOW. A MEASURE THAT TELLS US HOW MUCH OUR PREDICTIONS DEVIATE FROM THE ORIGINAL TARGET AND THAT’S THE ENTRY-POINT OF MEAN SQUARE ERROR.
+											 
+											 MSE=(1/N)*SUMM OF (Y - Y CAP)**2
+											 
+						Y is the actual value and Y_hat is the prediction , we only care about how much the prediction varies from the target. Not in which direction. So, we square the difference and divide the entire sum by the total number of records.
+						
+						IN THE REGRESSION TREE ALGORITHM, WE DO THE SAME THING AS THE CLASSIFICATION TREES. BUT, WE TRY TO REDUCE THE MEAN SQUARE ERROR AT EACH CHILD RATHER THAN THE ENTROPY.
+						
+						we need to build a Regression tree that best predicts the Y given the X.
+						
+						
+					DATASET- 
+					       X-->	1		2		3		4		5		6		7		8		9		10		11		12		13		14
+						   Y-->	1		1.2		1.4		1.1		1		5.5		6.1		6.7		6.4		6		6		3		3.2		3.1
+
+					Step 1
+						The first step is to sort the data based on X ( In this case, it is already sorted ). Then, take the average of the first 2 rows in variable X ( which is (1+2)/2 = 1.5 according to the given dataset ). Divide the dataset into 2 parts ( Part A and Part B ) , separated by x < 1.5 and X ≥ 1.5.
+
+						Now, Part A consist only of one point, which is the first row (1,1) and all the other points are in Part — B. Now, take the average of all the Y values in Part A and average of all Y values in Part B separately. These 2 values are the predicted output of the decision tree for x < 1.5 and x ≥ 1.5 respectively. Using the predicted and original values, calculate the mean square error and note it down.
+
+					Step 2
+						In step 1, we calculated the average for the first 2 numbers of sorted X and split the dataset based on that and calculated the predictions. Then, we do the same process again but this time, we calculate the average for the second 2 numbers of sorted X ( (2+3)/2 = 2.5 ). Then, we split the dataset again based on X < 2.5 and X ≥ 2.5 into Part A and Part B again and predict outputs, find mean square error as shown in step 1. This process is repeated for the third 2 numbers, the fourth 2 numbers, the 5th, 6th, 7th till n-1th 2 numbers ( where n is the number of records or rows in the dataset ).
+
+					Step 3
+						Now that we have n-1 mean squared errors calculated , we need to choose the point at which we are going to split the dataset. and that point is the point, which resulted in the lowest mean squared error on splitting at it. In this case, the point is x=5.5. Hence the tree will be split into 2 parts. x<5.5 and x≥ 5.5. The Root node is selected this way and the data points that go towards the left child and right child of the root node are further recursively exposed to the same algorithm for further splitting.
+						
+					 
+					What happens when there are multiple independent variables ?
+							Let us consider that there are 3 variables similar to the independent variable X from fig 2.2.
+							At each node, All the 3 variables would go through the same process as what X went through in the above example. The data would be sorted based on the 3 variables separately.
+							THE POINTS THAT MINIMISES THE MSE ARE CALCULATED FOR ALL THE 3 VARIABLES. OUT OF THE 3 VARIABLES AND THE POINTS CALCULATED FOR THEM, THE ONE THAT HAS THE LEAST MSE WOULD BE CHOSEN.
+							
+					for more detail of regression -	https://medium.com/analytics-vidhya/regression-trees-decision-tree-for-regression-machine-learning-e4d7525d8047
+							
+
+
+
+				3. Chi Square-
+
+				4. Reduction in Variance-
+				
+				
+				
+				
+
+				This algorithm is recursive in nature as the groups formed can be sub-divided using same strategy. Due to this procedure, this algorithm is also known as the greedy algorithm, as we have an excessive desire of lowering the cost. This makes the root node as best predictor/classifier.
+
+
+				Q- y we use DecisionTreeRegressor not DecisionTreeclassifier?
+				
+				
+				
+ENSEMBLES OF DECISION TREES-
+
+				The literary meaning of word ‘ensemble’ is group. Ensemble methods involve group of predictive models to achieve a better accuracy and model stability.
+				IN AN ENSEMBLE METHOD THE ALGORITHM COMBINES THE PREDICTIONS FROM MULTIPLE MACHINE LEARNING ALGORITHMS TOGETHER TO MAKE MORE ACCURATE PREDICTIONS THAN ANY INDIVIDUAL MODEL
+
+				Like every other model, a tree based algorithm also suffers from the plague of bias and variance.
+				Decision trees are prone to overfitting.
+				A champion model should maintain a balance between these two types of errors. This is known as the trade-off management of bias-variance errors.
+				Ensemble learning is one way to tackle bias-variance trade-off.
+
+				Normally, as you increase the complexity of your model, in this case decision tree, you will see a reduction in training error due to lower bias in the model. As you continue to make your model more complex, you end up over-fitting your model and your model will start suffering from high variance.
+				
+				IN CONTRAST TO BAGGING TECHNIQUES LIKE RANDOM FOREST, IN WHICH TREES ARE GROWN TO THEIR MAXIMUM EXTENT, BOOSTING MAKES USE OF TREES WITH FEWER SPLITS. SUCH SMALL TREES, WHICH ARE NOT VERY DEEP, ARE HIGHLY INTERPRETABLE. PARAMETERS LIKE THE NUMBER OF TREES OR ITERATIONS, THE RATE AT WHICH THE GRADIENT BOOSTING LEARNS, AND THE DEPTH OF THE TREE, COULD BE OPTIMALLY SELECTED THROUGH VALIDATION TECHNIQUES LIKE K-FOLD CROSS VALIDATION. HAVING A LARGE NUMBER OF TREES MIGHT LEAD TO OVERFITTING. SO, IT IS NECESSARY TO CAREFULLY CHOOSE THE STOPPING CRITERIA FOR BOOSTING.
+				
+				Imagine that you are a hiring manager interviewing several candidates with excellent qualifications. Each step of the evolution of tree-based algorithms can be viewed as a version of the interview process.
+
+						1. Decision Tree: 
+									Every hiring manager has a set of criteria such as education level, number of years of experience, interview performance. A decision tree is analogous to a hiring manager interviewing candidates based on his or her own criteria.
+						2. Bagging: 
+									Now imagine instead of a single interviewer, now there is an interview panel where each interviewer has a vote. Bagging or bootstrap aggregating involves combining inputs from all interviewers for the final decision through a democratic voting process.
+						3. Random Forest: 
+									It is a bagging-based algorithm with a key difference wherein only a subset of features is selected at random. In other words, every interviewer will only test the interviewee on certain randomly selected qualifications (e.g. a technical interview for testing programming skills and a behavioral interview for evaluating non-technical skills).
+						4. Boosting: 
+									This is an alternative approach where each interviewer alters the evaluation criteria based on feedback from the previous interviewer. This ‘boosts’ the efficiency of the interview process by deploying a more dynamic evaluation process.
+						5. Gradient Boosting: 
+									A special case of boosting where errors are minimized by gradient descent algorithm e.g. the strategy consulting firms leverage by using case interviews to weed out less qualified candidates. so this firm is minimizing the error of hiring less qualified candidates.
+						6. XGBoost: 
+									Think of XGBoost as gradient boosting on ‘steroids’ (well it is called ‘Extreme Gradient Boosting’ for a reason!). It is a perfect combination of software and hardware optimization techniques to yield superior results using less computing resources in the shortest amount of time.
+
+				There are various ways to ensemble weak learners to come up with strong learners:
+
+					1. BAGGING- 
+								BOOTSTRAP AGGREGATING OR BAGGING IS AN ENSEMBLE META-ALGORITHM COMBINING PREDICTION OF MULTIPLE - DECISION TREE THROUGH A MAJORITY VOTING MECHANISM.
+					
+								we know that bagging is parallel process.
+								THE STEPS FOLLOWED IN BAGGING ARE:
+
+								1. CREATE MULTIPLE DATASETS: Sampling is done with replacement on the original data and new datasets are formed.
+
+								2. BUILD MULTIPLE CLASSIFIERS: Classifiers are built on each data set. Generally the same classifier is modeled on each data set and predictions are made.
+
+								3. COMBINE CLASSIFIERS results: The predictions of all the classifiers are combined using a mean, median or mode value depending on the problem at hand. The combined values are generally more robust than a single model.
+								
+								Random Forest-  
+												RANDOM FOREST IS AN EXTENSION OVER BAGGING. IT TAKES ONE EXTRA STEP WHERE IN ADDITION TO TAKING THE RANDOM SUBSET OF DATA, IT ALSO TAKES THE RANDOM SELECTION OF FEATURES RATHER THAN USING ALL FEATURES TO GROW TREES. WHEN YOU HAVE MANY RANDOM TREES. IT’S CALLED RANDOM FOREST 😊     
+												
+												RANDOM FOREST IS A TECHNIQUE THAT USES ENSEMBLE LEARNING, THAT COMBINES MANY WEAK CLASSIFIERS TO PROVIDE SOLUTIONS TO COMPLEX PROBLEMS.
+												As the name suggests random forest consists of many decision trees. Rather than depending on one tree it takes the prediction from each tree and based on the majority votes of predictions, predicts the final output.
+												
+												DT vs RF				
+															THE MAIN DIFFERENCE BETWEEN THESE TWO DT & RF IS THAT RANDOM FOREST IS A BAGGING METHOD THAT USES A SUBSET OF THE ORIGINAL DATASET TO MAKE PREDICTIONS AND THIS PROPERTY OF RANDOM FOREST HELPS TO OVERCOME OVERFITTING. INSTEAD OF BUILDING A SINGLE DECISION TREE, RANDOM FOREST BUILDS A NUMBER OF DT’S WITH A DIFFERENT SET OF OBSERVATIONS. ONE BIG ADVANTAGE OF THIS ALGORITHM IS THAT IT CAN BE USED FOR CLASSIFICATION AS WELL AS REGRESSION PROBLEMS.
+												
+												Note: in RF we can not minimize loss because we are not using it. But in Gradient boosting we can minimise any loss even in dt we are using mse.
+												
+												Random forest= DT(base learner)+ bagging(Row sampling with replacement)+ feature bagging(column sampling) + aggregation(mean/median, majority vote)
+												
+												
+												Assumptions for Random Forest
+												
+															ASSUMPTIONS. No formal distributional assumptions, random forests are NON-PARAMETRIC and can thus handle skewed and multi-modal data as well as categorical data that are ordinal or non-ordinal.
+																Since the random forest combines multiple trees to predict the class of the dataset, it is possible that some decision trees may predict the correct output, while others may not. But together, all the trees predict the correct output. Therefore, below are two assumptions for a better Random forest classifier:
+
+																1. There should be some actual values in the feature variable of the dataset so that the classifier can predict accurate results rather than a guessed result.
+																2. The predictions from each tree must have very low correlations.
+																												
+												STEPS INVOLVED IN RANDOM FOREST ALGORITHM
+																Step-1 – We first make subsets of our original data. We will do row sampling and feature sampling that means we’ll select rows and columns with replacement and create subsets of the training dataset
+
+																Step- 2 – We create an individual decision tree for each subset we take and whichever feature gives the best split is used to split the node iteratively.
+
+																Step-3 – Each decision tree will give an output
+
+																Step 4 – Final output is considered based on Majority Voting if it’s a classification problem and average if it’s a regression problem.
+
+												
+															
+												1. In Random Forest, we grow multiple trees as opposed to a single tree in CART model.
+												2. We construct trees from the subsets of the original dataset. These subsets can have a fraction of the columns as well as rows.
+												3. To classify a new object based on attributes, each tree gives a classification and we say that the tree “votes” for that class.
+												4. The forest chooses the classification having the most votes (over all the trees in the forest) and in case of regression, it takes the average of outputs by different trees(majority votes for classification, average for regression.
+												
+												Before proceeding further, we need to know one more important thing that when we grow our decision tree to its depth we get Low Bias and High Variance, we can say that our model will perform perfectly on our training dataset, but it’ll suck when our new datapoint comes into the picture. To tackle this high variance situation, we use random forest where we are combining many decision trees and not just depending on a single DT, this will allow us to lower our variance, and this way we overcome our overfitting problem.
+												
+										OOB (OUT OF THE BAG) EVALUATION
+												We now know how bootstrapping works in random forests. It basically does row sampling and feature sampling with a replacement before training the model. Since sampling is done with replacement, about one-third of the data is not used to train the model and this data is called out of the bag samples. We can evaluate our model on these out-of-bag data points to know how it will perform on the test dataset. Let’s see how we can use this OOB evaluation in python. Let’s import the required libraries:
+												
+														rf=RandomForestClassifier(oob_score=True)
+														rf.fit(X_train,y_train)
+														rf.oob_score_
+														or we can do accuracy_score(y_test,rf.predict(X_test))
+														
+												
+												To get the oob evaluation we need to set a parameter called oob_score to TRUE. We can see that the score we get from oob samples, and the test dataset is somewhat the same. In this way, we can use these left-out samples in evaluating our model.
+												
+								Difference between Decision Tree and Random Forest:
+												DT:
+														1. Decision trees normally suffer from the problem of overfitting if it’s allowed to grow till its maximum depth.
+														2. A single decision tree is faster in computation.
+														3. When a data set with features is taken as input by a decision tree it will formulate some set of rules to do prediction.
+														
+												RF:
+														1. Random forests use the bagging method. It creates a subset of the original dataset, and the final output is based on majority ranking and hence the problem of overfitting is taken care of.
+														2. It is comparatively slower.
+														3. Random forest randomly selects observations, builds a decision tree and the average result is taken. It doesn’t use any set of formulas.
+														4. ROBUST TO OUTLIERS.
+														5. Works well for non-linear data.
+														6. LOW RISK OF OVERFITTING.
+														7. RUNS EFFICIENTLY ON LARGE DATASETS.
+												
+												Hence, we can come to a conclusion that random forests are much more successful than decision trees only if the trees are diverse and acceptable.
+												
+												
+												#choosen hyperparameters for gridsearch-
+																						# Number of trees
+																						n_estimators = [50,80,100]
+
+																						# Maximum depth of trees
+																						max_depth = [4,6,8]
+
+																						# Minimum number of samples required to split a node
+																						min_samples_split = [50,100,150]
+
+																						# Minimum number of samples required at each leaf node
+																						min_samples_leaf = [40,50]
+
+																						# HYperparameter Grid
+																						param_dict = {'n_estimators' : n_estimators,
+																									  'max_depth' : max_depth,
+																									  'min_samples_split' : min_samples_split,
+																									  'min_samples_leaf' : min_samples_leaf}
+                                                                                                                                                                                   												
+									Feature Importance Using Random Forest
+											Another great quality of this awesome algorithm is that it can be used for feature selection also. We can use it to know the feature’s importance. To understand how we calculate feature importance in Random Forest we first need to understand how we calculate it using Decision Trees. You need to understand some math’s here but don’t worry I’ll try to explain it in the easiest way possible. Let’s understand it with the help of an example. I am taking 5 rows and 2 columns for simplicity and then fitting DecisionTreeClassifier to this small dataset:
+
+					  
+															#features importance for Random forest-
+																  # Create an instance of the RandomForestClassifier
+																  rf_model = RandomForestClassifier()
+
+																  # Grid search
+																  rf_grid = GridSearchCV(estimator=rf_model,
+																						param_grid = param_dict,
+																						cv = 5, verbose=2, scoring='roc_auc')
+
+																  rf_grid.fit(X_train,Y_train)
+
+															rf_optimal_model = rf_grid.best_estimator_
+															importances = rf_optimal_model.feature_importances_
+
+															importance_dict = {'Feature' : list(X_train.columns),
+																			   'Feature Importance' : importances}
+
+															importance_df = pd.DataFrame(importance_dict)
+															importance_df['Feature Importance'] = round(importance_df['Feature Importance'],2)
+															importance_df.sort_values(by=['Feature Importance'],ascending=False)
+											
+											
+										Important Hyperparameters
+															Hyperparameters are used in random forests to either enhance the performance and predictive power of models or to make the model faster.
+
+															Following hyperparameters increases the predictive power:
+
+															1. N_ESTIMATORS– number of trees the algorithm builds before averaging the predictions.
+
+															2. MAX_FEATURES– maximum number of features random forest considers splitting a node.
+
+															3. MINI_SAMPLE_LEAF– determines the minimum number of leaves required to split an internal node.
+															( Minimum number of samples required at each leaf node)
+
+
+															Following hyperparameters increases the speed:
+
+															1. N_JOBS– it tells the engine how many processors it is allowed to use. If the value is 1, it can use only one processor but if the value is -1 there is no limit.
+
+															2. RANDOM_STATE– controls randomness of the sample. The model will always produce the same results if it has a definite value of random state and if it has been given the same hyperparameters and the same training data.
+
+															3. OOB_SCORE – OOB means out of the bag. It is a random forest cross-validation method. In this one-third of the sample is not used to train the data instead used to evaluate its performance. These samples are called out of bag samples.
+																										
+													The formula for calculating the feature importance is: fi= long formula in -
+													
+													https://www.analyticsvidhya.com/blog/2021/10/an-introduction-to-random-forest-algorithm-for-beginners/
+									
+												ADVANTAGES-
+															1. This algorithm can solve both type of problems i.e. classification and regression and does a decent estimation at both fronts.
+															2. RF HAS THE POWER OF HANDLING LARGE DATASETS WITH HIGHER DIMENSIONALITY. It can handle thousands of input variables and identify most significant variables so it is considered as one of the dimensionality reduction methods. Further, the model outputs Importance of variable, which can be a very handy feature (on some random data set).
+															3. It has an effective mETHOD FOR ESTIMATING MISSING DATA and maintains accuracy when a large proportion of the data is missing.
+															4. IT HAS METHODS FOR BALANCING ERRORS IN DATA SETS WHERE CLASSES ARE IMBALANCED.
+															5. The capabilities of the above can be extended to unlabeled data, leading to unsupervised clustering, data views and outlier detection.
+															6. Random Forest involves sampling of the input data with replacement called as bootstrap sampling. Here one third (say) of the data is not used for training and can be used to testing. These are called the out of bag samples. Error estimated on these out of bag samples is known as out of bag error. OUT-OF-BAG estimate is as accurate as using a test set of the same size as the training set. Therefore, using the out-of-bag error estimate removes the need for train test split.
+															7. It is highly stable as the average answers given by a large number of trees are taken.
+
+
+															
+												DISADVANTAGES-
+															1. SINCE FINAL PREDICTION IS BASED ON THE MEAN PREDICTIONS FROM SUBSET TREES, IT WON’T GIVE PRECISE VALUES FOR THE REGRESSION MODEL SO IT IS NOT MORE SUITABLE FOR REGRESSION TASKS..
+															2. It surely does a good job at classification but not as good as for regression problem as it does not give precise continuous nature predictions. In case of regression, it doesn’t predict beyond the range in the training data, and that they may over-fit data sets that are particularly noisy.
+															3. RANDOM FOREST CAN FEEL LIKE A BLACK BOX APPROACH FOR STATISTICAL MODELERS – YOU HAVE VERY LITTLE CONTROL ON WHAT THE MODEL DOES. YOU CAN AT BEST – TRY DIFFERENT PARAMETERS AND RANDOM SEEDS!
+															4. RANDOM FOREST IS HIGHLY COMPLEX WHEN COMPARED TO DECISION TREES WHERE DECISIONS CAN BE MADE BY FOLLOWING THE PATH OF THE TREE.
+															5. TRAINING TIME IS MORE COMPARED TO OTHER MODELS DUE TO ITS COMPLEXITY. WHENEVER IT HAS TO MAKE A PREDICTION EACH DECISION TREE HAS TO GENERATE OUTPUT FOR THE GIVEN INPUT DATA.
+															
+												Applications of Random Forest
+																		There are mainly four sectors where Random forest mostly used:
+
+																		1. Banking: Banking sector mostly uses this algorithm for the identification of loan risk.
+																		2. Medicine: With the help of this algorithm, disease trends and risks of the disease can be identified.
+																		3. Land Use: We can identify the areas of similar land use by this algorithm.
+																		4. Marketing: Marketing trends can be identified using this algorithm.
+																		
+																		
+												When to Avoid Using Random Forests?
+																	Random Forests Algorithms are not ideal in the following situations:
+
+																	1. Extrapolation: Random Forest regression is not ideal in the extrapolation of data. Unlike linear regression, which uses existing observations to estimate values beyond the observation range. 
+																	2. SPARSE DATA: Random Forest does not produce good results when the data is sparse. In this case, the subject of features and bootstrapped sample will have an invariant space. This will lead to unproductive spills, which will affect the outcome.
+														
+												why RF fails for regression problem:
+																	IT SURELY DOES A GOOD JOB AT CLASSIFICATION BUT NOT AS GOOD AS FOR REGRESSION PROBLEM AS IT DOES NOT GIVE PRECISE CONTINUOUS NATURE PREDICTIONS. IN CASE OF REGRESSION, IT DOESN’T PREDICT BEYOND THE RANGE IN THE TRAINING DATA, AND THAT THEY MAY OVER-FIT DATA SETS THAT ARE PARTICULARLY NOISY.
+																	Random Forest regression is not ideal in the extrapolation of data. Unlike linear regression, which uses existing observations to estimate values beyond the observation range.
+																		
+																		
+
+					2. BOOSTING- 
+									we know that boosting is SEQUENTIAL process.
+								 
+							THE PRINCIPLE BEHIND BOOSTING ALGORITHMS IS FIRST WE BUILT A MODEL ON THE TRAINING DATASET, THEN A SECOND MODEL IS BUILT TO RECTIFY THE ERRORS PRESENT IN THE FIRST MODEL. THIS PROCEDURE IS CONTINUED UNTIL AND UNLESS THE ERRORS ARE MINIMIZED, AND THE DATASET IS PREDICTED CORRECTLY.
+
+							Let’s take an example to understand this, suppose you built a decision tree algorithm on the Titanic dataset and from there you get an accuracy of 80%. After this, you apply a different algorithm and check the accuracy and it comes out to be 75% for KNN and 70% for Linear Regression.
+
+							We see the accuracy differs when we built a different model on the same dataset. But what if we use combinations of all these algorithms for making the final prediction? We’ll get more accurate results by taking the average of results from these models. We can increase the prediction power in this way.
+
+							Boosting algorithms works in a similar way, it combines multiple models (weak learners) to reach the final output (strong learners).
+
+					    There are many boosting algorithms which impart additional boost to model’s accuracy:
+
+								1. Gradient Boosting Machine -
+											GRADIENT BOOSTING MACHINE (GBM) OR GBDT (GRADIENT BOOSTING DECISION TREE) BUILDS THE MODEL IN A STAGE-WISE FASHION LIKE OTHER BOOSTING METHODS DO, AND IT GENERALIZES THEM BY ALLOWING OPTIMIZATION OF AN ARBITRARY DIFFERENTIABLE LOSS FUNCTION.
+											
+											We already know that errors play a major role in any machine learning algorithm. There are mainly two types of error, bias error and variance error. GRADIENT BOOST ALGORITHM HELPS US MINIMIZE BIAS ERROR OF THE MODEL.
+											
+											 THIS IS DONE BY BUILDING A NEW MODEL ON THE ERRORS OR RESIDUALS OF THE PREVIOUS MODEL.
+											 When the target column is continuous, we use Gradient Boosting Regressor whereas when it is a classification problem, we use Gradient Boosting Classifier. The only difference between the two is the “Loss function”. The objective here is to minimize this loss function by adding weak learners using gradient descent. Since it is based on loss function HENCE FOR REGRESSION PROBLEMS, WE’LL HAVE DIFFERENT LOSS FUNCTIONS LIKE MEAN SQUARED ERROR (MSE) AND FOR CLASSIFICATION, WE WILL HAVE DIFFERENT FOR E.G LOG-LIKELIHOOD.
+											 
+											 Understand Gradient Boosting Algorithm by step:
+											 step 1:
+													The first step in gradient boosting is to build a base model to predict the observations in the training dataset. For simplicity we take an average of the target column and assume that to be the predicted value
+													
+															Fo(x)=argmin E(summation of)  L(yi,gamma i)
+															
+															Looking at this may give you a headache, but don’t worry we will try to understand what is written here.
+
+															Here L is our loss function
+
+															Gamma is our predicted value
+
+															argmin means we have to find a predicted value/gamma for which the loss function is minimum.
+
+															Since the target column is continuous our loss function will be:
+															
+												imp	mse-->		  L = 1/n(yi-gamma i)**2
+															   
+															   Here yi is the observed value
+
+																And gamma is the predicted value
+
+																Now we need to find a minimum value of gamma such that this loss function is minimum. We all have studied how to find minima and maxima in our 12th grade. Did we use to differentiate this loss function and then put it equal to 0 right? Yes, we will do the same here.
+																
+																	dL/d GAMMA=2/2(SUMATION OF (Yi-GAMMA i)=-(Yi-GAMMA i)
+																	
+																	after solving this big equation We end up over an average of the observed car price and this is why I asked you to take the average of the target column and assume it to be your first prediction.
+																	Hence for gamma=14500, the loss function will be minimum so this value will become our prediction for the base model.
+																	
+											Step-2: 
+													The next step is to calculate the pseudo residuals which are (observed value – predicted value)
+													long formula here:
+													Here F(xi) is the previous model and m is the number of DT made.
+													
+													We are just taking the derivative of loss function w.r.t the predicted value and we have already calculated this derivative:   dL/d GAMMA=-(Yi-GAMMA i) or -(observed-predicted)
+													If you see the formula of residuals above, we see that the derivative of the loss function is multiplied by a negative sign, so now we get:   dL/d GAMMA=observed-predicted
+													
+													In the next step, we will build a model on these pseudo residuals and make predictions. Why do we do this? Because we want to minimize these residuals and minimizing the residuals will eventually improve our model accuracy and prediction power. So, using the Residual as target and the original feature Cylinder number, cylinder height, and Engine location we will generate new predictions. Note that the predictions, in this case, will be the error values, not the predicted car price values since our target column is an error now.
+													
+													Let’s say hm(x) is our DT made on these residuals.
+											Step- 3 
+													In this step we find the output values for each leaf of our decision tree. That means there might be a case where 1 leaf gets more than 1 residual, hence we need to find the final output of all the leaves. TO find the output we can simply take the average of all the numbers in a leaf, doesn’t matter if there is only 1 number or more than 1.
+													
+													Here hm(xi) is the DT made on residuals and m is the number of DT. When m=1 we are talking about the 1st DT and when it is “M” we are talking about the last DT.
+													The output value for the leaf is the value of gamma that minimizes the Loss function. The left-hand side “Gamma” is the output value of a particular leaf. On the right-hand side [Fm-1(xi)+ƴhm(xi))] is similar to step 1 but here the difference is that we are taking previous predictions whereas earlier there was no previous prediction.
+													
+											Step-5 
+													This is finally the last step where we have to update the predictions of the previous model. It can be updated as:
+															Fm(x)=(F(m-1)(X)+vm.hm(X)
+		watch krish naik explaination to that gbm by krish naik-													
+															where m is the number of decision trees made.
+															Since we have just started building our model so our m=1. Now to make a new DT our new predictions will be:
+																	new pred= previous pred + learning rate*the tree made on residuals
+																	
+																	Here Fm-1(x) is the prediction of the base model (previous prediction)
+																	learning rate that is usually selected between 0-1. It reduces the effect each tree has on the final prediction, and this improves accuracy in the long run. Let’s take nu=0.1 in this example.
+																	
+																	Suppose we want to find a prediction of our first data point which has a car height of 48.8. This data point will go through this decision tree and the output it gets will be multiplied with the learning rate and then added to the previous prediction.
+
+																	Now let’s say m=2 which means we have built 2 decision trees and now we want to have new predictions.
+
+																	This time we will add the previous prediction that is F1(x) to the new DT made on residuals. We will iterate through these steps again and again till the loss is negligible.
+																	
+													What is Gradient Boosting Classifier?
+															A GRADIENT BOOSTING CLASSIFIER IS USED WHEN THE TARGET COLUMN IS BINARY. ALL THE STEPS EXPLAINED IN THE GRADIENT BOOSTING REGRESSOR ARE USED HERE, THE ONLY DIFFERENCE IS WE CHANGE THE LOSS FUNCTION. EARLIER WE USED MEAN SQUARED ERROR WHEN THE TARGET COLUMN WAS CONTINUOUS BUT THIS TIME, WE WILL USE LOG-LIKELIHOOD CROS-ENTROPY OR SIGMOID AS OUR LOSS FUNCTION.
+
+															Let’s see how this loss function works, to read more about log-likelihood I recommend you to go through this article where I have given each detail you need to understand this.
+
+															The loss function for the classification problem is given below:
+															
+																	L=-[SUMM OF yi log p+(1-yi) log (1-p)]
+																	(This cost function also used in Logistic Regression is Log Loss or  sigmoid or cross entropy.)
+																	Now this is our loss function, and we need to minimize it, for this, we take the derivative of this w.r.t to log(odds) and then put it equal to 0,
+																	
+																	Now in the Gradient boosting regressor our next step was to calculate the pseudo residuals where we multiplied the derivative of the loss function with -1. We will do the same but now the loss function is different, and we are dealing with the probability of an outcome now.
+																	
+																			dL/d[log(odds)]=-observed+predicted=-(-observed+predicted)=observed-predicted
+																			
+																	After finding the residuals we can build a decision tree with all independent variables and target variables as “Residuals”.
+																	
+																	Now when we have our first decision tree, we find the final output of the leaves because there might be a case where a leaf gets more than 1 residuals, so we need to calculate the final output value. The math behind this step is out of the scope of this article so I will mention the direct formula to calculate the output of a leaf:
+																	
+																	 in website
+																	 
+																	 Finally, we are ready to get new predictions by adding our base model with the new tree we made on residuals.
+																	 
+															from sklearn.ensemble import GradientBoostingClassifier
+															# Define Gradient Boosting Classifier with hyperparameters
+															gbc=GradientBoostingClassifier(n_estimators=500,learning_rate=0.05,random_state=100,max_features=5 )
+															# Fit train data to GBC
+															gbc.fit(X_train,y_train)
+															
+															tuning:
+																	from sklearn.model_selection import GridSearchCV
+
+																	grid = {
+
+																		'learning_rate':[0.01,0.05,0.1],
+
+																		'n_estimators':np.arange(100,500,100),
+
+																	}
+
+
+																	gb = GradientBoostingClassifier()
+
+																	gb_cv = GridSearchCV(gb, grid, cv = 4)
+
+																	gb_cv.fit(X_train,y_train)
+
+																	print("Best Parameters:",gb_cv.best_params_)
+
+																	print("Train Score:",gb_cv.best_score_)
+
+																	print("Test Score:",gb_cv.score(X_test,y_test))
+																	
+																	We see the accuracy increased from 86 to 89 after tuning n_estimators and learning rate. Also the “true positive” and the “true negative” rate improved.
+																	The accuracy has increased even more when we tuned the parameter “max_depth”.
+																	
+										for more of GBM-   https://www.analyticsvidhya.com/blog/2021/09/gradient-boosting-algorithm-a-complete-guide-for-beginners/#h2_4
+
+
+																	
+													
+													
+													
+
+
+
+ 
+											
+								
+							2. XGBoost- 
+										XGBOOST IS A DECISION-TREE-BASED ENSEMBLE MACHINE LEARNING ALGORITHM THAT USES A GRADIENT BOOSTING FRAMEWORK. IN PREDICTION PROBLEMS INVOLVING UNSTRUCTURED DATA (IMAGES, TEXT, ETC.) ARTIFICIAL NEURAL NETWORKS TEND TO OUTPERFORM ALL OTHER ALGORITHMS OR FRAMEWORKS. HOWEVER, WHEN IT COMES TO SMALL-TO-MEDIUM STRUCTURED/TABULAR DATA, DECISION TREE BASED ALGORITHMS ARE CONSIDERED BEST-IN-CLASS RIGHT NOW. PLEASE SEE THE CHART BELOW FOR THE EVOLUTION OF TREE-BASED ALGORITHMS OVER THE YEARS.
+										
+										 The algorithm differentiates itself in the following ways:
+
+												1. A wide range of applications: Can be used to solve regression, classification, ranking, and user-defined prediction problems.
+												2. Portability: Runs smoothly on Windows, Linux, and OS X.
+												3. Languages: Supports all major programming languages including C++, Python, R, Java, Scala, and Julia.
+												4. Cloud Integration: Supports AWS, Azure, and Yarn clusters and works well with Flink, Spark, and other ecosystems.
+							
+								WHY DOES XGBOOST PERFORM SO WELL?
+									XGBoost and Gradient Boosting Machines (GBMs) are both ensemble tree methods that apply the principle of boosting weak learners (CARTs generally) using the gradient descent architecture. However, XGBoost improves upon the base GBM framework through systems optimization and algorithmic enhancements.
+									Extreme Gradient Boosting (XGBoost) is just an extension of gradient boosting with the following added advantages:
+
+											1. Regularization: Standard GBM implementation has no regularization like XGBoost, therefore it also helps to reduce overfitting. In fact, XGBoost is also known as ‘regularized boosting‘ technique.
+
+											2. Parallel Processing: XGBoost implements parallel processing and is blazingly faster as compared to GBM. But hang on, we know that boosting is sequential process so how can it be parallelized? We know that each tree can be built only after the previous one, but to make a tree it uses all the cores of the system. XGBoost also supports implementation on Hadoop as well as spark.
+
+											3. High Flexibility: XGBoost allow users to define custom optimization objectives and evaluation criteria. This adds a whole new dimension to the model and there is no limit to what we can do.
+
+											4. Handling Missing Values: XGBoost has an in-built routine to handle missing values. User is required to supply a different value than other observations and pass that as a parameter. XGBoost tries different things as it encounters a missing value on each node and learns which path to take for missing values in future.
+
+											5. Tree Pruning: A GBM would stop splitting a node when it encounters a negative loss in the split. Thus it is more of a greedy algorithm. XGBoost on the other hand make splits upto the max_depth specified and then start pruning the tree backwards and remove splits beyond which there is no positive gain. Another advantage is that sometimes a split of negative loss say -2 may be followed by a split of positive loss +10. GBM would stop as it encounters -2. But XGBoost will go deeper and it will see a combined effect of +8 of the split and keep both.
+
+											6. Built-in Cross-Validation: XGBoost allows user to run a cross-validation at each iteration of the boosting process and thus it is easy to get the exact optimum number of boosting iterations in a single run. This is unlike GBM where we have to run a grid-search and only a limited values can be tested.
+
+											7. Continue on Existing Model: User can start training an XGBoost model from its last iteration of previous run. This can be of significant advantage in certain specific applications. GBM implementation of sklearn also has this feature so they are even on this point.
+											8. Can be run on both single and distributed systems(Hadoop, Spark).
+											9. XGBoost is used in supervised learning(regression and classification problems).
+											
+											
+										EXTREME GRADIENT BOOSTING (XGBOOST) IS AN OPEN-SOURCE LIBRARY THAT PROVIDES AN EFFICIENT AND EFFECTIVE IMPLEMENTATION OF THE GRADIENT BOOSTING ALGORITHM.
+
+										GRADIENT BOOSTING BELONGS TO ENSEMBLE MACHINE LEARNING ALGORITHMS THAT CAN BE USED FOR CLASSIFICATION OR REGRESSION PREDICTIVE MODELING PROBLEMS.
+										“When in doubt, use XGBoost” — Owen Zhang, Winner of Avito Context Ad Click Prediction competition on Kaggle
+										
+										XGBoost Parameters
+												A complex machine learning algorithm like XGBoost comes along with a lot of parameters and so the scopes of parameter tuning are also high.
+
+												There are broadly three different kinds of parameters 
+
+												1. General Parameters: For overall functioning like the type of model (classification/regression), displaying of the error message, and so on.
+												2. Booster parameters: These are the main sets of parameters that guide individual trees at every step. Some of these booster parameters are listed below:
+													a. Eta: Learning rate(how much model will converge)
+													b. Max_depth: The maximum depth of the component decision tree
+													c. Max_leaf_nodes: The maximum number of terminal nodes in the decision tree
+													d. Subsample: fraction of observation which is to be selected for random sampling of each tree.
+													e. colsample_bytree: Kind of the maximum number of features. Denotes the fraction of columns to be random samples for each tree.
+												3. Learning task parameters: As the name indicates, these parameters define the optimization objective and the metric (RMSE, MAE, LogLoss, Error, AUC, etc) to be calculated at every step.
+												
+										how it works:
+										
+													AT FIRST, OUR BASE MODEL(M0) WILL GIVE A PREDICTION VALUE. AS WE KNOW THIS MODEL SUFFERS A LOSS WHICH WILL HAVE SOME OPTIMISATION IN THE NEXT MODEL(M1). MODEL M1 WILL HAVE INPUT AS AGE(INDEPENDENT FEATURES) AND TARGET AS THE LOSS SUFFERED(VARIANCES) IN M0. UNTIL NOW IT IS THE SAME AS THE GRADIENT BOOSTING TECHNIQUE.
+													For XGboost some new terms are introduced, 
+
+														ƛ -> regularization parameter
+														Ɣ -> for auto tree pruning
+														eta -> how much model will converge
+														Now calculate the similarity score,
+
+														Similarity Score(S.S.) =  (S.R ^ 2) / (N + ƛ)
+														Here, S.R is the sum of residuals,
+														N is Number of Residuals
+													Let’s make the decision tree using these residuals and similarity scores.
+													After this, we calculate the 
+													 Gain = S.S of the branch before split - S.S of the branch after the split.
+													 
+													Now we set our Ɣ, which is a value provided to the model at starting and its used during splitting. If Gain>Ɣ then split will happen otherwise not. Let’s assume that Ɣ for this problem is 130 then since the gain is greater than Ɣ, further split will occur. By this method, auto tree pruning will be achieved. The greater the Ɣ value more pruning will be done.
+													
+													For regularization and preventing overfitting, we must increase the ƛ  which was initially set to 0. But this should be done carefully as greater the ƛ  value lesser the Similarity score, lesser the gain and more the pruning.
+																New prediction = Previous Prediction + Learning rate * Output
+																
+													XGboost calls the learning rate as eta and its value can be set like 0.3 etc.
+													 
+													This way model M1 will be trained and residuals will keep on decreasing, which means the loss will be optimized in further models.
+
+
+										
+										Some of the reasons why XGBoost is used:
+													1. It is a powerful algorithm with high speed and performance.
+													2. Processing power of modern multicore computers can be utilized by the XGBoost algorithm.
+													3. It is cost-effective to train on large datasets.
+													4. Consistently outperform all single algorithm methods.
+													
+										Conclusion
+										
+												XGboost has proven to be the most efficient Scalable Tree Boosting Method. It has shown outstanding results across different use cases such as motion detection, stock sales predictions, malware classification, customer behaviour analysis and many more. The system runs way faster on a single machine than any other machine learning technique with efficient data and memory handling. The algorithm’s optimization techniques improve performance and thereby provides speed using the least amount of resources.
+								
+								3. AdaBoost- 
+												ADABOOST(ADAPTIVE BOOSTING) IS A BOOSTING ALGORITHM WHICH INCLUDES A GROUP OF ALGORITHMS THAT UTILIZE WEIGHTED AVERAGES TO MAKE WEAK LEARNERS INTO STRONG LEARNERS. EACH MODEL THAT RUNS DECIDES WHAT FEATURES THE NEXT MODEL WILL FOCUS ON.
+
+												The performance of decision trees on binary classification problems is frequently boosted using the AdaBoost algorithm. It is done by building a model from the training data, then creating a second model that attempts to correct the errors from the first model.
+
+												AdaBoost keeps on adding the models until the training set starts getting predicted perfectly or a given number of models is added. It is less susceptible to over-fitting than other learning algorithms.
+												
+												This algorithm starts by building a decision stump and then assigning equal weights to all the data points. Then it increases the weights for all the points which are misclassified and lowers the weight for those that are easy to classify or are correctly classified. A new decision stump is made for these weighted data points. The idea behind this is to improve the predictions made by the first stump.
+												
+												THE MAIN DIFFERENCE BETWEEN THESE TWO ALGORITHMS IS THAT GRADIENT BOOSTING HAS A FIXED BASE ESTIMATOR I.E., DECISION TREES WHEREAS IN ADABOOST WE CAN CHANGE THE BASE ESTIMATOR ACCORDING TO OUR NEEDS.
+												
+												ADABOOST ALSO CALLED ADAPTIVE BOOSTING IS A TECHNIQUE IN MACHINE LEARNING USED AS AN ENSEMBLE METHOD. THE MOST COMMON ALGORITHM USED WITH ADABOOST IS DECISION TREES WITH ONE LEVEL THAT MEANS WITH DECISION TREES WITH ONLY 1 SPLIT. THESE TREES ARE ALSO CALLED DECISION STUMPS.
+												
+							IMP					WHAT THIS ALGORITHM DOES IS THAT IT BUILDS A MODEL AND GIVES EQUAL WEIGHTS TO ALL THE DATA POINTS. IT THEN ASSIGNS HIGHER WEIGHTS TO POINTS THAT ARE WRONGLY CLASSIFIED. NOW ALL THE POINTS WHICH HAVE HIGHER WEIGHTS ARE GIVEN MORE IMPORTANCE IN THE NEXT MODEL. IT WILL KEEP TRAINING MODELS UNTIL AND UNLESS A LOW ERROR IS RECEIVED.
+												
+											Understanding the working of AdaBoost Algorithm:
+															Let’s start understanding what and how does this algorithm work under the hood.				
+														step 1:		
+																First of all these data points will be assigned some weights. Initially, all the weights will be equal.
+		krish nayak video imp														
+																W(xi,yi)=1/N
+																Where N is the total number of datapoints
+																Here since we have 5 data points so the sample weights assigned will be 1/5.
+														Step 2 – 
+																We’ll create a decision stump for each of the features and then calculate the Gini Index of each tree. The tree with the lowest Gini Index will be our first stump.
+																
+														step 3:
+																We’ll now calculate the “Amount of Say” or “Importance” or “Influence” for this classifier in classifying the datapoints using this formula:
+																					alpha=1/2 log ((1-total error)/total error)
+																					
+																					The total error is nothing, but the summation of all the sample weights of misclassified data points.
+																					Here in our dataset have 5 rows and let’s assume there is 1 wrong output, so our total error will be 1/5,(if it is 2 then 2/5) and alpha(performance of the stump) will be:
+																					alpha=(1/2)log(1-1/5)/(1/5)=1/2log4=0.69
+																					
+																					Note: Total error will always be between 0 and 1.
+																					0 Indicates perfect stump and 1 indicates horrible stump.
+																					
+																when there is no misclassification then we have no error (Total Error = 0), so the “amount of say (alpha)” will be a large number.
+
+																When the classifier predicts half right and half wrong then the Total Error = 0.5 and the importance (amount of say) of the classifier will be 0.
+
+																If all the samples have been incorrectly classified then the error will be very high (approx. to 1) and hence our alpha value will be a negative integer.
+																
+														Step 4 – 
+																You must be wondering why is it necessary to calculate the TE and performance of a stump? Well, the answer is very simple, we need to update the weights because if the same weights are applied to the next model, then the output received will be the same as what was received in the first model.
+
+																The wrong predictions will be given more weight whereas the correct predictions weights will be decreased. Now when we build our next model after updating the weights, more preference will be given to the points with higher weights.
+
+																After finding the importance of the classifier and total error we need to finally update the weights and for this, we use the following formula:
+														
+																		new sample weight=old weight*e**+- amount of say(alpha)
+																		
+																		The amount of say (alpha) will be negative when the sample is correctly classified.
+
+																		The amount of say (alpha) will be positive when the sample is miss-classified.
+
+																		There are four correctly classified samples and 1 wrong, here the sample weight of that datapoint is 1/5 and the amount of say/performance of the stump of Gender is 0.69.
+
+																		New weights for correctly classified samples are:
+																		
+																							New weights=1/5*exp(-0.69)=0.2*0.502=0.1004
+																		For wrongly classified samples the updated weights will be:
+																							New weights=1/5*exp(0.69)=0.2*1.994=0.3988
+																							
+																				Note: See the sign of alpha when I am putting the values, the alpha is negative when the data point is correctly classified, and this decreases the sample weight from 0.2 to 0.1004. It is positive when there is misclassification, and this will increase the sample weight from 0.2 to 0.3988
+																				
+																				We know that the total sum of the sample weights must be equal to 1 but here if we sum up all the new sample weights, we will get 0.8004. To bring this sum equal to 1 we will normalize these weights by dividing all the weights by the total sum of updated weights that is 0.8004. So, after normalizing the sample weights we get this dataset and now the sum is equal to 1.
+														step 5:
+																Now this act as our new dataset and we need to repeat all the above steps i.e.
+																Iterate through these steps until and unless a low training error is achieved.
+																
+											 ADVANTAGES AND DISADVANTAGES
+															1. Coming to the advantages, Adaboost is LESS PRONE TO OVERFITTING as the input parameters are not jointly optimized. The accuracy of weak classifiers can be improved by using Adaboost. Nowadays, Adaboost is being used to classify text and images rather than binary classification problems.
+
+															2. The main disadvantage of Adaboost is that it needs a quality dataset. Noisy data and outliers have to be avoided before adopting an Adaboost algorithm.
+															
+											FOR MORE OF ADABOOST:- https://www.analyticsvidhya.com/blog/2021/09/adaboost-algorithm-a-complete-guide-for-beginners/
+																		
+												
+
+
+
+								
+								4. LightGBM- 
+								
+								
+											LIGHT GBM IS A FAST, DISTRIBUTED, HIGH-PERFORMANCE GRADIENT BOOSTING FRAMEWORK BASED ON DECISION TREE ALGORITHM, USED FOR RANKING, CLASSIFICATION, Regression AND MANY OTHER MACHINE LEARNING TASKS.
+											
+											LIGHTGBM USES HISTOGRAM-BASED ALGORITHMS[4, 5, 6], WHICH BUCKET CONTINUOUS FEATURE (ATTRIBUTE) VALUES INTO DISCRETE BINS. THIS SPEEDS UP TRAINING AND REDUCES MEMORY USAGE.
+
+											SINCE IT IS BASED ON DECISION TREE ALGORITHMS, IT SPLITS THE TREE LEAF WISE WITH THE BEST FIT WHEREAS OTHER BOOSTING ALGORITHMS SPLIT THE TREE DEPTH WISE(xgboost) OR LEVEL WISE(adaboost) RATHER THAN LEAF-WISE. So when growing on the same leaf in Light GBM, the LEAF-WISE ALGORITHM CAN REDUCE MORE LOSS THAN THE LEVEL-WISE ALGORITHM AND HENCE RESULTS IN MUCH BETTER ACCURACY WHICH CAN RARELY BE ACHIEVED BY ANY OF THE EXISTING BOOSTING ALGORITHMS. Also, it is surprisingly very fast, hence the word ‘Light’.
+															
+															LEAF vs level wise split
+																(If you grow the full tree, best-first (leaf-wise) and depth-first (level-wise) will result in the same tree. The difference is in the order in which the tree is expanded. Since we don't normally grow trees to their full depth, order matters: application of early stopping criteria and pruning methods can result in very different trees. BECAUSE LEAF-WISE CHOOSES SPLITS BASED ON THEIR CONTRIBUTION TO THE GLOBAL LOSS AND NOT JUST THE LOSS ALONG A PARTICULAR BRANCH, IT OFTEN (NOT ALWAYS) WILL LEARN LOWER-ERROR TREES "FASTER" than level-wise. I.e. for a given number of leaves, leaf-wise will probably out-perform level-wise. As you add more nodes, without stopping or pruning they will converge to the same performance because they will literally build the same tree eventually.
+																https://datascience.stackexchange.com/questions/26699/decision-trees-leaf-wise-best-first-and-level-wise-tree-traverse
+																)
+											
+											LEAF WISE SPLITS LEAD TO INCREASE IN COMPLEXITY AND MAY LEAD TO OVERFITTING AND IT CAN BE OVERCOME BY SPECIFYING ANOTHER PARAMETER MAX-DEPTH WHICH SPECIFIES THE DEPTH TO WHICH SPLITTING WILL OCCUR.
+											
+											A Gradient Boosting Decision tree or a GBDT is a very popular machine learning algorithm that has effective implementations like XGBoost and many optimization techniques are actually adopted from this algorithm. The EFFICIENCY AND SCALABILITY OF THE MODEL ARE NOT QUITE UP TO THE MARK WHEN THERE ARE MORE FEATURES IN THE DATA. For this specific behavior, the major reason is that each feature should scan all the various data instances to make an estimate of all the possible split points which is very time-consuming and tedious.
+											
+								IMP-->
+											To solve this problem, The LGBM or Light Gradient Boosting Model is used. It uses two types of techniques which are gradient Based on side sampling or GOSS and Exclusive Feature bundling or EFB. So GOSS will ACTUALLY EXCLUDE THE SIGNIFICANT PORTION OF THE DATA PART WHICH HAVE SMALL GRADIENTS AND ONLY USE THE REMAINING DATA TO ESTIMATE THE OVERALL INFORMATION GAIN. The data instances which have large gradients actually play a greater role for computation on information gain. GOSS cAN GET ACCURATE RESULTS WITH A SIGNIFICANT INFORMATION GAIN DESPITE USING A SMALLER DATASET THAN OTHER MODELS.
+
+											With the EFB, It puts the mutually exclusive features along with nothing but it will rarely take any non-zero value at the same time to reduce the number of features. This impacts the overall result for an effective feature elimination without compromising the accuracy of the split point.
+
+											BY COMBINING THE TWO CHANGES, IT WILL FASTEN UP THE TRAINING TIME OF ANY ALGORITHM BY 20 TIMES. SO LGBM CAN BE THOUGHT OF AS GRADIENT BOOSTING TREES WITH THE COMBINATION FOR EFB AND GOSS. 
+
+											
+
+												
+											Why is LightGBM popular?
+															It has become difficult for the traditional algorithms to give results fast, as the size of the data is increasing rapidly day by day. LIGHTGBM IS CALLED “LIGHT” BECAUSE OF ITS COMPUTATION POWER AND GIVING RESULTS FASTER. IT TAKES LESS MEMORY TO RUN AND IS ABLE TO DEAL WITH LARGE AMOUNTS OF DATA. Most widely used algorithm in Hackathons because the motive of the algorithm is to get good accuracy of results and also brace GPU leaning.
+											When to use LightGBM?
+														LIGHTGBM IS NOT FOR A SMALL VOLUME OF DATASETS. IT CAN EASILY OVERFIT SMALL DATA DUE TO ITS SENSITIVITY. It can be used for data having more than 10,000+ rows. There is no fixed threshold that helps in deciding the usage of LightGBM. It can be used for large volumes of data especially when one needs to achieve a high accuracy.
+														
+											What are split points?
+														Split points are the feature values depending on which data is divided at a tree node.
+														
+											HOW ARE THE OPTIMUM SPLIT POINTS CREATED?
+														Split finding algorithms are used to find candidate splits.
+														One of the most popular split finding algorithm is the Pre-sorted algorithm which enumerates all possible split points on pre-sorted values. This method is simple but highly inefficient in terms of computation power and memORY .
+														THE SECOND METHOD IS THE HISTOGRAM BASED ALGORITHM WHICH BUCKETS CONTINUOUS FEATURES INTO DISCRETE BINS TO CONSTRUCT FEATURE HISTOGRAMS DURING TRAINING. It costs O(#data * #feature) for histogram building and O(#bin * #feature) for split point finding. As bin << data histogram building will dominate the computational complexity.
+											
+														Both LightGBM and xgboost utilise histogram based split finding in contrast to sklearn which uses GBM ( One of the reasons why it is slow). Let’s begin with the crux of this post
+														
+											WHAT MAKES LIGHTGBM SPECIAL?
+															LightGBM aims to reduce complexity of histogram building ( O(data * feature) ) by down sampling data and feature using GOSS and EFB. This will bring down the complexity to (O(data2 * bundles)) where data2 < data, and bundles << feature.
+															
+											What is GOSS?
+
+															GOSS (Gradient Based One Side Sampling) is a novel sampling method WHICH DOWN SAMPLES THE INSTANCES ON BASIS OF GRADIENTS. As we know instances with small gradients are well trained (small training error) and those with large gradients are under trained. A NAIVE APPROACH TO DOWNSAMPLE IS TO DISCARD INSTANCES WITH SMALL GRADIENTS BY SOLELY FOCUSSING ON INSTANCES WITH LARGE GRADIENTS but this would alter the data distribution. In a nutshell GOSS retains instances with large gradients while performing random sampling on instances with small gradients.
+
+															Intuitive steps for GOSS calculation
+															1. Sort the instances according to absolute gradients in a descending order
+															2. Select the top a * 100% instances. [ Under trained / large gradients ]
+															3. Randomly samples b * 100% instances from the rest of the data. This will reduce the contribution of well trained examples by a factor of b ( b < 1 )
+															4. Without point 3 count of samples having small gradients would be 1-a ( currently it is b ). In order to maintain the original distribution LightGBM amplifies the contribution of samples having small gradients by a constant (1-a)/b to put more focus on the under-trained instances. This puts more focus on the under trained instances without changing the data distribution by much.
+															
+											What is EFB(Exclusive Feature Bundling)?
+
+															Remember histogram building takes O(#data * #feature). IF WE ARE ABLE TO DOWN SAMPLE THE #FEATURE WE WILL SPEED UP TREE LEARNING. LIGHTGBM ACHIEVES THIS BY BUNDLING FEATURES TOGETHER. WE GENERALLY WORK WITH HIGH DIMENSIONALITY DATA. SUCH DATA HAVE MANY FEATURES WHICH ARE MUTUALLY EXCLUSIVE I.E THEY NEVER TAKE ZERO VALUES SIMULTANEOUSLY. LIGHTGBM SAFELY IDENTIFIES SUCH FEATURES AND BUNDLES THEM INTO A SINGLE FEATURE TO REDUCE THE COMPLEXITY TO O(#DATA * #BUNDLE) WHERE #BUNDLE << #FEATURE.
+
+															Part 1 of EFB : Identifying features that could be bundled together
+
+																	Intuitive explanation for creating feature bundles
+
+																	1. Construct a graph with weighted (measure of conflict between features) edges. Conflict is measure of the fraction of exclusive features which have overlapping non zero values.
+																	2. Sort the features by count of non zero instances in descending order.
+																	3. Loop over the ordered list of features and assign the feature to an existing bundle (if conflict < threshold) or create a new bundle (if conflict > threshold).
+															
+															Part 2 of EFB : Algorithm for merging features
+
+																	We will try to understand the intuition behind merging features by an example. But before that let’s answer the following questions :
+
+																	What is EFB achieving?
+
+																	EFB is merging the features to reduce the training complexity. In order to keep the merge reversible we will keep exclusive features reside in different bins.
+															Intuitive explanation for merging features
+
+																	1. Calculate the offset to be added to every feature in feature bundle.
+																	2. Iterate over every data instance and feature.
+																	3. Initialise the new bucket as zero for instances where all features are zero.
+																	4. Calculate the new bucket for every non zero instance of a feature by adding respective 
+																	
+											Let us look at some of the advantages of Light GBM.
+											
+
+											 Advantages of Light GBM
+																1. FASTER TRAINING SPEED AND HIGHER EFFICIENCY: LIGHT GBM USE HISTOGRAM BASED ALGORITHM I.E IT BUCKETS CONTINUOUS FEATURE VALUES INTO DISCRETE BINS WHICH FASTEN THE TRAINING PROCEDURE.
+																2. LOWER MEMORY USAGE: REPLACES CONTINUOUS VALUES TO DISCRETE BINS WHICH RESULT IN LOWER MEMORY USAGE.
+																3. BETTER ACCURACY THAN ANY OTHER BOOSTING ALGORITHM: It produces much more complex trees by following leaf wise split approach rather than a level-wise approach which is the main factor in achieving higher accuracy. However, it can sometimes lead to overfitting which can be avoided by setting the max_depth parameter.
+																4. COMPATIBILITY WITH LARGE DATASETS: It is capable of performing equally good with large datasets with a significant reduction in training time as compared to XGBOOST.
+																5. Parallel learning supported.
+																7. CATEGORICAL FEATURE SUPPORT:LightGBM can use categorical features directly (without one-hot encoding). The experiment on Expo data shows about 8x speed-up compared with one-hot encoding.
+																
+																#pip install lightgbm
+																import lightgbm as lgb 
+																import xgboost as xgb
+																
+																if have time: points from tech doc official:
+																			https://lightgbm.readthedocs.io/en/v3.3.2/Features.html
+																some are :
+																					LightGBM uses histogram-based algorithms[4, 5, 6], which bucket continuous feature (attribute) values into discrete bins. This speeds up training and reduces memory usage. Advantages of histogram-based algorithms include the following:
+
+																					1. Reduced cost of calculating the gain for each split
+
+																							a. Pre-sort-based algorithms have time complexity O(#data)
+
+																							b. Computing the histogram has time complexity O(#data), but this involves only a fast sum-up operation. Once the histogram is constructed, a histogram-based algorithm has time complexity O(#bins), and #bins is far smaller than #data.
+
+																					2. Use histogram subtraction for further speedup
+
+																							a. To get one leaf’s histograms in a binary tree, use the histogram subtraction of its parent and its neighbor
+
+																							b. So it needs to construct histograms for only one leaf (with smaller #data than its neighbor). It then can get histograms of its neighbor by histogram subtraction with small cost (O(#bins))
+
+																					3. Reduce memory usage
+
+																							a. Replaces continuous values with discrete bins. If #bins is small, can use small data type, e.g. uint8_t, to store training data
+
+																							b. No need to store additional information for pre-sorting feature values
+
+																					4. Reduce communication cost for distributed learning
+																					
+																			Optimization in Accuracy:
+																					Leaf-wise (Best-first) Tree Growth
+																					Most decision tree learning algorithms grow trees by level (depth)-wise, 
+																					LightGBM grows trees leaf-wise (best-first). It will choose the leaf with max delta loss to grow. Holding #leaf fixed, leaf-wise algorithms tend to achieve lower loss than level-wise algorithms.
+																					Leaf-wise may cause over-fitting when #data is small, so LightGBM includes the max_depth parameter to limit tree depth. However, trees still grow leaf-wise even when max_depth is specified.
+																					
+																					
+																			Optimal Split for Categorical Features
+																					It is common to represent categorical features with one-hot encoding, but this approach is suboptimal for tree learners. Particularly for high-cardinality categorical features, a tree built on one-hot features tends to be unbalanced and needs to grow very deep to achieve good accuracy.
+
+																					Instead of one-hot encoding, the optimal solution is to split on a categorical feature by partitioning its categories into 2 subsets. If the feature has k categories, there are 2^(k-1) - 1 possible partitions. But there is an efficient solution for regression trees[8]. It needs about O(k * log(k)) to find the optimal partition.
+
+																					The basic idea is to sort the categories according to the training objective at each split. More specifically, LightGBM sorts the histogram (for a categorical feature) according to its accumulated values (sum_gradient / sum_hessian) and then finds the best split on the sorted histogram.
+																					
+																					
+																
+											
+																
+											LGBM VS XGB- 
+
+														There has been only a slight increase in accuracy and auc score by applying Light GBM over XGBOOST that means xgb have a slight better accuracy than lgbm but there is a significant difference in the execution time for the training procedure. Light GBM is almost 7 times faster than XGBOOST and is a much better approach when dealing with large datasets.
+														This turns out to be a huge advantage when you are working on large datasets in limited time competitions.
+														
+											
+													What are LightGBM Parameters?
+ 
+
+																	It is very important to get familiar with basic parameters of an algorithm that you are using. LightGBM has more than 100 parameters that are given in the documentation of LightGBM, but there is no need to study all of them. Let us see what are such different parameters. 
+
+																	 
+
+																	Control Parameters (below are in details so no need to read this otherwise important)
+																	 
+
+																	Max depth: It gives the depth of the tree and also controls the overfitting of the model. If you feel your model is getting overfitted lower down the max depth.
+
+																	 
+
+																	Min_data_in_leaf: Leaf minimum number of records also used for controlling overfitting of the model.
+
+																	 
+
+																	Feature_fraction: It decides the randomly chosen parameter in every iteration for building trees. If it is 0.7 then it means 70% of the parameter would be used.
+
+																	 
+
+																	Bagging_fraction: It checks for the data fraction that will be used in every iteration. Often, used to increase the training speed and avoid overfitting.
+
+																	 
+
+																	Early_stopping_round: If the metric of the validation data does show any improvement in last early_stopping_round rounds. It will lower the imprudent iterations.
+
+																	 
+
+																	Lambda: It states regularization. Its values range from 0 to 1.
+
+																	 
+
+																	Min_gain_to_split: Used to control the number of splits in the tree.
+
+																	 
+
+																	 
+
+																	 
+																	Core Parameters
+																	 
+
+																	Task: It tells about the task that is to be performed on the data. It can either train on the data or prediction on the data.
+
+																	 
+
+																	Application: This parameter specifies whether to do regression or classification. LightGBM default parameter for application is regression.
+
+																			Binary: It is used for binary classification.
+
+																			Multiclass: It is used for multiclass classification problems.
+
+																			Regression: It is used for doing regression.
+
+																	 
+
+																	Boosting: It specifies the algorithm type.
+
+																			rf :  Used for Random Forest.
+
+																			Goss: Gradient-based One Side Sampling.
+
+																	 
+
+																	Num_boost_round: It tells about the boosting iterations.
+
+																	 
+
+																	Learning_rate: The role of learning rate is to power the magnitude of the changes in the approximate that gets updated from each tree’s output. It has values : 0.1,0.001,0.003.
+
+																	 
+
+																	Num_leaves: It gives the total number of leaves that would be present in a full tree, default value: 31
+
+																	 
+
+																	 
+
+																	Metric Parameter
+																	eval_metric-
+																	It takes care of the loss while building the model. Some of them are stated below for classification as well as regression.
+																					Mae: Mean absolute error.
+
+																					Mse: Mean squared error.
+
+																					Binary_logloss: Binary Classification loss.
+
+																					Multi_logloss: Multi Classification loss.
+														
+														
+											Tuning Parameters of Light GBM
+																Light GBM uses leaf wise splitting over depth-wise splitting which enables it to converge much faster but also leads to overfitting. So here is a quick guide to tune the parameters in Light GBM.
+
+																For best fit
+																1. num_leaves : This parameter is used to set the number of leaves to be formed in a tree. Theoretically relation between num_leaves and max_depth is num_leaves= 2^(max_depth). However, this is not a good estimate in case of Light GBM since splitting takes place leaf wise rather than depth wise. Hence num_leaves set must be smaller than 2^(max_depth) otherwise it may lead to overfitting. Light GBM does not have a direct relation between num_leaves and max_depth and hence the two must not be linked with each other.
+																
+																2. min_data_in_leaf : It is also one of the important parameters in dealing with overfitting. Setting its value smaller may cause overfitting and hence must be set accordingly. Its value should be hundreds to thousands of large datasets.
+																3. max_depth: It specifies the maximum depth or level up to which tree can grow.
+																 
+
+																For faster speed
+																1. bagging_fraction : Is used to perform bagging for faster results
+																2. feature_fraction : Set fraction of the features to be used at each iteration
+																3. MAX_BIN : SMALLER VALUE OF MAX_BIN CAN SAVE MUCH TIME AS IT BUCKETS THE FEATURE VALUES IN DISCRETE BINS WHICH IS COMPUTATIONALLY INEXPENSIVE.
+																 
+
+																For better accuracy
+																1. Use bigger training data
+																2. num_leaves : Setting it to HIGH VALUE PRODUCES DEEPER TREES WITH INCREASED ACCURACY BUT LEAD TO OVERFITTING. Hence its higher value is not preferred.
+																3. max_bin : Setting it to high values has similar effect as caused by increasing value of num_leaves and also slower our training procedure.
+																
+												model = lgb.LGBMClassifier(learning_rate=0.09,max_depth=-5,random_state=42)
+												model.fit(x_train,y_train,eval_set=[(x_test,y_test),(x_train,y_train)],verbose=20,eval_metric='logloss')
+												#plotting the various feature importance
+												lgb.plot_importance(model)
+												
+												#plotting the various metric evaluation
+												#If you do not mention the eval_set during the fitment, then you will actually get an error while plotting the metric evaluation.
+												lgb.plot_metric(model)
+
+												#plotting the various tree plot
+												lgb.plot_tree(model,figsize=(30,40))
+												
+										more maths- https://www.analyticsvidhya.com/blog/2021/08/complete-guide-on-how-to-use-lightgbm-in-python/
+
+												
+												
+												
+												
+
+ 
+													
+								5. CatBoost-
+
+					3. STACKING-    
+									Stacking or Stacked Generalization is an ensemble technique.
+
+									IT USES A META-LEARNING ALGORITHM TO LEARN HOW TO BEST COMBINE THE PREDICTIONS FROM TWO OR MORE BASE MACHINE LEARNING ALGORITHMS.
+
+									THE BENEFIT OF STACKING IS THAT IT CAN HARNESS THE CAPABILITIES OF A RANGE OF WELL-PERFORMING MODELS ON A CLASSIFICATION OR REGRESSION TASK AND MAKE PREDICTIONS THAT HAVE BETTER PERFORMANCE THAN ANY SINGLE MODEL IN THE ENSEMBLE.
+
+									Unlike boosting, in stacking, a single model is used to learn how to best combine the predictions from the contributing models (e.g. instead of a sequence of models that correct the predictions of prior models).
+									
+								The architecture of a stacking model involves two or more base models, often referred to as level-0 models, and a meta-model that combines the predictions of the base models, referred to as a level-1 model.
+
+										1. Level-0 Models (Base-Models): Models fit on the training data and whose predictions are compiled.
+
+										2. Level-1 Model (Meta-Model): Model that learns how to best combine the predictions of the base models. The meta-model is trained on the predictions made by base models on out-of-sample data. That is, data not used to train the base models is fed to the base models, predictions are made, and these predictions, along with the expected outputs, provide the input and output pairs of the training dataset used to fit the meta-model.
+
+										The outputs from the base models used as input to the meta-model may be real value in the case of regression, and probability values, probability like values, or class labels in the case of classification.
+
+				BAGGING-make copies and take opinion from each copy.
+				BOOSTING- use errors to improve model
+							Adaboost- weights of errors
+							Gradient boost-regress on errors
+				STACKING-- use predictions from other models as the- x variables
+
+
+
+
+															 
+				IMP- 
+				random forest is parallel  and boosting is sequential
+
+				Q-Which of the following are true about random forest and gradient boosting(GBM) ensemble methods?
+				A- Both methods can be use for classification and regression tasks.
+
+				Q-Which of the following are true about the gradient boosted decision tree?
+				A- Next tree is trained based on how the previous tree has performed and
+				   we can use gradient descent methods to minimize the loss function.
+				   
+				note: 1. decision tree can be used only for both regression and classification tasks
+				      2. Random forest and gradient boosting ensemble methods - both can be used for regression and classification tasks.
+					  3. more notes - https://www.analyticsvidhya.com/blog/2017/09/30-questions-test-tree-based-models/
+
+				 
+				stratify parameters-
+									1. Split the dataset into train and test using stratified sampling on our dependent variable.
+									2. Using a stratified sampling ensures the distribution of dependent variable remains same across train and test datasets
+										X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.2, random_state = 0, stratify = Y)
+									USED COMPULSORY IF DATA BALANCING TECH IS NOT USED 
+							what is pruning? 
+									FOR MORE DETAILS- LINK>>>>
+
+
+								https://machinelearningmastery.com/train-test-split-for-evaluating-machine-learning-algorithms/
+								
+					NOTE:  Accuracy is not a good metric to evaluate our model since the dataset is heavily imbalanced. Thus we will use roc_auc score
+								
+								
+						# Hyperparameter tuning
+
+							classifier = RandomForestClassifier() # For GBM, use GradientBoostingClassifier()
+							grid_values = {'n_estimators':[50, 80,  100], 'max_depth':[3, 5, 7]}
+							classifier = GridSearchCV(classifier, param_grid = grid_values, scoring = 'roc_auc', cv=5)
+
+							# Fit the object to train dataset
+							classifier.fit(X_train, Y_train)
+							test_preds=classifier.predict(X_test)
+							roc_auc_score(Y_test,test_preds)
+							
+							# Obtain the confusion matrix on test set
+								confusion_matrix(Y_test,test_preds)
+
+INTRODUCTION TO MODEL EXPLAINABILITY
+
+
+													^
+													|
+													|\
+													| \
+													| *\Neural Networks(deep-learning) and Light Gbm -- Black box algos                                   
+										acccuracy	|    \                                 
+													|    *\Xg boost and Random Forest -- grey box algos  or can also be called black-box                              
+													|       \
+													|       *\Decision Tree and Linear Reg  -- white box algos(more explainable)
+													|_________\___________________>
+															 explainability
+				BLACK-BOX MODELS OFTEN RESULT IN BETTER ACCURACY THAN WHITE-BOX MODELS, BUT YOU SACRIFICE TRANSPARENCY AND ACCOUNTABILITY.
+				
+				so much theory in collab
+
+interpretable are the synonyms of explainable.
+Why do we need interpretability?
+Machine learning model fairness and interpretability are critical for data scientists, researchers and developers to explain their models and understand the value and accuracy of their findings. Interpretability is also important to debug machine learning models and make informed decisions about how to improve them.
+
+
+
+
+
+
+
+
+
+

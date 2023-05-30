@@ -1,0 +1,1575 @@
+train test split in detail-
+https://machinelearningmastery.com/train-test-split-for-evaluating-machine-learning-algorithms/
+Null hypothesis is a general statement that there is no relationship between two measured phenomena.
+
+IMP NOTE FOR REGRESSION- Lower correlation means weak linear relationship but there may be a strong non-linear relationship so, we can’t pass any judgement at this level, let the algorithm work for us.
+
+note - imp for basic definations --- https://stanford.edu/~shervine/teaching/cs-229/cheatsheet-machine-learning-tips-and-tricks
+
+1. Type 1 error: 
+			Type 1 error occurs when an  investigator rejects a null hypothesis that is actually true. ex- we predicts that a women is not pregnant while she is pregnant then we are doing type 1 error here. In that case we are more focusing on the false positives hence if we want to minimize this error our metrics will be Precision.
+
+2. P-Values: 
+			P - value is stands for probability value. It tells us how likely it is that a result occurred by chance alone. So basically p-value is used in hypothesis testing to help you support or rejects null hypothesis. And we know that the smaller the p-value, the stronger the evidence to reject null hypothesis.
+
+3. Difference between Mode, Mean and Median: 
+			Mean represents the center of the gravity of the data and it is sensitive to extreme values while median represents the middle of the dataset which is not sensitive to extreme values and mode is represents the most common value of the data which also doesn't have any effect of  extreme values.
+
+4. Data Science: 
+			As we know that data science is a subject in which we study about the data and make some useful insights from it which can help our business to increase. Its three main components are data design, data collection, and data analysis. for example- on the basis of past data we can make insights that in which field we are doing good and in which field we have to focus more.
+
+Let’s understand the meaning of “Noise” in a brief manner:
+
+														By noise we means those data points in the dataset which don’t really represent the true properties of your data, but only due to a random chance.
+CLT- Central limit Theoram-   
+
+						Central Limit Theorem suggests that if you randomly draw a sample of your customers, say 1000 customers, this sample itself might not be normally distributed. But if you now repeat the experiment say 100 times, then the 100 means of those 100 samples (of 1000 customers) will make up a normal distribution.
+						https://towardsdatascience.com/central-limit-theorem-explained-with-python-code-230884d40ce0
+
+														
+NOTE- SPARSE MODEL, MEANS THAT WE BELIEVE MANY FEATURES ARE IRRELEVANT TO THE OUTPUT.
+
+
+Bias: 
+								IT MEASURES HOW FAR OFF IN GENERAL OUR MODEL'S PREDICTIONS ARE FROM THE CORRECT VALUE. THUS AS OUR MODEL GETS MORE AND MORE COMPLEX WE WILL BECOME MORE AND MORE ACCURATE ABOUT OUR PREDICTIONS (ERROR STEADILY DECREASES).
+								
+Variance: 
+								VARIANCE CAN BE DEFINED AS FLUCTUAION IN ACCURACY IN TEST DATA FROM TRAIN DATA, IF WE PERFORM N NUMBER OF TESTING.
+								
+				Covariance:
+						Covariance is an indicator of the extent to which 2 random variables are dependent on each other. A higher number denotes higher dependency.
+						Covariance signifies the direction of the linear relationship between the two variables. By direction we mean if the variables are directly proportional or inversely proportional to each other. (INCREASING THE VALUE OF ONE VARIABLE MIGHT HAVE A POSITIVE OR A NEGATIVE IMPACT ON THE VALUE OF THE OTHER VARIABLE).
+						The value of covariance lies in the range of -∞ and +∞
+						Change in scale Affects covariance
+						
+						cov(x,y)=summ of (xi-xbar)*(yi-ybar)/N
+									where,
+										xbar= mean of indep var
+										ybar= mean of dep var
+										N= no. of observations
+						
+				Correlation 
+						IS A STATISTICAL MEASURE THAT INDICATES HOW STRONGLY TWO VARIABLES ARE RELATED.
+						CORRELATION IS LIMITED TO VALUES BETWEEN THE RANGE -1 AND +1
+						change in scale Does not affect the correlation
+						
+						corr= cov(x,y)/( sigma of x*sigma of y)
+										WHERE,
+													SIGma is std and we know that sigma=root(variance)
+													means,
+													sigma of x=root(summ of (xi-xbar)**2/n-1) bcoz variance=(summ of (xi-xbar)**2/n-1) or n if ther is population
+						
+				IN LAYMAN'S TERMS COVARIANCE IS WHEN TWO VARIABLES VARY WITH EACH OTHER, WHEREAS CORRELATION IS WHEN THE CHANGE IN ONE VARIABLE RESULTS IN THE CHANGE IN ANOTHER VARIABLE.
+				
+Standard deviation is a metric of variance i.e. how much the individual data points are spread out from the mean.
+				
+				for more details- 
+				https://www.mygreatlearning.com/blog/covariance-vs-correlation/
+
+Transformation:
+
+						1. square-root for moderate skew: sqrt(x) for positively skewed data, sqrt(max(x+1) - x) for negatively skewed data
+
+						2. log for greater skew: log10(x) for positively skewed data, log10(max(x+1) - x) for negatively skewed data
+
+						3. inverse for severe skew: 1/x for positively skewed data 1/(max(x+1) - x) for negatively skewed data
+
+						4. Linearity and heteroscedasticity: First try log transformation in a situation where the dependent variable starts to increase more rapidly with increasing independent variable values If your data does the opposite – dependent variable values decrease more rapidly with increasing independent variable values – you can first consider a square transformation.
+
+		
+
+Linear regression:
+
+				Linear regression equation: Y=Bo+B1X+e
+			Linear regression is one of the most basic/simple types of regression in supervised machine learning. The linear regression model consists of a
+			predictor/independent variable and a dependent variable related linearly to each other. We try to find the relationship between independent variable
+			(input) and a corresponding dependent variable (output).
+
+										This can be expressed in the form of a straight line
+										Y=Bo+B1X1+B2X2....+BPXP+e     
+										Where- Y is the actual value,
+												β0 is bias or estimated intercept.
+												β1,...,βp are the model parameters or coefficients or weights or estimated slope
+												x1, x2,...,xp are independent the feature values,
+												e is random error(noise)
+					
+			THE GOAL OF LINEAR REGRESSION IS TO CREATE A TREND LINE OR BEST FIT LINE BASED ON THE PAST DATA.
+			
+
+			Linear regression, also known as ordinary least squares (OLS) Regression and
+			linear least squares Regression, is the real workhorse of the regression world.
+			
+			(Ordinary least squares, or linear least squares, estimates the parameters in a regression model by minimizing the sum of the squared residuals.)
+			
+			Mathematics to the rescue
+								We can draw infinite number of lines but never be sure that the line is the best fit or not, so here enters our saviour: 
+										
+										MSE = 1/n *E sum of (y-y^)**2
+										
+								The Cost Function is a mathematical construct which is calculated by adding up the squared error terms.A loss function allows us to calculate the error between our current model to the actual points in our dataset. In other words, it tells us how poorly our model is performing.
+								The goal for a linear model then becomes to optimize the weight (b) via the cost function. The cost function calculates the error between predictions and actual values, represented as a single real-valued number. THE COST FUNCTION IS THE AVERAGE ERROR ACROSS N SAMPLES IN THE DATASET.
+								
+								THE MSE FUNCTION OPERATES AS FOLLOWS:
+
+												1. calculates the sum of the Euclidean distances between the actual (Y) and predicted value (ŷ)
+												2. squares the distance in order to get rid of any negative signs.
+												3. divides the sum of squares by the number of elements in our dataset (this step is done due to machine learning convention)
+
+								
+								Gradient Descent
+											GRADIENT DESCENT IS A SIMPLE OPTIMISATION TECHNIQUE FOR FINDING MINIMUM OF ANY FUNCTION, IN THIS CASE WE WANT TO FIND THE MINIMA OF OUR MSE FUNCTION.  IN OTHER WORDS, GRADIENT DESCENT WILL FIND A LOCAL MINIMUM IN OUR MSE LOSS FUNCTION.
+											
+											You can visualise the function as a valley, and you are standing on some random point. Your aim is to reach the bottom most point of the valley and Gradient Descent help you in reaching to the bottom most point of the valley.
+											
+												Why do we need to find a local minimum? 
+															THAT’S BECAUSE IT WILL TELL US THE OPTIMAL WEIGHT AND BIAS USED TO ACQUIRE A LOW ERROR VALUE. WE WILL THEN USE THAT WEIGHT AND BIAS IN OUR FINAL EQUATION FOR OUR LINE OF BEST FIT
+
+												Here is how you will do it:
+
+															You will see and make out where the slope of the valley is going down, then you start taking steps towards the down going slope. Once you see that every contour around you is higher than where you are standing you claim that you have reached the bottom most point.
+
+												Here is how Gradient Descent will do it:
+
+															It has to know where the slope of the valley is going (and it doesn’t have eyes as you do) so it takes the help of mathematics here.
+
+															TO KNOW THE SLOPE OF A FUNCTION AT ANY POINT YOU DIFFERENTIATE THAT POINT WITH RESPECT TO ITS PARAMETERS, THUS GRADIENT DESCENT DIFFERENTIATES THE ABOVE COST FUNCTION AND COMES TO KNOW THE SLOPE OF THAT POINT.
+															
+															FOR THOSE WHO ARE NOT FAMILIAR WITH DERIVATIVES YET, ALL YOU NEED TO KNOW FOR RIGHT NOW IS THAT DERIVATIVES ALLOW US TO FIND THE SLOPE OF A NON-LINEAR GRAPH AT ANY INSTANTANEOUS POINT. AFTER FINDING THE DERIVATIVE, WE WILL CHECK FOR WHERE THE SLOPE IS ZERO AND THAT WILL SIGNIFY THAT WE REACHED A LOCAL MAX/MIN. In our case we are searching for a local minimum in our MSE function since we are trying to minimize our error.
+
+															To go to the bottom most point it has to go in the opposite direction of the slope, i.e. where the slope is decreasing.
+
+															IT HAS TO TAKE SMALL STEPS TO MOVE TOWARDS THE BOTTOM POINT AND THUS LEARNING RATE DECIDES THE LENGTH OF STEP THAT GRADIENT DESCENT WILL TAKE.
+
+															AFTER EVERY MOVE IT VALIDATES THAT THE CURRENT POSITION IS GLOBAL MINIMA OR NOT. THIS IS VALIDATED BY THE SLOPE OF THAT POINT, IF THE SLOPE IS ZERO THEN THE ALGORITHM HAS REACHED THE BOTTOM MOST POINT.
+															AFTER EVERY STEP, IT UPDATES THE PARAMETER (OR WEIGHTS) AND BY DOING THE ABOVE STEP REPEATEDLY IT REACHES TO THE BOTTOM MOST POINT.
+															
+															NOTE:
+																1. If the gradient/slope is positive at the point where the ball lies, then it must move left to get closer to a valley
+																2. If the gradient/slope is negative, then the ball must move right to get closer to the valley
+																
+																
+														Cost functions available for Regression
+																				Regression tasks deal with continuous data. Cost functions available for Regression are,
+
+																				Mean Absolute Error
+																				Mean Squared Error(default)
+																				Root Mean Squared Error
+																				Root Mean Squared Logarithmic Error
+																				
+																				all are avalilable here in detail- https://towardsdatascience.com/cost-functions-of-regression-and-its-optimization-techniques-in-machine-learning-2f5931cd33f1
+																
+																
+																MSE = 1/n *E sum of (yi-yi^)**2
+															    MSE = 1/n *E sum of (yi-(wxi+b))**2    from y^=mx+c
+
+													FINAL COST FUNCTION: 1/2m* (Ei=1 to m) summ of (y^-y)**2
+																			
+																			where, m = no. of observation
+																			we added 2 here for easyness of mathmatics acc to one thesis paper
+
+														
+																Differentiate with respect to w:
+																Hint — use the chain rule and constant rule.
+																
+																				del MSE/del w	= 1/n *E sum of 2(yi-(wxi+b))(-xi)
+																	Simplify					= -2/n *E summ of xi(yi-yi^)
+																	
+																Next apply the same process for differentiating with respect to b
+																		
+																			del MSE/del b	= -2/n *E summ of (yi-yi^)
+																			
+																			
+															Update the weight and bias (Still GD)
+																	AFTER FINDING THE GRADIENTS, WE WILL USE THE FOLLOWING TWO EQUATIONS TO UPDATE OUR WEIGHT AND BIAS:
+																						w= w- del MSE/del w *L or alpha
+																						b= b- del MSE/del b *L
+																						
+																			Why do we subtract?
+																					BECAUSE SUBTRACTING GUIDES THE MODEL IN THE DIRECTION OF THE LOCAL MINIMUM.
+
+																			Remember if the gradient is (+) we go left (-)
+																					if the gradient is (-) we go right (+)
+																					2. L refers to the learning rate(alpha).
+
+																			To understand the learning rate, let’s analyze a man climbing down a mountain.
+																			
+																			
+																			for example:   
+																							WHEN THE MAN IS STEEPLY APPROACHING DOWNHILL, HE TAKES BIGGER STEPS TO REACH THE BOTTOM FASTER. HOWEVER, AS HE APPROACHES CLOSER TO THE VALLEY, HE DECREASES HIS STEP SIZE TO ENSURE THAT HE DOESN’T OVERSTEP AND END UP ON THE OTHER SIDE OF THE MOUNTAIN.
+
+																							WHAT WE BASICALLY OBSERVED IS THAT THE MAN’S SPEED IS PROPORTIONAL TO THE SLOPE OF THE MOUNTAIN.
+
+																							This part is key for understanding the learning rate.
+
+																							Usually the learning rate is defined to be a small number (e.g 0.001) to ensure that the regression model doesn’t overstep and create more error when adjusting the weights and biases. And since L is multiplied to the gradients, the behavior of adjusting the weight and bias will be similar that of the man climbing down this mountain.
+																							
+												FINAL COST FUNCTION: 1/2m* (Ei=1 to m) summ of (y^-y)**2
+												
+																THERE ARE MANY APPROACH OF MATH OF LINEAR REGRESSION TWO IN BOOK AND
+																one is here also-- https://www.alpharithms.com/simple-linear-regression-modeling-502111/
+																
+																where, m= no. of observaton
+																		(in LR we doesn't have epochs and learning rate parameter these two are the part of SGDRegresssor which is also a linear model in LR case it keep iterating till it got the minimum error)
+																			Perform Multiple Epochs
+																							AN EPOCH IS THE MACHINE LEARNING DEFINITION OF ITERATING THROUGH THE WHOLE DATASET, CALCULATING THE LOSS FUNCTION, AND PERFORMING GRADIENT DESCENT.
+
+																							Since Gradient descent works in small stages, we will need multiple epochs to start seeing noticeable improvement in our linear regression model.
+																							
+																							Wow! Ok lets bump it up to a 300 epochs (By the way don’t try this by hand. Use code)
+																							Jackpot! This looks like the line of best fit.
+																							
+																							You might ask, what if we keep increasing the number of epochs? This is possible, but after a certain point the decrease in error will become extremely small and insignificant. It could also lead to overfitting or even increasing our error (overstepping). 
+																							For our model, some error we received is completely acceptable. Our model has reached a local minimum.
+																							
+																			Choose the Optimum Weight and Bias
+																							After running multiple epochs and acquiring an optimum error value, this is a good indicator that the current weight and bias will provide us the line of best fit for our model. Let’s find out what they are!
+												Victory
+															Once you have reached the bottom most point of the valley that means you have got the parameters corresponding to the least MSE or Cost function, and these values of parameters will fetch you the highest accuracy.
+
+															You can now use your Linear Regression model to predict the dependent variable of any unforeseen data point with very high accuracy.
+															
+															
+												maths with example - https://medium.com/swlh/an-intuitive-approach-to-linear-regression-b127da628e45
+
+
+								
+			
+			How do we determine the best fit line?
+								THE BEST FIT LINE IS CONSIDERED TO BE THE LINE FOR WHICH THE ERROR BETWEEN THE PREDICTED VALUES AND THE OBSERVED VALUES IS MINIMUM. IT IS ALSO CALLED THE REGRESSION LINE AND THE ERRORS ARE ALSO KNOWN AS RESIDUALS(IT CAN BE VISUALIZED BY THE VERTICAL LINES FROM THE OBSERVED DATA VALUE TO THE REGRESSION LINE)
+										min(SSE) = Ei=1 to n(y-y^)**2
+								SSE : Sum square error
+								Note: Predicted value can have positive or negative error. If we don’t square the error, then the positive and negative points will cancel each other out. Absolute function( |Actual- Pred| ) can be one option but it is not differentiable at Actual = Pred.
+								
+			Applications of Linear Regression
+							1. Sales Driver Analysis — Linear Regression can be used to predict the sale of products in the future based on past buying behaviour
+							2. Predict Economic Growth — Economists use Linear Regression to predict the economic growth of a country or state
+							3. Score Prediction — Sports analyst use linear regression to predict the number of runs or goals a player would score in the coming matches based on previous performances
+							4. Salary Estimation — An organisation can use linear regression to figure out how much they would pay to a new joiner based on the years of experience
+							5. House Price Prediction — Linear regression analysis can help a builder to predict how much houses it would sell in the coming months and at what price
+							6. Oil Price Prediction — Petroleum prices can be predicted using Linear Regression
+								
+			ASSUMPTION OF REGRESSION LINE
+							1. The relation between the dependent and independent variables
+							should be almost linear.
+							2. Mean of residuals should be zero or close to 0 as much as possible. It
+							is done to check whether our line is actually the line of “best fit”.
+							3. There should be homoscedasticity or equal variance in a regression
+							model. This assumption means that the variance around the
+							regression line is same for all values of the predictor variable (X).
+							4. There should not be multicollinearity in regression model.
+							Multicollinearity generally occurs when there are high correlations
+							between two or more independent variables.
+							
+				
+
+			Introduction to Gaussian Distribution
+								In probability theory, a normal (or Gaussian) distribution is a type of continuous probability distribution for a real-valued random variable. The general form of its probability density function is Gaussian Distribution 
+
+								SAMPLES OF THE GAUSSIAN/NORMAL DISTRIBUTION FOLLOW A BELL-SHAPED CURVE AND LIES AROUND THE MEAN. THE MEAN, MEDIAN, AND MODE OF GAUSSIAN DISTRIBUTION ARE THE SAME.
+				DISTRIBUTION DETECTION : 
+							1. via distplot:
+								
+										SKEWNESS:
+											1. Positively skewed (or right-skewed) distribution is a type of distribution in which most values are clustered around the left tail of the distribution while the right tail of the distribution is longer.here mean>median>mode
+											2. Negatively skewed (also known as left-skewed) distribution is a type of distribution in which more values are concentrated on the right side (tail) of the distribution graph while the left tail of the distribution graph is longer.hear mean<median<mode
+											3. For symmetric graph mean=median=mode
+									
+							2. via skewness value:
+
+											checking skewness of df =  df.skew()
+											
+												From the above result values, we can check which variable is normally distributed and which is not.
+
+												1. positively skewed if 0.5< skewness :
+																a. The variables with skewness > 1 are highly positively skewed.
+
+																b. The variables with 0.5 < skewness < 1 are moderately positively skewed.
+
+												2. normally distributed or symmetric if skewness between -0.5 to +0.5 :
+																								a. the variables with -0.5 < skewness < 0.5 are symmetric i.e normally distributed.
+
+												3. negatively skewed if skewness<-0.5 :
+																					a. The variables with -0.5 < skewness < -1 are moderately negatively skewed.
+																					b. The variables with skewness > -1 are highly negatively skewed.
+
+
+
+					MACHINE LEARNING IS THE ABILITY OF MACHINE TO LEARN FROM DATA .
+
+					“A computer program is said to learn from experience E with respect to some task T and some performance measure P, if its performance on T, as measured by P, improves with experience E.” by Tom Mitchell
+
+							1.
+							GRADIENT DESCENT =IS AN OPTIMIZATION ALGORITHM THAT HELPS MACHINE
+								learning models to find out paths to a minimum value using repeated
+								steps.
+								Gradient descent is used to minimize a function so that it gives the
+								lowest output of that function. This function is called the Loss Function.
+
+							2. 
+								The function which is used to
+								minimize for
+								linear regression model
+								is the mean squared error.
+								Note: MSE is used instead of SSE to save space and avoid memory
+								explosion with large # of observations(n)
+
+							3. 
+								There should not be multicollinearity in regression model.
+								Multicollinearity generally occurs when there are high correlations
+								between two or more independent variables.
+
+							4. 
+							Homoscedasticity-
+									Homoscedasticity (meaning “same variance”) describes a situation in
+									which the error term is the same across all values of the independent
+									variables.
+									Heteroscedasticity (the violation of homoscedasticity) is present when
+									the size of the residuals/error term differs across values of an independent
+									variable. 
+									Detection -													
+											WE CAN DETECT HOMOSCEDASTICY BY SCATTER PLOT OF RESIDUAL VS FITTED VALUE (pred value) :
+											
+											X_train, X_test, y_train, y_test = train_test_split(X, y,random_state = 0,test_size=0.25)
+											regr = LinearRegression()
+											regr.fit(X_train,y_train)
+											y_pred = regr.predict(X_train)
+											
+											residuals = y_train.values-y_pred
+											p = sns.scatterplot(y_pred,residuals)
+											plt.xlabel('y_pred/predicted values')
+											plt.ylabel('Residuals')
+											plt.ylim(-10,10)
+											plt.xlim(0,26)
+											p = sns.lineplot([0,26],[0,0],color='blue')
+											p = plt.title('Residuals vs fitted values plot for homoscedasticity check')
+											
+											WE CAN CHECK VIA USING GOLDFELD QUANDT ALSO 
+												we test for heteroscedasticity.
+
+														Null Hypothesis: Error terms are homoscedastic
+														Alternative Hypothesis: Error terms are heteroscedastic.
+														
+														import statsmodels.stats.api as sms
+														from statsmodels.compat import lzip
+														name = ['F statistic', 'p-value']
+														test = sms.het_goldfeldquandt(residuals, X_train)
+														lzip(name, test)
+													IF P VALUE IS MORE THAN 0.05 IN GOLDFELD QUANDT TEST, WE CAN'T REJECT IT'S NULL HYPOTHESIS THAT ERROR TERMS ARE HOMOSCEDASTIC. GOOD.
+											
+											
+											
+											
+											#above part of these code is below down after two paragraph
+											plt.scatter(x, y, s=10)
+											# sort the values of x before line plot
+											sort_axis = operator.itemgetter(0)
+											sorted_zip = sorted(zip(x,y_poly_pred), key=sort_axis)
+											x, y_poly_pred = zip(*sorted_zip)
+											plt.plot(x, y_poly_pred, color='m')
+											plt.show()
+
+													HOMOSCEDASTICITY-
+																 if we plot the residuals on the X-axis, we’d see it along in a straight line parallel to the X-axis. This is a clear sign of Homoscedasticity
+											
+													HETEROSCEDASTICITY: 
+																In the simplest terms, the easiest way to know if Heteroscedasticity is present is by plotting the graph of residuals. If you see any pattern present then there is Heteroscedasticity. Typically the values increase as the fitted value increase, thereby making a cone-shaped curve.
+																
+											
+									
+									WHAT IF HETEROSCEDASTICITY?
+												Heteroscedasticity does not cause bias in the coefficient estimates, it
+												does make them less precise.
+
+												Dealing with Heteroscedasticity:
+												1. Log-transformation Box-cox transformation of features- 
+																techniques we used to convert non-normal distributon variables into a normal distribution variables.
+																			box-cox trans-
+																						Box-cox Transformation only cares about computing the value of \lambda  which varies from – 5 to 5. A value of \lambda  is said to be best if it is able to approximate the non-normal curve to a normal curve
+												2. Outlier treatment
+												3. Try polynomial fit : 	
+															if we apply PolynomialFeatures from sklearn.preprocessing on our X before given to linear regrssion  but we have to define a degree-
+																	Degree- 
+																				We can choose the degree of polynomial based on the relationship between target and predictor. THE 1-DEGREE POLYNOMIAL IS A SIMPLE LINEAR REGRESSION; THEREFORE, THE VALUE OF DEGREE MUST BE GREATER THAN 1. WITH THE INCREASING DEGREE OF THE POLYNOMIAL, THE COMPLEXITY OF THE MODEL ALSO INCREASES.
+																				
+																# transforming the data to include another axis
+																		x = x[:, np.newaxis]
+																		y = y[:, np.newaxis]
+
+																		polynomial_features= PolynomialFeatures(degree=2)
+																		x_poly = polynomial_features.fit_transform(x)
+
+																		model = LinearRegression()
+																		model.fit(x_poly, y)
+																		y_poly_pred = model.predict(x_poly)
+																		r2 = r2_score(y,y_poly_pred)
+
+							5.
+							Multicollinearity=
+									Multicollinearity occurs when independent variables in a regression
+									model are correlated.
+									THIS CORRELATION IS A PROBLEM BECAUSE INDEPENDENT VARIABLES SHOULD BE
+									INDEPENDENT. IF THE DEGREE OF CORRELATION BETWEEN VARIABLES IS HIGH
+									ENOUGH, IT CAN CAUSE PROBLEMS WHEN YOU FIT THE MODEL AND INTERPRET THE
+									RESULTS.
+									
+									Detection:
+									
+												Variance inflation factor(VIF) detects multicollinearity.
+												 **VIF-** VARIANCE INFLATION FACTOR (VIF) IS A MEASURE OF THE AMOUNT OF MULTICOLLINEARITY IN A SET OF MULTIPLE REGRESSION VARIABLES.
+													Mathematically, the VIF for a regression model variable is equal to the ratio of the overall model variance to the variance of a model that includes only that single independent variable. This ratio is calculated for each independent variable. A high VIF indicates that the associated independent variable is highly collinear with the other variables in the model.
+																A rule of thumb for interpreting the variance inflation factor:
+																1 = not correlated.
+																Between 1 and 5 = moderately correlated.
+																Greater than 5 = highly correlated.
+																
+																VIF= 1/1-Ri**2
+																
+														 **Weight of Evidence**:
+																	The weight of evidence tells the predictive power of an independent variable in relation to the dependent variable.
+
+														** Information Value**: 
+														Information value tells us which columns in a data set have predictive power or influence on the value of a specified dependent variable.
+													
+
+						What if Multicollinearity?
+
+										Multicollinearity happens when independent variables in the regression model are highly correlated to each other. IT MAKES IT HARD TO INTERPRET OF MODEL AND ALSO CREATES AN OVERFITTING PROBLEM. IT IS A COMMON ASSUMPTION THAT PEOPLE TEST BEFORE SELECTING THE VARIABLES INTO THE REGRESSION MODEL.
+										HOW TO REMOVE MULTICOLLINEARITY:-
+
+												1. Remove some of the highly correlated independent variables.
+												2. Linearly combine the independent variables, such as adding them
+												together.
+												3. Perform an analysis designed for highly correlated variables, such as
+												principal components analysis
+												
+												Steps for Implementing VIF
+
+															• Calculate the VIF factors.
+
+															• Inspect the factors for each predictor variable, if the VIF is between 5–10, multicollinearity is likely present and you should consider dropping the variable.
+
+															IN VIF METHOD, WE PICK EACH FEATURE AND REGRESS IT AGAINST ALL OF THE OTHER FEATURES. FOR EACH REGRESSION, THE FACTOR IS CALCULATED AS :
+
+															VIF=frac{1}/{1-R^2}
+
+															WHERE, R-SQUARED IS THE COEFFICIENT OF DETERMINATION IN LINEAR REGRESSION. ITS VALUE LIES BETWEEN 0 AND 1.
+												
+												checking mcr-
+														#Multicollinearity
+																	from statsmodels.stats.outliers_influence import variance_inflation_factor
+																	def calc_vif(X):
+
+																		# Calculating VIF
+																		vif = pd.DataFrame()
+																		vif["variables"] = X.columns
+																		vif["VIF"] = [variance_inflation_factor(X.values, i) for i in range(X.shape[1])]
+
+																		return(vif)
+										applying on df-
+												calc_vif(dataset[[i for i in dataset.describe().columns if i not in ['car_ID','price']]])
+												
+
+		6. 
+		LIMITATIONS OF LINEAR REGRESSION
+									1. Outliers can have huge effect on the regression line.
+									2. Linear regression assumes a linear relationship between dependent
+									and independent variables, which is not the case in most of the real
+									world problems.
+									3. Prone to underfitting - Linear regression sometimes fails to capture
+									the underneath pattern in data properly due to simplicity of the
+									algorithm.
+
++
+							1. Linear regression is simple to implement and easier to interpret the
+							output coefficients
+							2. When you know the relationship between the independent and
+							dependent variable is linear, this algorithm is the best to use
+							because it’s less complex as compared to other algorithms
+							3. It works well irrespective of data size
+								
+							
+							8.
+							Regression Model Evaluation Metrics
+															After the model is built, if we see that the difference in the values of the
+															predicted and actual data is not much, it is considered to be a good
+															model and can be used to make future predictions.
+															Few metric tools we can use to calculate error in the model
+															1. MSE (Mean Squared Error)
+															2. RMSE (Root of Mean Squared Error(MSE))
+															3. MAE (Mean Absolute Error)
+															4. MAPE (Mean Absolute Percentage Error) or MAPD(D FOR DEVIATION)
+															5. R2 (R – Squared)
+															6. Adjusted R2
+
+						 
+																	1. Mean Absolute Error(MAE)
+																				MAE is a very simple metric which calculates the absolute difference between actual and predicted values.
+																				
+																				Now you have to find the MAE of your model which is basically a mistake made by the model known as an error. Now find the difference between the actual value and predicted value that is an absolute error but we have to find the mean absolute of the complete dataset.
+																				so, sum all the errors and divide them by a total number of observations, this is MAE. And we aim to get a minimum MAE because this is a loss.
+																				
+																						MAE= 1/n *E sum of (y-y^) where n is num of datapoints
+																						
+																				Advantages of MAE
+
+																						1. The MAE you get is in the same unit as the output variable.
+																						2. It is most Robust to outliers.
+																				Disadvantages of MAE
+
+																						1. The graph of MAE is not differentiable so we have to apply various optimizers like Gradient descent which can be differentiable.
+																						
+																				from sklearn.metrics import mean_absolute_error
+																				print("MAE",mean_absolute_error(y_test,y_pred))
+
+																	2. Mean Squared Error (MSE)
+																			MSE or Mean Squared Error is one of the most preferred metrics for
+																			regression tasks.MSE is a most used and very simple metric with a little bit of change in MAE. It is simply the average of the squared difference
+																			between the target value and the value predicted by the regression
+																			model.
+																			formula- MSE=1/n *E sum of (y-y^)**2
+																			
+																			So, above in MAE, we are finding the absolute difference and here we are finding the squared difference.
+																			
+																			Advantages of MSE
+
+																					1. The graph of MSE is differentiable, so you can easily use it as a loss function.
+
+																			Disadvantages of MSE
+
+																					1. The value you get after calculating MSE is a squared unit of output. for example, the output variable is in meter(m) then after calculating MSE the output we get is in meter squared.
+																					2. If you have outliers in the dataset then it penalizes the outliers most and the calculated MSE is bigger. So, in short, It is not Robust to outliers which were an advantage in MAE.
+																					
+																			from sklearn.metrics import mean_squared_error
+																			print("MSE",mean_squared_error(y_test,y_pred))
+																	
+																	3. RMSE:
+																				The Root Mean Squared Errors (RMSE) takes the square root of MSE and indicates the absolute fit of the model to the data–how close the observed data points are to the model’s predicted values. RMSE is relatively easier to interpret in that it comes in the same unit as the response variable. Lower values of RMSE mean that the regression line is close to the data points, indicating a better fit.
+																				
+																				RMSE is a good measure of how accurately the model predicts the response, and it is the most important criterion for fit if the main purpose of the model is prediction.
+																				
+																				 RMSE=Root of MSE or  =root of [1/n *E sum of (y-y^)**2]
+																				 
+																				 Advantages of RMSE
+																								 1. The output value you get is in the same unit as the required output variable which makes interpretation of loss easy.
+																				Disadvantages of RMSE
+																								1. It is not that robust to outliers as compared to MAE.
+																								2. for performing RMSE we have to USE NumPy square root function over MSE.
+																								
+																				print("RMSE",np.sqrt(mean_squared_error(y_test,y_pred)))
+																				
+																				Most of the time people use RMSE as an evaluation metric and mostly when you are working with deep learning techniques the most preferred metric is RMSE.
+																				
+																	4. Root Mean Squared Log Error(RMSLE) (not imp)
+																					Taking the log of the RMSE metric slows down the scale of error. The metric is very helpful when you are developing a model without calling the inputs. In that case, the output will vary on a large scale.
+
+																					To control this situation of RMSE we take the log of calculated RMSE error and resultant we get as RMSLE.
+
+																					To perform RMSLE we have to use the NumPy log function over RMSE.
+
+																					print("RMSE",np.log(np.sqrt(mean_squared_error(y_test,y_pred))))
+																					It is a very simple metric that is used by most of the datasets hosted for Machine Learning competitions.
+
+																
+																	5. PROPERTIES OF R2
+																	
+																					R2 score is a metric that tells the performance of your model, not the loss in an absolute sense that how many wells did your model perform.
+
+																					In contrast, MAE and MSE depend on the context as we have seen whereas the R2 score is independent of context.
+
+																					So, with help of R squared we have a baseline model to compare a model which none of the other metrics provides. The same we have in classification problems which we call a threshold which is fixed at 0.5. SO BASICALLY R2 SQUARED CALCULATES HOW MUCH REGRESSION LINE IS BETTER THAN A MEAN LINE.
+
+																					HENCE, R2 SQUARED IS ALSO KNOWN AS COEFFICIENT OF DETERMINATION OR SOMETIMES ALSO KNOWN AS GOODNESS OF FIT
+																					
+																					r2 = 1-(SSR/SST) or = sum(ybar-y^)**2/sum(y-ybar)**2
+																						where, 
+																							SSR = sum of squared regression error
+																							SST = sum of squared total error
+																													
+																								where,
+																									SSR= It is the sum of the differences between the predicted value and the mean of the dependent variable. Think of it as a measure that describes how well our line fits the data.
+																											SSR=sum(y^-ybar)**2
+																											
+																									SST = The sum of squares total, denoted SST, is the squared differences between the actual values of dependent variable and its mean
+																											SST=sum(y-ybar)**2
+																											
+																											y=actual value
+																											y^=predicted value
+																											ybar= is the mean of y values
+																											
+																											
+																							ADDITION- 
+																									SSE or RSS=The last term is the sum of squares error, or SSE. The error is the difference between the observed value and the predicted value
+																									
+																									Residual sum of squares (also known as the sum of squared errors of prediction)
+																									Generally, a lower residual sum of squares indicates that the regression model can better explain the data, while a higher residual sum of squares indicates that the model poorly explains the data.
+																											SSE=sum(y^-y)**2
+																											
+																							note: The relationship between the three types of sum of squares can be summarized by the following equation:
+																							
+																									SST= SSR+SSE
+																									
+																									
+																							from - https://www.statology.org/sst-ssr-sse/
+
+																									
+																									
+																													
+																					Now, how will you interpret the R2 score? suppose If the R2 score is zero then the above regression line by mean line is equal (means 1) so 1-1 is zero. So, in this case, both lines are overlapping means model performance is worst, It is not capable to take advantage of the output column.
+
+																					Now the second case is when the R2 score is 1, it means when the division term is zero and it will happen when the regression line does not make any mistake, it is perfect. In the real world, it is not possible.
+
+																					So we can conclude that as our regression line moves towards perfection, R2 score move towards one. And the model performance improves.
+
+																					The normal case is when the R2 score is between zero and one like 0.8 which means your model is capable to explain 80 per cent of the variance of data.
+																					
+																						1. R2 ranges between 0* to 1.
+																						2. R2 of 0 means that there is no correlation between the dependent
+																						and the independent variable.
+																						3. R2 of 1 means the dependent variable can be predicted from the
+																						independent variable without any error.
+																						4. AN R2 OF 0.20 MEANS THAT 20% VARIANCE IN Y IS PREDICTABLE FROM X; AN
+																						R2 OF 0.40 MEANS THAT 40% VARIANCE IS PREDICTABLE.
+																						*Note : R² score may range from -∞ to 1 if OLS is not used to get the
+																						predictions.
+																						
+																					from sklearn.metrics import r2_score
+																					r2 = r2_score(y_test,y_pred)
+																					print(r2)
+																					
+																				
+																				In fields such as physics and chemistry, scientists are usually looking for regressions with R-squared between 0.7 and 0.99. However, in social sciences, such as economics, finance, and psychology the situation is different. There, an R-squared of 0.2, or 20% of the variability explained by the model, would be fantastic.
+																			
+																			
+																	6. Adjusted R²:
+																					The disadvantage of the R2 score is while adding new features in data the R2 score starts increasing or remains constant but it never decreases because It assumes that while adding more data variance of data increases.
+
+																					But the problem is when we add an irrelevant feature in the dataset then at that time R2 sometimes starts increasing which is incorrect.
+
+																					Hence, To control this situation Adjusted R Squared came into existence.
+																					
+																							R2(adj)=1-{[(n-1)/(n-k-1)]*(1-R2)}
+																							
+																								where , n= no. of observation, k=no. of independent features
+																								
+																					Now as K increases by adding some features SO THE DENOMINATOR WILL DECREASe, n-1 will remain constant. R2 score will remain constant or will increase slightly so the complete answer will increase and when we subtract this from one then the resultant score will decrease. so this is the case when we add an irrelevant feature in the dataset.
+																					And if we add a relevant feature then the R2 score will increase and 1-R2 will decrease heavily and THE DENOMINATOR WILL ALSO DECREASE so the complete term decreases, and on subtracting from one the score increases.
+																					
+																					n=40 
+																					k=2
+																					adj_r2_score = 1 - ((1-r2)*[(n-1)/(n-k-1)])
+																					print(adj_r2_score)
+																					Hence, this metric becomes one of the most important metrics to use during the evaluation of the model.
+																					
+																		NOTE: THE ADJUSTED R² SCORE IS SLIGHTLY LOWER THAN THE R² SCORE 
+																		case:
+																				for example if XGBoost have the highest Adjusted R² score and the worst would be AdaBoost with the least R² score. However, recall that this metric is only a relative measure of fitness so, we must look at the RMSE values. In this case, XGBoost and AdaBoost have the lowest and highest RMSE values respectively and the rest models are in the exact same order as their Adjusted R² scores. This further confirms that the best fit model for this dataset is XGBoost and the worst fit model is AdaBoost. Note, this doesn’t always happen so, be careful. Generally, when you have a model with the highest Adjusted R² and high RMSE, you would be better off with the one that has moderate Adjusted R² and low RMSE as the latter is the absolute measure of fit.
+										There can be situations where you have to use different evaluation metrics and if you are a beginner then you should try all these metrics which will help you to get a better understanding of each to evaluate when you can use which metric.
+										
+										
+										Which evaluation metric should you prefer to use for a dataset having a lot of outliers in it?
+										Solution -- 
+												Mean Absolute Error(MAE) is preferred when we have too many outliers present in the dataset because MAE is robust to outliers whereas MSE and RMSE are very susceptible to outliers and these start penalizing the outliers by squaring the error terms, commonly known as residuals.
+																					
+
+
+
+
+							8. Variance:
+									variance can be defined as fluctuaion in accuracy in test data from train data, if we perform n number of testing.
+
+									higher bias will lead to higher error in both train and test data since its an underfitted model.. however higher variance ensure you have low error in train data but higher error in test data just because it overfitted the train data.
+						
+
+							There are 3 scenarios.. you can have low bias low variance.. low bias high variance.. or high bias low variance... we are looking for the scenario where we get both bias and variance low/balanced
+
+							so bias and variance are inversely proportional(means negative relation)
+
+
+							if test r2 is lower than train r2 that means it is overfitting(means high variance,low bias)
+							if test r2 is low as well as train r2 that means it is underfitting(means high bias,low variance)
+							if test r2 is high and balanced as well as train r2 that means it is balanced fit(means low variance and low bias)
+
+							good balance- is not a problem arising due to bias/variance
+
+
+							What happens when model complexity increases?
+							Your Answer- Variance of the model increases
+
+							Overfitting is more likely when there is huge amount of train data.
+							Your Answer-False
+
+							Which of the following step / assumption in regression modeling impacts the trade-off between under-fitting and over-fitting the most?
+							Your Answer- The polynomial degree
+
+							Suppose the model is demonstrating the high variance across different training sets. Which of the following is not a valid way to reduce the variance?
+							Your Answer- increase the model complexity
+							
+							
+							in overfit error =0
+							overfitting in details below this-
+						
+
+
+							9. data splitting
+
+									The train-test split is a technique for evaluating the performance of a machine learning algorithm. It can be used for classification or regression problems and can be used for any supervised learning algorithm.
+
+									The procedure involves taking a dataset and dividing it into two subsets. The first subset is used to fit the model and is referred to as the training dataset. The second subset is not used to train the model; instead, the input element of the dataset is provided to the model, then predictions are made and compared to the expected values. This second dataset is referred to as the test dataset.
+									Train Dataset : Used to fit the machine learning model.(80%)
+									Test Dataset : Used to evaluate the fit machine learning model(20%).
+
+
+
+
+					for making regression database-
+													from sklearn.datasets import make_regression
+													from matplotlib import pyplot
+
+													X, y = make_regression(n_samples=1000, n_features=100 (or 1), n_informative=10, noise=0.1, random_state=1)
+
+
+
+					In regression with multiple independent variables, the coefficient tells you how much the dependent variable is expected to increase when that independent variable increases by one, holding all the other independent variables constant.
+
+					Overfitting: 
+								So what is overfitting? Well, to put it in more simple terms it's when we built a model that is too complex that it matches the training data "too closely" or we can say that the model has started to learn not only the signal, but also the noise in the data. The result of this is that our model will do well on the training data, but won't generalize to out-of-sample data, data that we have not seen before.
+								
+								Overfitting happens when the model performs well on the training set but not so well on unseen (test) data.
+					underfitting
+								Underfitting happens when it neither performs well on the train set nor on the test set.
+							
+							
+								
+			BIAS-VARIANCE TRADEOFF: 
+								When we discuss prediction models, prediction errors can be decomposed into two main subcomponents we care about: error due to "bias" and error due to "variance". Understanding these two types of error can help us diagnose model results and avoid the mistake of over/under fitting. A typical graph of discussing this is shown below:
+								
+					Bias: 
+								IT MEASURES HOW FAR OFF IN GENERAL OUR MODEL'S PREDICTIONS ARE FROM THE CORRECT VALUE. THUS AS OUR MODEL GETS MORE AND MORE COMPLEX WE WILL BECOME MORE AND MORE ACCURATE ABOUT OUR PREDICTIONS (ERROR STEADILY DECREASES).
+								
+					Variance: 
+								IT MEASURES HOW DIFFERENT CAN OUR MODEL BE FROM ONE TO ANOTHER, AS WE'RE LOOKING AT DIFFERENT POSSIBLE DATA SETS. If the estimated model will vary dramatically from one data set to the other, then we will have very erratic predictions, because our prediction will be extremely sensitive to what data set we obtain. As the complexity of our model rises, variance becomes our primary concern.
+								VARIANCE CAN BE DEFINED AS FLUCTUAION IN ACCURACY IN TEST DATA FROM TRAIN DATA, IF WE PERFORM N NUMBER OF TESTING.
+							RSS: 
+								RESIDUAL SUM OF SQUARES IS A STATISTICAL TECHNIQUE USED TO MEASURE THE AMOUNT OF VARIANCE IN DATA SET THAT IS NOT EXPLAINED VIA A REGRESSION MODELS ITSELF.
+								
+								SSE or RSS=This term is the sum of squares error, or SSE. The error is the difference between the observed value and the predicted value
+																									
+																									Residual sum of squares (also known as the sum of squared errors of prediction)
+																									Generally, a lower residual sum of squares indicates that the regression model can better explain the data, while a higher residual sum of squares indicates that the model poorly explains the data.
+																											SSE=sum(y^-y)**2
+			WHAT IS BIAS & VARIANCE TRADE-OFF IN DATA SCIENCE?
+								Solution 
+								When building a model using Data Science or Machine Learning, our goal is to build one that has low bias and variance. We know that bias and variance are both errors that occur due to either an overly simplistic model or an overly complicated model. Therefore, when we are building a model, the goal of getting high accuracy is only going to be accomplished if we are aware of the tradeoff between bias and variance. 
+								Bias is an error that occurs when a model is too simple to capture the patterns in a dataset. To reduce bias, we need to make our model more complex. Although making our model more complex can lead to reducing bias, if we make our model too complex, it may end up becoming too rigid, leading to high variance. So, the tradeoff between bias and variance is that if we increase the complexity, we reduce bias and increase variance, and if we reduce complexity, then we increase bias and reduce variance. Our goal is to find a point at which our model is complex enough to give low bias but not so complex to end up having high variance.
+					Coefficients-
+								COEFFICIENT (OR WEIGHTS)IS ASSIGNED TO EACH FEATURE - IT IS AN INDICATOR OF THEIR SIGNIFICANCE TO THE OUTCOME Y. For example, we assume that temperature is a larger driver of ice cream sales than whether it's a public holiday. The weight assigned to temperature in our linear model will be larger than the public holiday variable.
+								
+									
+									
+					Particularly, regularization is implemented to avoid overfitting of the data, especially when there is a large variance between train and test set performances. With regularization, the number of features used in training is kept constant, yet the magnitude of the coefficients (w) is reduced.
+					
+					There are different ways of reducing model complexity and preventing overfitting in linear models. This includes ridge and lasso regression models.
+			Regularization technique:
+								Why we go for Regularizaton Technique?
+											Sometimes what happens is that our Machine learning model performs well on the training data but does not perform well on the unseen or test data. It means the model is not able to predict the output or target column for the unseen data by introducing noise in the output, and hence the model is called an overfitted model.
+
+											Let’s understand the meaning of “Noise” in a brief manner:
+
+														By noise we means those data points in the dataset which don’t really represent the true properties of your data, but only due to a random chance.
+
+											So, to deal with the problem of overfitting we take the help of regularization techniques.
+
+											Regularization tries to reduce the variance of the model, without a substantial increase in the bias.
+			Ridge and Lasso Regression:
+							Regularized linear regression models are very similar to least squares, except that the coefficients are estimated by minimizing a slightly different objective function. we minimize the sum of RSS and a "penalty term" that penalizes coefficient size.
+							
+					lasso:-
+							It stands for Least Absolute Shrinkage and Selection Operator.
+							
+							Lasso regression (or "L1 regularization") minimizes:
+										RSS+λ∑j=1p|βj| 					
+
+							In this shrinkage technique, the coefficients determined in the linear model, are shrunk towards the central point as the mean of zero by introducing a penalization factor called the alpha α (or sometimes lamda) values.
+							
+							Alpha (α) is the penalty term that denotes the amount of shrinkage (or constraint) that will be implemented in the equation. WITH ALPHA SET TO ZERO, YOU WILL FIND THAT THIS IS THE EQUIVALENT OF THE LINEAR REGRESSION MODEL, and a larger value penalizes the optimization function. THEREFORE, LASSO REGRESSION SHRINKS THE COEFFICIENTS AND HELPS TO REDUCE THE MODEL COMPLEXITY AND MULTI-COLLINEARITY. 
+							ALPHA (Α) CAN BE ANY REAL-VALUED NUMBER BETWEEN ZERO AND INFINITY; THE LARGER THE VALUE, THE MORE AGGRESSIVE THE PENALIZATION IS.
+								
+							DUE TO THE FACT THAT COEFFICIENTS WILL BE SHRUNK TOWARDS A MEAN OF ZERO, LESS IMPORTANT FEATURES IN A DATASET ARE ELIMINATED WHEN PENALIZED. THE SHRINKAGE OF THESE COEFFICIENTS BASED ON THE ALPHA VALUE PROVIDED LEADS TO SOME FORM OF AUTOMATIC FEATURE SELECTION, AS INPUT VARIABLES ARE REMOVED IN AN EFFECTIVE APPROACH.
+							
+							In statistics, it is known as the L-1 norm.
+											👉 It is similar to the Ridge Regression except that the penalty term includes the absolute weights instead of a square of weights.
+
+											👉 In this technique, the L1 penalty has the eﬀect of forcing some of the coeﬃcient estimates to be exactly equal to zero which means there is a complete removal of some of the features for model evaluation when the tuning parameter λ is suﬃciently large. Therefore, the lasso method also performs Feature selection and is said to yield sparse models.
+
+											NOTE- SPARSE MODEL, MEANS THAT WE BELIEVE MANY FEATURES ARE IRRELEVANT TO THE OUTPUT.
+
+							** LIMITATION OF LASSO REGRESSION:**
+
+											1. Problems with some types of Dataset: If the number of predictors is greater than the number of data points, Lasso will pick at most n predictors as non-zero, even if all predictors are relevant.
+											2. Multicollinearity Problem: If there are two or more highly collinear variables then LASSO regression selects one of them randomly which is not good for the interpretation of our model.
+											
+											from sklearn.linear_model import Lasso
+											lasso  = Lasso(alpha=0.1 , max_iter= 3000)
+
+											lasso.fit(X_train, y_train)
+											or to find the best params
+											from sklearn.model_selection import GridSearchCV
+											lasso = Lasso()
+											parameters = {'alpha': [1e-15,1e-13,1e-10,1e-8,1e-5,1e-4,1e-3,1e-2,1e-1,1,5,10,20,30,40,45,50,55,60,100]}
+											lasso_regressor = GridSearchCV(lasso, parameters, scoring='neg_mean_squared_error', cv=3)
+											lasso_regressor.fit(X_train, y_train)
+											ridge_regressor.best_params_
+						
+					Ridge:
+							SIMILAR TO THE LASSO REGRESSION, RIDGE REGRESSION PUTS A SIMILAR CONSTRAINT ON THE COEFFICIENTS BY INTRODUCING A PENALTY FACTOR. HOWEVER, WHILE LASSO REGRESSION TAKES THE MAGNITUDE(absolute) OF THE COEFFICIENTS, RIDGE REGRESSION TAKES THE SQUARE.
+							
+									Ridge regression (or "L2 regularization") minimizes:
+										RSS+λ∑j=1pβj**2
+							
+										Ridge regression is one of the types of linear regression in which we introduce a small amount of bias, known as Ridge regression penalty so that we can get better long-term predictions.
+
+										Note: In Statistics, it is known as the L-2 norm.
+
+										In THIS TECHNIQUE, THE COST FUNCTION IS ALTERED BY ADDING THE PENALTY TERM (SHRINKAGE TERM), WHICH MULTIPLIES THE LAMBDA WITH THE SQUARED WEIGHT OF EACH INDIVIDUAL FEATURE.
+										
+										USAGE OF RIDGE REGRESSION:
+													When we have the independent variables which are having high collinearity (problem of MULTICOLLINEARITY) between them, at that time general linear or polynomial regression will fail so to solve such problems, Ridge regression can be used.
+										
+										Limitation of Ridge Regression:
+													1. Not helps in Feature Selection: It decreases the complexity of a model but does not reduce the number of independent variables since it never leads to a coefficient being zero rather only minimizes it. Hence, this technique is not good for feature selection.
+													2. Model Interpretability: Its disadvantage is model interpretability since it will shrink the coefficients for least important predictors, very close to zero but it will never make them exactly zero. In other words, the final model will include all the independent variables, also known as predictors.
+													
+													from sklearn.linear_model import Ridge
+
+													ridge  = Ridge(alpha=0.1)
+													ridge.fit(X_train,y_train)
+													
+													or to find best params
+													
+													from sklearn.model_selection import GridSearchCV
+													ridge = Ridge()
+													parameters = {'alpha': [1e-15,1e-13,1e-10,1e-8,1e-5,1e-4,1e-3,1e-2,1e-1,1,5,10,20,30,40,45,50,55,60,100]}
+													ridge_regressor = GridSearchCV(ridge, parameters, scoring='neg_mean_squared_error', cv=3)
+													ridge_regressor.fit(X_train, y_train)
+													
+													ridge_regressor.best_params_
+													
+						KEY DIFFERENCES BETWEEN RIDGE AND LASSO REGRESSION
+														1. Ridge regression helps us to reduce only the overfitting in the model while keeping all the features present in the model. It reduces the complexity of the model by shrinking the coefficients whereas Lasso regression helps in reducing the problem of overfitting in the model as well as automatic feature selection.
+
+														2. Lasso Regression tends to make coefficients to absolute zero whereas Ridge regression never sets the value of coefficient to absolute zero.
+																					
+														3. The cost function for both ridge and lasso regression are similar. However, lasso takes(adds) the magnitude(absolute) and ridge regression takes(adds) the square of the coefficients.
+														
+										
+						Let's know some basics for setting up the Lambda:
+														How λ relates to the principle of “Curse of Dimensionality”?
+
+																AS THE VALUE OF Λ RISES, IT SIGNIFICANTLY REDUCES THE VALUE OF COEFFICIENT ESTIMATES AND THUS REDUCES THE VARIANCE. Till a point, this increase in λ is beneficial for our model as it is only reducing the variance (hence avoiding overfitting), without losing any important properties in the data. BUT AFTER A CERTAIN VALUE OF Λ, THE MODEL STARTS LOSING SOME IMPORTANT PROPERTIES, GIVING RISE TO BIAS IN THE MODEL AND THUS UNDERFITTING. Therefore, we have to select the value of λ carefully. To select the good value of λ, cross-validation comes in handy.
+														
+														Important points about λ:
+																Λ IS THE TUNING PARAMETER USED IN REGULARIZATION THAT DECIDES HOW MUCH WE WANT TO PENALIZE THE FLEXIBILITY OF OUR MODEL I.E, CONTROLS THE IMPACT ON BIAS AND VARIANCE. WHEN Λ = 0, THE PENALTY TERM HAS NO EﬀECT, THE EQUATION BECOMES THE COST FUNCTION OF THE LINEAR REGRESSION MODEL. Hence, for the minimum value of λ i.e, λ=0, the model will resemble the linear regression model. So, the estimates produced by ridge regression will be equal to least squares. However, as λ→∞ (tends to infinity), the impact of the shrinkage penalty increases, and the ridge regression coeﬃcient estimates will approach zero.
+				
+						
+					Elasticnet: Not in almabetter
+								ELASTIC NET IS A PENALIZED LINEAR REGRESSION MODEL THAT INCLUDES BOTH THE L1 AND L2 PENALTIES DURING TRAINING. Using the terminology from “The Elements of Statistical Learning,” a hyperparameter “alpha” is provided to assign how much weight is given to each of the L1 and L2 penalties.
+								
+								IN TERMS OF HANDLING BIAS, ELASTIC NET IS CONSIDERED BETTER THAN RIDGE AND LASSO REGRESSION, SMALL BIAS LEADS TO THE DISTURBANCE OF PREDICTION AS IT IS DEPENDENT ON A VARIABLE. THEREFORE ELASTIC NET IS BETTER IN HANDLING COLLINEARITY THAN THE COMBINED RIDGE AND LASSO REGRESSION.
+								
+								for elastic net when we do gridsearch cv we need 'l1_ratio' values also with 'alpha' values in parameters.like-
+										from sklearn.linear_model import ElasticNet
+												#a=alpha
+												#b= 1 – alpha
+
+												#Elasticnet_penalty(Alpha)= a * (L1 penalty) + b * (L2 penalty)
+
+												#l1_ratio = a / (a + b)
+												elasticnet = ElasticNet(alpha=0.1, l1_ratio=0.5)
+												elasticnet.fit(X_train,y_train)
+										or to find best params:
+										from sklearn.model_selection import GridSearchCV
+												elastic = ElasticNet()
+												parameters = {'alpha': [1e-15,1e-13,1e-10,1e-8,1e-5,1e-4,1e-3,1e-2,1e-1,1,5,10,20,30,40,45,50,55,60,100],'l1_ratio':[0.3,0.4,0.5,0.6,0.7,0.8]}
+												elastic_regressor = GridSearchCV(elastic, parameters, scoring='neg_mean_squared_error',cv=5)
+												elastic_regressor.fit(X_train, y_train)
+												elastic_regressor.best_params_
+							
+					
+					Lasso regression (or "L1 regularization") minimizes:
+					RSS+λ∑j=1p|βj| 					
+
+					Ridge regression (or "L2 regularization") minimizes:
+					RSS+λ∑j=1pβj**2 
+
+
+
+					Where - Λ  IS A TUNING PARAMETER THAT SEEKS TO BALANCE BETWEEN THE FIT OF THE MODEL TO THE DATA AND THE MAGNITUDE OF THE MODEL'S COEFFICIENTS:
+					A TINY  Λ  IMPOSES NO PENALTY ON THE COEFFICIENT SIZE, AND IS EQUIVALENT TO A NORMAL LINEAR REGRESSION.
+					Increasing  λ  penalizes the coefficients and thus shrinks them towards zero.
+					Lasso stands for least absolute shrinkage and selection operator
+					Thus you can think of it as, we're balancing two things to measure the model's total quality. The RSS, measures how well the model is going to fit the data, and then the magnitude of the coefficients, which can be problematic if they become too big.
+
+					LASSO REGRESSION SHRINKS COEFFICIENTS ALL THE WAY TO ZERO, THUS REMOVING THEM FROM THE MODEL.
+					RIDGE REGRESSION SHRINKS COEFFICIENTS TOWARD ZERO, BUT THEY RARELY REACH ZERO.
+
+					Lasso-L-L1-ABSOLUTE-REACH TO zero-DIAMOND
+					Ridge-R-L2-SQUARE-toward zero-circle
+					
+					Why Lasso can be Used for feature Selection, but not Ridge Regression.-
+									Considering the geometry of both the lasso (left) and ridge (right) models, the elliptical contours (red circles) are the cost functions for each. Relaxing the constraints introduced by the penalty factor leads to an increase in the constrained region (diamond, circle). Doing this continually, we will hit the center of the ellipse, where the results of both lasso and ridge models are similar to a linear regression model. 
+									
+									However, both methods determine coefficients by finding the first point where the elliptical contours hit the region of constraints. SINCE LASSO REGRESSION TAKES A DIAMOND SHAPE IN THE PLOT FOR THE CONSTRAINED REGION, EACH TIME THE ELLIPTICAL REGIONS INTERSECT WITH THESE CORNERS, AT LEAST ONE OF THE COEFFICIENTS BECOMES ZERO. THIS IS IMPOSSIBLE IN THE RIDGE REGRESSION MODEL AS IT FORMS A CIRCULAR SHAPE AND THEREFORE VALUES CAN BE SHRUNK CLOSE TO ZERO, BUT NEVER EQUAL TO ZERO.
+									
+									
+					HOW SHOULD WE CHOOSE BETWEEN LASSO REGRESSION (L1) AND RIDGE REGRESSION (L2)?
+									1. If model performance is our primary concern or that we are not concerned with explicit feature selection, it is best to try both and see which one works better. USUALLY L2 REGULARIZATION CAN BE EXPECTED TO GIVE SUPERIOR PERFORMANCE OVER L1.
+									2. Note that there's also a ElasticNet regression, which is a combination of Lasso regression and Ridge regression.
+									3. LASSO REGRESSION IS PREFERRED IF WE WANT A SPARSE MODEL, MEANING THAT WE BELIEVE MANY FEATURES ARE IRRELEVANT TO THE OUTPUT.
+									4. When the dataset includes collinear features, Lasso regression is unstable in a similar way as unregularized linear models are, meaning that the coefficients (and thus feature ranks) can vary significantly even on small data changes.
+									5. IN TERMS OF HANDLING BIAS, ELASTIC NET IS CONSIDERED BETTER THAN RIDGE AND LASSO REGRESSION, SMALL BIAS LEADS TO THE DISTURBANCE OF PREDICTION AS IT IS DEPENDENT ON A VARIABLE. THEREFORE ELASTIC NET IS BETTER IN HANDLING COLLINEARITY THAN THE COMBINED RIDGE AND LASSO REGRESSION.
+									
+									
+									
+									
+					To sum it up, overfitting is when we build a predictive model that fits the data "too closely", so that it captures the random noise in the data rather than true patterns. As a result, the model predictions will be wrong when applied to new data. Give that our data is sufficiently large and clean, regularization is one good way to prevent overfitting from occurring.
+					
+					
+		imp--		SO WHEN WE NEED VARIABLE SELECTION AND HAVE OVER-FITTING ISSUE AND WE WANT SPARSE MODEL- L1 MODEL
+					WHEN WE HAVE MULTICOLLINEARITY ISSUE=L2 MODEL
+					AND WHEN WE HAVE TO REDUCE BIASNESS AND WE HAVE MULTICOLLINEARITY IN OUR DATADASET- ELASTICNET MODEL
+					
+					IMP POINTS:
+									1. higher the vif is useless
+									1.1- L1 PERFORM features selection but L2 don't.L2 is more useful for features interpretation.
+											 So while L2 regularization does not perform feature selection the same way as L1 does, it is more useful for feature interpretation due to its stability and the fact that useful features still tend to have non-zero coefficients. But again, please do remove collinear features to prevent a bunch of downstream headaches.
+
+									2. use regularization if overfitting
+
+									3. If your test r2 score is comparatively good as well.. which means there is no overfitting and your model is already generalized in most cases. Usually you need not regularize in that case.
+
+									However you can check and see if your r2 score improves for test data
+
+
+									When you use ridge regression
+
+									4. in tranformation-use log,sqrt etc - for reduce the skew in df
+
+									5. we can use any from these zscore,minmaxscaler,standard scaler 
+
+									6. for numeric column- use barplot
+									   for categorical col- use hist
+
+
+									7. Correlation-  linear relation between 2 features
+									8. VIF- linear relation between more than 2(>2) features
+						9. ZSCORE or standard scaler=
+									A Z-SCORE MEASURES THE DISTANCE BETWEEN A DATA POINT AND THE MEAN USING STANDARD DEVIATIONS. Z-SCORES CAN BE POSITIVE OR NEGATIVE. THE SIGN TELLS YOU WHETHER THE OBSERVATION IS ABOVE OR BELOW THE MEAN. For example, a z-score of +2 indicates that the data point falls two standard deviations above the mean, while a -2 signifies it is two standard deviations below the mean. A z-score of zero equals the mean. Statisticians also refer to z-scores as standard scores, and I’ll use those terms interchangeably.
+
+											1.Standardizing the raw data by transforming them into z-scores provides the following benefits:
+
+											2. Understand where a data point fits into a distribution.
+											3. Compare observations between dissimilar variables.
+											4. Identify outliers
+											5. Calculate probabilities and percentiles using the standard normal distribution.
+											
+									How to Find a Z-score
+												To calculate z-scores, take the raw measurements, subtract the mean, and divide by the standard deviation.
+												The formula for finding z-scores is the following:
+												
+												Z = X - mu\sigma  it is also a formula of StandardScaler()
+												
+												X represents the data point of interest. Mu and sigma represent the mean and standard deviation for the population from which you drew your sample. Alternatively, use the sample mean and standard deviation when you do not know the population values.
+													
+								https://statistics.laerd.com/statistical-guides/standard-score-3.php
+								orange and apple exp-    https://statisticsbyjim.com/basics/z-score/
+									
+						  CONCLUSION 
+										WE HAVE SEEN AN IMPLEMENTATION OF RIDGE AND LASSO REGRESSION MODELS AND THE THEORETICAL AND MATHEMATICAL CONCEPTS BEHIND THESE TECHNIQUES. SOME OF THE KEY TAKEAWAYS FROM THIS TUTORIAL INCLUDE:
+										1. THE COST FUNCTION FOR BOTH RIDGE AND LASSO REGRESSION ARE SIMILAR. HOWEVER, LASSO TAKES THE MAGNITUDE AND RIDGE REGRESSION TAKES THE SQUARE OF THE COEFFICIENTS.
+										2. LASSO REGRESSION CAN BE USED FOR AUTOMATIC FEATURE SELECTION, AS THE GEOMETRY OF ITS CONSTRAINED REGION ALLOWS COEFFICIENT VALUES TO INERT TO ZERO.
+										3. AN ALPHA VALUE OF ZERO IN EITHER RIDGE OR LASSO MODEL WILL HAVE RESULTS SIMILAR TO THE REGRESSION MODEL.
+										4. THE LARGER THE ALPHA VALUE, THE MORE AGGRESSIVE THE PENALIZATION.
+										
+								https://www.datacamp.com/tutorial/tutorial-lasso-ridge-regression
+		Transformation:
+							
+						1. square-root for moderate skew: sqrt(x) for positively skewed data, sqrt(max(x+1) - x) for negatively skewed data
+
+						2. log for greater skew: log10(x) for positively skewed data, log10(max(x+1) - x) for negatively skewed data
+
+						3. inverse for severe skew: 1/x for positively skewed data 1/(max(x+1) - x) for negatively skewed data
+
+						4. Linearity and heteroscedasticity: First try log transformation in a situation where the dependent variable starts to increase more rapidly with increasing independent variable values If your data does the opposite – dependent variable values decrease more rapidly with increasing independent variable values – you can first consider a square transformation.
+
+	CROSS VALIDATION-
+
+
+					 We make these choices in a data-driven way by measuring model quality of various alternatives. You've already learned to use train_test_split to split the data, so you can measure model quality on the test data. Cross-validation extends this approach to model scoring (or "model validation.") Compared to train_test_split, CROSS-VALIDATION GIVES YOU A MORE RELIABLE MEASURE OF YOUR MODEL'S QUALITY, THOUGH IT TAKES LONGER TO RUN.
+					 
+					  The larger the test set, the more reliable your measures of model quality will be
+					  
+					  The larger the test set, the less randomness (aka "noise") there is in our measure of model quality.
+					  
+					But we can only get a large test set by removing data from our training data, and smaller training datasets mean worse models. In fact, the ideal modeling decisions on a small dataset typically aren't the best modeling decisions on large datasets.
+					
+					The Cross-Validation Procedure
+								IN CROSS-VALIDATION, WE RUN OUR MODELING PROCESS ON DIFFERENT SUBSETS OF THE DATA TO GET MULTIPLE MEASURES OF MODEL QUALITY. FOR EXAMPLE, WE COULD HAVE 5 FOLDS OR EXPERIMENTS. WE DIVIDE THE DATA INTO 5 PIECES, EACH BEING 20% OF THE FULL DATASET
+								
+								Cross-Validation is a statistical method of evaluating and comparing learning algorithms by dividing data into two segments: one used to learn or train a model and the other used to validate the model.
+								
+								
+
+ 
+ 
+							 TRADE-OFFS BETWEEN CROSS-VALIDATION AND TRAIN-TEST SPLIT-
+											Cross-validation gives a more accurate measure of model quality, which is especially important if you are making a lot of modeling decisions. However, it can take more time to run, because it estimates models once for each fold. So it is doing more total work.
+											Given these tradeoffs, when should you use each approach? 
+													On small datasets, the extra computational burden of running cross-validation isn't a big deal. These are also the problems where model quality scores would be least reliable with train-test split. So, if your dataset is smaller, you should run cross-validation.
+													For the same reasons, a simple train-test split is sufficient for larger datasets. It will run faster, and you may have enough data that there's little need to re-use some of it for holdout.
+													There's no simple threshold for what constitutes a large vs small dataset. If your model takes a couple minute or less to run, it's probably worth switching to cross-validation. IF YOUR MODEL TAKES MUCH LONGER TO RUN, CROSS-VALIDATION MAY SLOW DOWN YOUR WORKFLOW MORE THAN IT'S WORTH.
+													Alternatively, you can run cross-validation and see if the scores for each experiment seem close. If each experiment gives the same results, train-test split is probably sufficient.
+											
+									for cross val tech and implementation-    https://www.analyticsvidhya.com/blog/2021/11/top-7-cross-validation-techniques-with-python-code/
+
+							
+Logistic Regression		:		
+
+								#creation of random dataset for classification:
+									# test classification dataset
+									from collections import Counter
+									from sklearn.datasets import make_classification
+									# define dataset
+									X, y = make_classification(n_samples=1000, n_features=10, n_informative=5, n_redundant=5, n_classes=3, random_state=1)
+									# summarize the dataset
+									print(X.shape, y.shape)
+				What is Logistic Regression?
+									LOGISTIC REGRESSION IS A CLASSIFICATION ALGORITHM THAT PREDICTS THE PROBABILITY OF AN OUTCOME THAT CAN ONLY HAVE TWO VALUES (I.E. A DICHOTOMY). A LOGISTIC REGRESSION PRODUCES A LOGISTIC CURVE, WHICH IS LIMITED TO VALUES BETWEEN 0 AND 1. LOGISTIC REGRESSION MODELS THE PROBABILITY THAT EACH INPUT BELONGS TO A PARTICULAR CATEGORY.
+									Logistic regression is an excellent tool for classification problems, where the output value that we wish to predict only takes small number of discrete values.
+									
+									LOGISTIC REGRESSION USES ENTROPY AS A LOSS FUNCTION AND RUN GRADIENT DESCENT ALGORITHM.
+									Logistic regression is also called as Sigmoid because it looks like S as in picture below. One end always at 0 and other end is always at 1.
+																		
+									How does Logistic Regression Work?
+													The logistic regression equation is quite similar to the linear regression model.
+
+													Consider we have a model with one predictor “x” and one Bernoulli response variable “ŷ” and p is the probability of ŷ=1. The linear equation can be written as:
+																		p = b0+b1x     --------> eq 1
+													
+													THE RIGHT-HAND SIDE OF THE EQUATION (B0+B1X) IS A LINEAR EQUATION AND CAN HOLD VALUES THAT EXCEED THE RANGE (0,1). BUT WE KNOW PROBABILITY WILL ALWAYS BE IN THE RANGE OF (0,1).
+
+													TO OVERCOME THAT, WE PREDICT ODDS INSTEAD OF PROBABILITY.
+
+													ODDS: THE RATIO OF THE PROBABILITY OF AN EVENT OCCURRING TO THE PROBABILITY OF AN EVENT NOT OCCURRING.
+
+													Odds = p/(1-p)
+													 FOR exm if u win 4 matches from 10 then odds will be: 0.4/(1-0.4)= prob of wining/prob of loosing=0.4\0.6
+
+													The equation 1 can be re-written as:
+																		p/(1-p) = b0+b1x      --------> eq 2
+																		
+													ODDS CAN ONLY BE A POSITIVE VALUE, TO TACKLE THE NEGATIVE NUMBERS, WE PREDICT THE LOGARITHM OF ODDS.
+
+													Log of odds = ln(p/(1-p))
+
+													The equation 2 can be re-written as:
+																		ln(p/(1-p)) = b0+b1x      --------> eq 3
+													To recover p from equation 3, we apply exponential on both sides.
+																		exp(ln(p/(1-p))) = exp(b0+b1x)
+																		e**ln(p/(1-p)) = e**(b0+b1x)
+													From the inverse rule of logarithms,
+																		p/(1-p) = e**(b0+b1x)
+													
+													Simple algebraic manipulations
+																		p = (1-p) * e**(b0+b1x)
+																		p = e**(b0+b1x)- p * e**(b0+b1x)
+																		
+													Taking p as common on the right-hand side
+																		p = p * [(e**(b0+b1x)/p) - e**(b0+b1x)]
+																		p = e**(b0+b1x) / (1 + e**(b0+b1x))
+																		
+													Dividing numerator and denominator by e**(b0+b1x) on the right-hand side
+													
+																		p = 1 / (1 + e**-(b0+b1x)) tHIS IS OUR SIGMOID FUNCTION
+																
+													Similarly, the equation for a logistic model with ‘n’ predictors is as below:
+																		p = 1/ (1 + e**-(b0+b1x1+b2x2+b3x3+----+bnxn)
+																		
+													THE RIGHT SIDE PART LOOKS FAMILIAR, ISN’T IT? YES, IT IS THE SIGMOID FUNCTION. IT HELPS TO SQUEEZE THE OUTPUT TO BE IN THE RANGE BETWEEN 0 AND 1.
+													
+													Sigmoid Function:
+																	THE SIGMOID FUNCTION IS USEFUL TO MAP ANY PREDICTED VALUES OF PROBABILITIES INTO ANOTHER VALUE BETWEEN 0 AND 1.
+																	
+																	We started with a linear equation and ended up with a logistic regression model with the help of a sigmoid function.
+
+																	Linear model: ŷ or y or z= b0+b1x
+																	SIGMOID FUNCTION: σ(z) = 1/(1+e**−z)
+																	Logistic regression model or logistic function:: ŷ = σ(b0+b1x) = 1/(1+e**-(b0+b1x))
+																	
+																	implementation of logistic reg with sigmoid function: https://www.analyticsvidhya.com/blog/2021/05/how-can-we-implement-logistic-regression/
+
+																	SO, UNLIKE LINEAR REGRESSION'S LINE, WE GET AN ‘S’ SHAPED CURVE IN LOGISTIC REGRESSION.
+																	
+										imp-->					A linear equation (z) is given to a sigmoidal activation function (σ) to predict the output (ŷ).
+															SO WE USED SIGMOID FUNCTION IN COST FUNC OF LOGISTIC REG To LIMIT THE prob VALUE BETWEEN 0 TO 1.
+
+
+																			To evaluate the performance of the model, we calculate the loss. The most commonly used loss function is the mean squared error.
+
+																			BUT IN LOGISTIC REGRESSION, AS THE OUTPUT IS A PROBABILITY VALUE BETWEEN 0 OR 1, MEAN SQUARED ERROR WOULDN’T BE THE RIGHT CHOICE. SO, INSTEAD, WE USE THE CROSS-ENTROPY LOSS FUNCTION.
+
+																			THE CROSS-ENTROPY LOSS FUNCTION IS USED TO MEASURE THE PERFORMANCE OF A CLASSIFICATION MODEL WHOSE OUTPUT IS A PROBABILITY VALUE.
+
+																			Learn more about the cross-entropy loss function from here.
+			loss unction- cross entropy LOSS FUNCTION
+																			Kudos to us, we have steadily come all the way here and understood the limitations of Linear regression for classification and the working of the Logistic regression model.
+															Cost Function in Logistic Regression
+															
+																	WHY IS MSE NOT USED AS A COST FUNCTION IN LOGISTIC REGRESSION?
+
+																			In linear regression, we use the Mean squared error which was the difference between y_predicted and y_actual and this is derived from the maximum likelihood estimator.
+																			
+																			In logistic regression Yi is a non-linear function (Ŷ=1​/1+ e**-z). If we use this IN THE ABOVE MSE EQUATION THEN IT WILL GIVE A NON-CONVEX GRAPH WITH MANY LOCAL MINIMA
+																			
+		cost function- log loss or binary cross entropy or entropy loss ---< -1/2N  summ of (ylog p(y) +(1-y)log (1-p(y))	
+		
+																			THE PROBLEM HERE IS THAT THIS COST FUNCTION WILL GIVE RESULTS WITH LOCAL MINIMA, WHICH IS A BIG PROBLEM BECAUSE THEN WE’LL MISS OUT ON OUR GLOBAL MINIMA AND OUR ERROR WILL INCREASE.
+																			In order to solve this problem, we derive a different cost function for logistic regression called LOG LOSS or entropy loss WHICH IS ALSO DERIVED FROM THE MAXIMUM LIKELIHOOD ESTIMATION METHOD.
+																					log loss(Ycap,y) or L(Ycap,y) = - (y log Ycap +(1-y) log (1-Ycap)
+																					
+																																																				log loss or binary cross entropy = -1/2N  summ of (ylog p +(1-y)log (1-p))
+																														or
+																				log loss or binary cross entropy = -1/2N  summ of (ylog p(y) +(1-y)log (1-p(y)))
+														or  - FINAL COST FUNCTION linear regression: 1/2m* (Ei=1 to m) summ of (y^-y)**2
+																				
+																				p(y) is the probability of 1.
+																				1-p(y) is the probability of 0.
+																				
+																							WHEN THIS ERROR FUNCTION IS PLOTTED WITH RESPECT TO WEIGHT PARAMETERS OF THE LINEAR REGRESSION MODEL, IT FORMS A CONVEX CURVE WHICH MAKES IT ELIGIBLE TO APPLY GRADIENT DESCENT OPTIMIZATION ALGORITHM TO MINIMIZE THE ERROR BY FINDING GLOBAL MINIMA AND ADJUST WEIGHTS.
+
+
+																							WHY DON’T WE USE `MEAN SQUARED ERROR AS A COST FUNCTION IN LOGISTIC REGRESSION?
+																							IN LOGISTIC REGRESSION Ŷi IS A NONLINEAR FUNCTION(Ŷ=1​/1+ e**-z), if WE PUT THIS IN THE ABOVE MSE EQUATION IT WILL GIVE A NON-CONVEX FUNCTION AS SHOWN:
+
+
+																							 
+
+																							WHEN WE TRY TO OPTIMIZE VALUES USING GRADIENT DESCENT IT WILL CREATE COMPLICATIONS TO FIND GLOBAL MINIMA.
+
+																							Another reason is in classification problems, we have target values like 0/1, So (Ŷ-Y)**2 WILL ALWAYS BE IN BETWEEN 0-1 WHICH CAN MAKE IT VERY DIFFICULT TO KEEP TRACK OF THE ERRORS AND IT IS DIFFICULT TO STORE HIGH PRECISION FLOATING NUMBERS.
+
+																							THE COST FUNCTION USED IN LOGISTIC REGRESSION IS LOG LOSS OR  SIGMOID OR CROSS ENTROPY.
+																				
+																			What is the use of MAXIMUM LIKELIHOOD ESTIMATOR?
+																							THE MAIN AIM OF MLE IS TO FIND THE VALUE OF OUR PARAMETERS FOR WHICH THE LIKELIHOOD FUNCTION IS MAXIMIZED. THE LIKELIHOOD FUNCTION IS NOTHING BUT A JOINT PDF OF OUR SAMPLE OBSERVATIONS and joint distribution is the multiplication of the conditional probability for observing each example given the distribution parameters. In other words, we try to find such that plugging these estimates into the model for P(x), yields a number close to one for people who had a malignant tumor and close to 0 for people who had a benign tumor.
+																							
+																							(IN ORDER THAT OUR MODEL PREDICTS OUTPUT VARIABLE AS 0 OR 1, WE NEED TO FIND THE BEST FIT SIGMOID CURVE, THAT GIVES THE OPTIMUM VALUES OF BETA CO-EFFICIENTS. THAT IS WE NEED TO CREATE AN EFFICIENT BOUNDARY BETWEEN THE 0 AND 1 VALUES.
+																							NOW A COST FUNCTION TELLS YOU HOW CLOSE YOUR VALUES ARE FROM ACTUAL. SO HERE WE NEED A COST FUNCTION WHICH MAXIMIZES THE LIKELIHOOD OF GETTING DESIRED OUTPUT VALUES. SUCH A COST FUNCTION IS CALLED AS MAXIMUM LIKELIHOOD ESTIMATION (MLE) FUNCTION.)
+
+																							Let’s start by defining our likelihood function. We now know that the labels are binary which means they can be either yes/no or pass/fail etc. We can also say we have two outcomes success and failure. This means we can interpret each label as Bernoulli random variable.
+																							
+																							A RANDOM EXPERIMENT WHOSE OUTCOMES ARE OF TWO TYPES, SUCCESS S AND FAILURE F, OCCURRING WITH PROBABILITIES P AND Q RESPECTIVELY IS CALLED A BERNOULLI TRIAL. IF FOR THIS EXPERIMENT A RANDOM VARIABLE X IS DEFINED SUCH THAT IT TAKES VALUE 1 WHEN S OCCURS AND 0 IF F OCCURS, THEN X FOLLOWS A BERNOULLI DISTRIBUTION.
+																							
+																			Gradient Descent Optimization
+																							In this section, we will try to understand how we can utilize Gradient Descent to compute the minimum cost.
+
+																							Gradient descent changes the value of our weights in such a way that it always converges to minimum point or we can also say that, IT AIMS AT FINDING THE OPTIMAL WEIGHTS WHICH MINIMIZE THE LOSS FUNCTION OF OUR MODEL. IT IS AN ITERATIVE METHOD THAT FINDS THE MINIMUM OF A FUNCTION BY FIGURING OUT THE SLOPE AT A RANDOM POINT AND THEN MOVING IN THE OPPOSITE DIRECTION 
+																							
+																							At first gradient descent takes a random value of our parameters from our function. Now we need an algorithm that will tell us whether at the next iteration we should move left or right to reach the minimum point. The gradient descent algorithm finds the slope of the loss function at that particular point and then in the next iteration, it moves in the opposite direction to reach the minima. SINCE WE HAVE A CONVEX GRAPH NOW bcoz of our log loss cost function.WE DON’T NEED TO WORRY ABOUT LOCAL MINIMA. A CONVEX CURVE WILL ALWAYS HAVE ONLY 1 MINIMA .
+																							
+																							We can summarize the gradient descent algorithm as:
+																									theta new=theta old- alpha*(del J(theta)/del theta j)
+																									(convergence theoram for updating coefficients weights)
+																									HERE ALPHA IS KNOWN AS THE LEARNING RATE. IT DETERMINES THE STEP SIZE AT each iteration while moving towards the minimum point. Usually, a lower value of “alpha” is preferred, because if the learning rate is a big number then we may miss the minimum point and keep on oscillating in the convex curve.
+																									
+																									Now, we will derive the cost function with the help of the chain rule as it allows us to calculate complex partial derivatives by breaking them down.
+																									
+																									If the slope is negative (downward slope) then our gradient descent will add some value to our new value of the parameter directing it towards the minimum point of the convex curve. Whereas if the slope is positive (upward slope) the gradient descent will minus some value to direct it towards the minimum point.
+																									
+																							all math from- https://www.analyticsvidhya.com/blog/2021/08/conceptual-understanding-of-logistic-regression-for-data-science-beginners/
+
+									
+									what happens if we choose regression on binary classification:
+									
+											Now here’s where things get tricky.. Let’s take a look at the y-intercept. We have a y-intercept of -.67. Seems odd as vs isn’t something that can go negative… in fact, it can only be 0 or 1. This is going to constitute a major issue for using linear regression on a binary variable, but more on that in a moment. First, we’ll seek to better understand the data we’re working with.
+											
+											The obvious issue here is that the best fit line in scatterplot goes on forever in either direction. The output on either extreme, literally wouldn’t make sense.
+											For this reason, we can’t use linear regression as is. That doesn’t mean it’s useless, we just have to modify it such that our extremes of prediction aren’t infinite.
+						
+						∏(class1)-: hw(x)  ∏(class0)-: 1−hw(x)
+						
+							The  ∏  symbol means take the product of the  hw(x)  for the observations that are classified as that class. You will notice that for observations that are labeled as class 0, we are taking 1 minus the logistic function. That is because we are trying to find a value to maximize, and since observations that are labeled as class 0 should have a probability close to zero, 1 minus the probability should be close to 1. This procedure is also known as the MAXIMUM LIKELIHOOD ESTIMATION.
+							
+												(In order that our model predicts output variable as 0 or 1, we need to find the best fit sigmoid curve, that gives the optimum values of beta co-efficients. That is we need to create an efficient boundary between the 0 and 1 values.
+												Now a cost function tells you how close your values are from actual. So here we need a cost function which maximizes the likelihood of getting desired output values. Such a cost function is called as Maximum Likelihood Estimation (MLE) function.)
+							
+				Updating model parameters using Gradient Descent
+									Recall our task is to find the optimal value for each individual weight to lower the cost. This requires taking the partial derivative of the cost/error function with respect to a single weight, and then running gradient descent for each individual weight to update them.
+									And we'll do this iteratively for each weight, many times, until the whole network's cost function is minimized.
+									
+									
+						encoding a column for logistic reg-  df['class'] = df['Churn'].apply(lambda x : 1 if x == "Yes" else 0)
+
+
+
+
+								logistic equation-
+
+											probability p here is nothing but a function of x.. so we can take derivative.. x is our independent variable in formulas-
+											sse is an example of loss function.. loss function in logistic regression is cross entropy loss or sigmoid loss.
+											
+																		(SIGMOID IS USED FOR BINARY CLASSIFICATION METHODS WHERE WE ONLY HAVE 2 CLASSES, WHILE SOFTMAX APPLIES TO MULTICLASS PROBLEMS. IN FACT, THE SOFTMAX FUNCTION IS AN EXTENSION OF THE SIGMOID FUNCTION)
+											for eg. out of 100 animals, you have only 2 cats and 98 dogs.. this is an imbalanced dataset
+
+
+											Logistic regression does not make many of the KEY ASSUMPTIONS like linear regression and general linear models that are based on ordinary least squares algorithms – particularly regarding linearity, normality, homoscedasticity, and measurement level.
+													1. First, logistic regression does not require a linear relationship between the dependent and independent variables. 
+													2. Second, the error terms (residuals) do not need to be normally distributed(no need of 0 mean for residuals). 
+													3. Third, homoscedasticity is not required. 
+													4. Finally, the dependent variable in logistic regression is not measured on an interval or ratio scale.
+											
+								HOWEVER, SOME OTHER ASSUMPTIONS STILL APPLY.
+													1. First, BINARY LOGISTIC REGRESSION REQUIRES THE DEPENDENT VARIABLE TO BE BINARY and ORDINAL LOGISTIC REGRESSION requires the dependent variable to be ordinal.
+															(Logistic regression is usually taken to mean binary logistic regression for a two-valued dependent variable Y. Ordinal regression is a general term for any model dedicated to ordinal Y whether Y is discrete or continuous for example- our dependent variable are three or more in one order like member-premium,silver,gold or employee sal- high,med,low ----in that case we uses ordinal logistic regression)
+													
+													2. Second, LOGISTIC REGRESSION REQUIRES THE OBSERVATIONS TO BE INDEPENDENT OF EACH OTHER. In other words, the observations should not come from repeated measurements or matched data.
+													3. Third, LOGISTIC REGRESSION REQUIRES THERE TO BE LITTLE OR NO MULTICOLLINEARITY among the independent variables. This means that the independent variables should not be too highly correlated with each other.
+													4. Fourth, LOGISTIC REGRESSION ASSUMES LINEARITY OF INDEPENDENT VARIABLES AND LOG ODDS. although this analysis does not require the dependent and independent variables to be related linearly, it requires that the independent variables are linearly related to the log odds.
+													
+													
+											Odds and Probability
+														
+														As per our scenario, there are 4 times when I am able to beat the system in chess, so the odds of me winning the game are 4 to 6, i.e., out of total 10 games, I win 4 games and lose 6 games.
+														in that case odds=4/6,
+																	probability=4/10, 
+																	odds= probability of winnig/probability of losing or =4/10-4
+																	so don’t confuse them.
+														
+														so, Odds are the ratio of something happening to something not happening. In our scenario above, the odds are 4 to 6
+								
+							EVALUATION METRICS FOR CLASSIFICATION MODELS
+													1. Accuracy : 
+																ACCURACY SIMPLY MEASURES HOW OFTEN THE CLASSIFIER CORRECTLY PREDICTS. WE CAN DEFINE ACCURACY AS THE RATIO OF THE NUMBER OF CORRECT PREDICTIONS AND THE TOTAL NUMBER OF PREDICTIONS.
+													
+																Accuracy will require two inputs (i) actual class labels (ii)predicted class labels. To get the class labels from probabilities( these probabilities will be probabilities of getting a HIT), you can take a threshold of 0.5. Any probability above 0.5 will be labeled as class 1 and anything less than 0.5 will be labeled as class 0.- 
+																		ACC=(TP+TN)/(TP+TN+FP+FN)
+																		
+																Accuracy is useful when the target class is well balanced but is not a good choice for the unbalanced classes. Imagine the scenario where we had 99 images of the dog and only 1 image of a cat present in our training data. Then our model would always predict the dog, and therefore we got 99% accuracy. In reality, Data is always imbalanced for example Spam email, credit card fraud, and medical diagnosis. Hence, if we want to do a better model evaluation and have a full picture of the model evaluation, other metrics such as recall and precision should also be considered.
+									Confusion Matrix
+												CONFUSION MATRIX IS A PERFORMANCE MEASUREMENT FOR THE MACHINE LEARNING CLASSIFICATION PROBLEMS WHERE THE OUTPUT CAN BE TWO OR MORE CLASSES. IT IS A TABLE WITH COMBINATIONS OF PREDICTED AND ACTUAL VALUES.
+
+												A CONFUSION MATRIX IS DEFINED AS THE-TABLE THAT IS OFTEN USED TO DESCRIBE THE PERFORMANCE OF A CLASSIFICATION MODEL ON A SET OF THE TEST DATA FOR WHICH THE TRUE VALUES ARE KNOWN.
+												
+												It is extremely useful for measuring the Recall, Precision, Accuracy, and AUC-ROC curves.
+												
+												1. True Positive: We predicted positive and it’s true. In the image, we predicted that a woman is pregnant and she actually is.
+
+												2. True Negative: We predicted negative and it’s true. In the image, we predicted that a man is not pregnant and he actually is not.
+
+												3. False Positive (Type 1 Error)- We predicted positive and it’s false. In the image, we predicted that a man is pregnant but he actually is not.
+
+												4. False Negative (Type 2 Error)- We predicted negative and it’s false. In the image, we predicted that a woman is not pregnant but she actually is.
+
+												We discussed Accuracy, now let’s discuss some other metrics of the confusion matrix
+
+
+												 
+													2. Precision : 
+																	PRECISION EXPLAINS HOW MANY OF THE CORRECTLY PREDICTED CASES ACTUALLY TURNED OUT TO BE POSITIVE. PRECISION IS USEFUL IN THE CASES WHERE FALSE POSITIVE IS A HIGHER CONCERN THAN FALSE NEGATIVES. THE IMPORTANCE OF PRECISION IS IN MUSIC OR VIDEO RECOMMENDATION SYSTEMS, E-COMMERCE WEBSITES, ETC. WHERE WRONG RESULTS COULD LEAD TO CUSTOMER CHURN AND THIS COULD BE HARMFUL TO THE BUSINESS.
+													
+													
+																	Precision for a label is defined as the number of true positives divided by the number of predicted positives.
+																				Precision= TP/TP+FP
+																	
+																	Precision is 0.90 means 90 percent times it predicted correctly that people not churn from all the cases of people actully not churns similarly as in people who churns are 367 but it predicted 168 times that they churns so its precision is low
+
+
+
+													precision- total positive prediction me kitne sahi predict kiye = correct pos pred/total pos pred
+													recall==no. correct pos pred/ totall of actual 
+													  
+
+													3. Recall : 
+																	RECALL EXPLAINS HOW MANY OF THE ACTUAL POSITIVE CASES WE WERE ABLE TO PREDICT CORRECTLY WITH OUR MODEL. IT IS A USEFUL METRIC IN CASES WHERE FALSE NEGATIVE IS OF HIGHER CONCERN THAN FALSE POSITIVE. IT IS IMPORTANT IN MEDICAL CASES WHERE IT DOESN’T MATTER WHETHER WE RAISE A FALSE ALARM BUT THE ACTUAL POSITIVE CASES SHOULD NOT GO UNDETECTED!
+													
+																	Recall for a label is defined as the number of true positives divided by the total number of actual positives. Report recall in percentages- 
+																	
+																					Recall=TP/TP+FN
+																	
+																	   Recall= people truly predicted who churn /people who predicted churns actually hence it is 938/(938+201)=0.82 similarly for people who not churn.
+
+
+													4. F1-Score : 
+																	IT IS THE WEIGHTED AVERAGE OF THE PRECISION AND THE RECALL SCORES. THIS IS DEFINED AS THE HARMONIC MEAN OF PRECISION AND RECALL.- 
+																			F1-Score= 2/((1/RECALL) + (1/PRECISION)) or 2.pre*recall/pre+recall
+																	
+																	 IT GIVES A COMBINED IDEA ABOUT PRECISION AND RECALL METRICS. IT IS MAXIMUM WHEN PRECISION IS EQUAL TO RECALL.
+																	The F1 score is calculated based on the precision and recall of each class.The F1 score reaches its perfect value at one and worst at 0.It is a very good way to show that a classifies has a good recall and precision values.
+																
+																	The F1 score punishes extreme values more. F1 SCORE COULD BE AN EFFECTIVE EVALUATION METRIC IN THE FOLLOWING CASES:
+
+																				1. When FP and FN are equally costly.
+																				2. Adding more data doesn’t effectively change the outcome
+																				3. True Negative is high
+
+
+													5. Log Loss : 
+																	  Log loss (Logistic loss) or Cross-Entropy Loss is one of the major metrics to assess the performance of a classification problem.
+																	For a single sample with true label y∈{0,1} and a probability estimate p=Pr(y=1), the log loss is:
+																				LogLoss=∑i=1 to M[yilog(Pi)+(1−yi)log(1−Pi)] 
+																				
+																	Here M refers to the number of observations and  yi  = 1 or 0 depending upon the label for the  ith  observation and  Pi  is the probability of class 1 or probability of getting a HIT.
+																	from sklearn.metrics import log_loss
+																	log_loss(y_test,test_preds[:,1])
+																	A good model should have a smaller log loss value.
+
+
+													6. AUC-ROC - 
+																	THE RECEIVER OPERATOR CHARACTERISTIC (ROC) CURVE IS AN EVALUATION METRIC FOR BINARY CLASSIFICATION PROBLEMS. IT IS A PROBABILITY CURVE THAT PLOTS THE TPR AGAINST FPR AT VARIOUS THRESHOLD VALUES AND ESSENTIALLY SEPARATES THE ‘SIGNAL’ FROM THE ‘NOISE’. THE AREA UNDER THE CURVE (AUC) IS THE MEASURE OF THE ABILITY OF A CLASSIFIER TO DISTINGUISH BETWEEN CLASSES AND IS USED AS A SUMMARY OF THE ROC CURVE.
+																	
+																	The AUC represents a model’s ability to discriminate between positive and negative classes. An area of 1.0 represents a model that made all predictions perfectly. An area of 0.5 represents a model as good as random.
+
+																	the greater the AUC, the better is the performance of the model at different threshold points between positive and negative classes. This simply means that When AUC is equal to 1, the classifier is able to perfectly distinguish between all Positive and Negative class points. When AUC is equal to 0, the classifier would be predicting all Negatives as Positives and vice versa. When AUC is 0.5, the classifier is not able to distinguish between the Positive and Negative classes.
+																	
+																	ROC curve isn’t just a single number but it’s a whole curve that provides nuanced details about the behavior of the classifier. It is also hard to quickly compare many ROC curves to each other.
+
+																	
+																	
+												from sklearn.metrics import r2_score
+													from sklearn.metrics import mean_squared_error
+														from sklearn.metrics import mean_absolute_error
+															from sklearn.metrics import roc_auc_score, confusion_matrix, accuracy_score, precision, recall
+															
+															
+												choosing evaluation metrics based on situation- https://machinelearningmastery.com/tour-of-evaluation-metrics-for-imbalanced-classification/
+													
+
+
+
+
+
+												No need to read it it's similar math again:
+																	`Winter is here`. Let’s welcome winters with a warm data science problem 😉
+
+																	Let’s take a case study of a clothing company that manufactures jackets and cardigans. They want to have a model that can predict whether the customer will buy a jacket (class 1) or a cardigan(class 0) from their historical behavioral pattern so that they can give specific offers according to the customer’s needs. As a data scientist, you need to help them to build a predictive model.
+
+																	When we start Machine Learning algorithms, the first algorithm we learn about is `Linear Regression` in which we predict a continuous target variable.
+
+																	If we use Linear Regression in our classification problem, we will get a best-fit line like this:
+
+																	Log loss - Linear regression
+																	Z = ßX + b
+
+																	Problem with the linear line:
+																	WHEN YOU EXTEND THIS LINE, YOU WILL HAVE VALUES GREATER THAN 1 AND LESS THAN 0, WHICH DO NOT MAKE MUCH SENSE IN OUR CLASSIFICATION PROBLEM. It will make a model interpretation a challenge. That is where `Logistic Regression` comes in. If we needed to predict sales for an outlet, then this model could be helpful. But here we need to classify customers.
+
+																	-WE NEED A FUNCTION TO TRANSFORM THIS STRAIGHT LINE IN SUCH A WAY THAT VALUES WILL BE BETWEEN 0 AND 1:(which is sigmoid)
+																	
+																					In Logistic Regression, the log-odds of a categorical response being "true" (1) is modeled as a linear combination of the features:
+																					
+																					log(p/1−p)=w0+w1x1,...,wjxj
+																					OR
+																					log(p/1−p)=wTx
+
+																								WHERE- w0  is the intercept term, and  w1  to  wj  represents the parameters for all the other features (a total of j features).
+																									   By convention of we can assume that  x0=1 , so that we can re-write the whole thing using the matrix notation  wTx .
+
+																					This is called the logit function. The equation can be re-arranged into the logistic function:
+																					p=ewTx/1+ewTx 
+																					Or in the more commonly seen form:
+																					hw(x)=1/1+e−wTx
+
+																					Ŷ = Q (Z)​
+
+																					Q (Z) =1​/1+ e**-z (Sigmoid Function or loss entropy)
+
+																					Ŷ =1​/1+ e**-z or wTx
+
+																	-AFTER TRANSFORMATION, WE WILL GET A LINE THAT REMAINS BETWEEN 0 AND 1. ANOTHER ADVANTAGE OF THIS FUNCTION IS ALL THE CONTINUOUS VALUES WE WILL GET, WILL BE BETWEEN 0 AND 1 WHICH WE CAN USE AS A PROBABILITY FOR MAKING PREDICTIONS. FOR EXAMPLE, IF THE PREDICTED VALUE IS ON THE EXTREME RIGHT, THE PROBABILITY WILL BE CLOSE TO 1 AND IF THE PREDICTED VALUE IS ON THE EXTREME LEFT, THE PROBABILITY WILL BE CLOSE TO 0.
+
+																	Log loss - sigmoid function
+																	Selecting the right model is not enough. You need a function that measures the performance of a Machine Learning model for given data. Cost Function quantifies the error between predicted values and expected values.
+
+																	`If you can’t measure it, you can’t improve it.`
+
+																	-Another thing that will change with this transformation is Cost Function. In Linear Regression, we use `Mean Squared Error` for cost function given by:-
+																	
+																	
+														1. 
+
+
+
+														Log loss - Cost function
+																		and 
+
+																		 
+
+														What is Log Loss?
+																		Log Loss is the most important classification metric based on probabilities. It’s hard to interpret raw log-loss values, but log-loss is still a good metric for comparing models. For any given problem, a lower log loss value means better predictions.
+																		
+																		
+																		The logistic function has some nice properties. The y-value represents the probability and it is always bounded between 0 and 1, which is want we wanted for probabilities. For an x value of 0 you get a 0.5 probability. Also as you get more positive x value you get a higher probability, on the other hand, a more negative x value results in a lower probability.
+																		
+										(What is entropy loss function- Also called logarithmic loss, log loss or logistic loss)
+										
+										
+										for understanding classification report(metrices)-
+                                                  https://medium.com/@kohlishivam5522/understanding-a-classification-report-for-your-machine-learning-model-88815e2ce397
+                                                  https://towardsdatascience.com/understanding-data-science-classification-metrics-in-scikit-learn-in-python-3bc336865019
+												  
+												  https://www.kdnuggets.com/2020/04/performance-evaluation-metrics-classification.html
+
+
+
+
+						Q-   The actual function “mean_squared_error” doesn’t have anything about the negative part. But the function implemented when you try ‘neg_mean_squared_error’ will return a negated version of the score.
+						A-  Usually algorithm related to hyperparmeter tuning (e.g- Gridsearchcv) thinks that higher the score better the model. Which is true in almost all cases except mean squares error.
+						Let’s say model with r2 score 0.7 is better than model with r2 score 0.5.
+						So Gridsearch will say that best model is r2 with score 0.7.
+						But if you have set scoring to mean square error than it will say model with mse(mean square error) 0.7 is better than model with mse 0.5. hence it will consider model with MSE 0.7 as best model.
+						Which is not true.
+						Hence to avoid that we set neg mean square error.
+						So Now for Gridsearchcv model with NMSE -0.5 is better than model with NMSE -0.7 .bcoz (-0.5>-0.7)
+						so it will result model with NMSE 0.5 as best model.
+						Which is true bcoz mse is nothing but error which should always be minimum right…!!
+						
+						
+					ADVANTAGES OF LOGISTIC REGRESSION :
+									1. It makes no assumptions about distributions of classes in feature space.
+									2. Easily extended to multiple classes (MULTINOMIAL REGRESSION).
+									3. Natural probabilistic view of class predictions.
+									4. Quick to train and very fast at classifying unknown records.
+									5. Good accuracy for many simple data sets.
+									5. Resistant to overfitting.
+									
+					Disadvantages of Logistic Regression :
+									1. It cannot handle continuous variables.
+									2. IF INDEPENDENT VARIABLES ARE NOT CORRELATED WITH THE TARGET VARIABLE, THEN LOGISTIC REGRESSION DOES NOT WORK.
+									3. Requires large sample size for stable results.
+									
+					tuning of logistic regression:
+													From these 3 experiment, we can conclude we didn’t gain any substantial benefit in building a better model while tuning the hyperparameters, and the classifier with default parameters was strong enough by itself.
+													from- https://medium.com/codex/do-i-need-to-tune-logistic-regression-hyperparameters-1cb2b81fca69
+													
+													
+					
+				from sklearn.linear_model import LogisticRegression
+
+				clf = LogisticRegression(fit_intercept=True, max_iter=10000) 
+						if we want to go for multiclass then-
+								clf = LogisticRegression(random_state=0, multi_class='multinomial', solver='newton-cg')
+						 
+							if we want to go for ordinal classes or ordinal logistic regression:
+								from mord import LogisticAT
+								#creating the ordinal logistic regression model
+								clf = LogisticAT(alpha=1.0, verbose=0)
+				clf.fit(X_train, y_train)
+				y_pred = clf.predict(X_test)
+			``	metrics.accuracy_score( y_test, y_pred) or
+				print(metrics.classification_report( y_test, y_pred))
+				metrics.roc_auc_score(y_test, test_preds[:,1])
+													
+													
+	imp				logistic regression for MULTINOMIAL CLASSIFICATION:
+													The LogisticRegression class can be configured for multinomial logistic regression by setting the “multi_class” argument to “multinomial” and the “solver” argument tO A SOLVER THAT SUPPORTS MULTINOMIAL LOGISTIC REGRESSION, such as “lbfgs“.
+																		...
+																		# define the multinomial logistic regression model
+																		model = LogisticRegression(multi_class='multinomial', solver='lbfgs')
+													IT IS A GOOD PRACTICE TO EVALUATE CLASSIFICATION MODELS USING REPEATED STRATIFIED K-FOLD CROSS-VALIDATION. THE STRATIFICATION ENSURES THAT EACH CROSS-VALIDATION FOLD HAS APPROXIMATELY THE SAME DISTRIBUTION OF EXAMPLES IN EACH CLASS AS THE WHOLE TRAINING DATASET.
+																		model = LogisticRegression(multi_class='multinomial', solver='lbfgs')
+																		# define the model evaluation procedure
+																		cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
+																		# evaluate the model and collect the scores
+																		n_scores = cross_val_score(model, X, y, scoring='accuracy', cv=cv, n_jobs=-1)
+																		# report the model performance
+																		print('Mean Accuracy: %.3f (%.3f)' % (mean(n_scores), std(n_scores)))
+													
+													Tune Penalty for MULTINOMIAL LOGISTIC REGRESSION
+																		AN IMPORTANT HYPERPARAMETER TO TUNE FOR MULTINOMIAL LOGISTIC REGRESSION IS THE PENALTY TERM.
+
+																		THIS TERM IMPOSES PRESSURE ON THE MODEL TO SEEK SMALLER MODEL WEIGHTS. THIS IS ACHIEVED BY ADDING A WEIGHTED SUM OF THE MODEL COEFFICIENTS TO THE LOSS FUNCTION, ENCOURAGING THE MODEL TO REDUCE THE SIZE OF THE WEIGHTS ALONG WITH THE ERROR WHILE FITTING THE MODEL
+													
+																		BY DEFAULT, THE LOGISTICREGRESSION CLASS USES THE L2 PENALTY WITH A WEIGHTING OF COEFFICIENTS SET TO 1.0. The type of penalty can be set via the “penalty” argument with values of “l1“, “l2“, “elasticnet” (e.g. both), ALTHOUGH NOT ALL SOLVERS SUPPORT ALL PENALTY TYPES. THE WEIGHTING OF THE COEFFICIENTS IN THE PENALTY CAN BE SET VIA THE “C” ARGUMENT.
+
+																		# define the multinomial logistic regression model with a default penalty
+																		LogisticRegression(multi_class='multinomial', solver='lbfgs', penalty='l2', C=1.0)
+																		
+																					C : float, default=1.0
+																					C close to 1.0: Light penalty.
+																					C close to 0.0: Strong penalty.
+																					
+																		FOR EXAMPLE AND MORE:- 
+																				https://machinelearningmastery.com/multinomial-logistic-regression-with-python/#:~:text=Logistic%20regression%2C%20by%20default%2C%20is,into%20multiple%20binary%20classification%20problems.
+
+
+													
+
+
+
+
+parameter place:-		model= Reg()			
+						model fit on ===model.fit(X_train,y_train)
+						test/y_preds = model.predict(X_test)
+                        train/train_preds = model.predict(X_train)
+						
+						metrics.classification_report(y_true, y_preds)
+										- where y_preds=model.predict(X_test) and y_true ia directly from split like y_test and vice versa
+						same like confusion matrix ====metrics.confusion_matrix(y_test,y_preds)
+						same in accuracy====metrics.accuracy_score(y_test, y_preds)
+						same in precision_score(y_test, yhat or y_preds)
+
+				
+Rolling dice is a discrete distribution, while the normal distribution, AKA the Gaussian distribution, is continuous by definition
+it is possible to apply  logistic reg algo on a 3 class classification problem
+unlike multiple regression,logistic regression predicts a categorical outcome variable
+
+Notes- https://www.analyticsvidhya.com/blog/2017/08/skilltest-logistic-regression/
+more-      https://towardsdatascience.com/introduction-to-logistic-regression-66248243c148
+
+
+FOR SELECTING TOP 10 features FROM NUMERICAL DF IN FEATURE ENGINEERING-
+											from sklearn.feature_selection import SelectKBest
+											from sklearn.feature_selection import f_regression
+
+											def select_features(X_train, y_train, X_test):
+											  # configure to select all features
+											  fs = SelectKBest(score_func=f_regression, k=5)
+											  # learn relationship from training data
+											  fs.fit(X_train, y_train)
+											  # transform train input data
+											  X_train_fs = fs.transform(X_train)
+											  # transform test input data
+											  X_test_fs = fs.transform(X_test)
+											  return X_train_fs, X_test_fs, fs
+											  
+										     FOR PLOTTING THEM-
+																	# # what are scores for the features
+																	# for i in range(len(fs.scores_)):
+																	# 	print('Feature %d: %f' % (i, fs.scores_[i]))
+																	# # plot the scores
+																	# pyplot.bar([i for i in range(len(fs.scores_))], fs.scores_)
+																	# pyplot.show()
+																					  
+											X_train_fs, X_test_fs, fs = select_features(X_train, y_train, X_test)
+
+											X_train=X_train_fs
+											X_test=X_test_fs
+											y_train=y_train
+											
+											OR U CAN USE THIS Also
+											
+											 # X_train_fs, X_test_fs, fs = select_features(X_train, y_train, X_test)
+											   model = LinearRegression()
+											   model.fit(X_train_fs, y_train)
+											 # evaluate the model
+											   yhat = model.predict(X_test_fs)
+											 # evaluate predictions
+											   mae = mean_absolute_error(y_test, yhat)
+											   print('MAE: %.3f' % mae)
+											   
+											   
+
+for comparing classification report:
+https://openclassrooms.com/en/courses/6401081-improve-the-performance-of-a-machine-learning-model/6519011-evaluate-the-performance-of-a-classification-model
+
+
+ 

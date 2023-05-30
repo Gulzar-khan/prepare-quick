@@ -1,0 +1,733 @@
+INTRODUCTION TO NUMPY-
+
+
+
+np.random() - This instruction gives a floating-point value ranging from 0 to 1.
+random.choice(9,8)- it returns the array of 8 random int till 9(9 not included)-[1,3,2,3,6,8,1,6]
+random.uniform(X, Y) - This function gives a floating-point value in the X and Y range.
+random.randint(X, Y) - This function gives a random integer between X and Y values.
+np.random.randn(100, 5)- it create an array of shape 100 by 5(100 rows and 5 col or elimnt per rows), negative & floating numbers included
+
+
+1.prime_array = np.array([2,3,5,7,11])
+print(prime_array)
+
+
+2.random_3D_cohort = np.array(np.random.randint(10,45,(2,4,6)))
+             2.2# Create an array of shape (100,5)
+                our_array = np.random.randn(100, 5)
+
+                       1.Every item in an ndarray takes the same size of block in the memory. Each element in ndarray is an object of data-type object also called as dtype.
+					   2.The most important object defined in NumPy is an N-dimensional array type called ndarray. It describes the collection of items of the same type. Items in the collection can be accessed using a zero-based index.
+					   3.another_array_with_range = np.arange(10,20,2) - between 10 to 19 with a difference of 2 so-[10,12,14,16,18]
+					   4.linearly_spaced_values = np.linspace(10,20,9 , endpoint = False, retstep = True)   means in range 10-20 find nine numbers which are equally different with each other and starting from 10 (if endpoint = False). 
+					   if endpoint = True that means 20 will be the end of numbers means 20 is also included
+					   if retstep= True than the difference will also be printed in result
+					   
+					   5.change list or tuple to array np.asarray(list or tuple)
+					   6.for inserting something to an array- axis 0=in set, axis 1= in row, axis 2=column 
+					   otherwise axis0=column and axis1=row for max/min/sum etc
+					   
+					   7.for 2d -first row than column like- (2,3) means (2(row),3(column))
+                         for 3d- first "set count" than row in per set than column like- (2,3,4) means 2(set),3(row),4(columns)
+                       8. in indexing and slicing always follow RC rules means first row than column.
+                          --axis=1------->row
+                         |
+                         |                                               AND axis=2 means on element on the basis of column
+                       axis=0  
+                         |
+                       column
+					   
+					   
+
+                       9.change list or tuple to array np.asarray(list or tuple)
+					   
+INTRODUCTION TO PANDAS-
+
+
+
+                          another_dataframe = pd.DataFrame(some_2D_array, columns=['A','B','C','D'],index = ['First','Second','Third']) 
+						  or
+						  another_dataframe = pd.DataFrame(([2,3,7,7,5],[1,2,5,9,0]), columns=['A','B','C','D','E'])
+						
+                        1.Series : A series is essentially a column
+                        2.Data Frame : A DataFrame is a two-dimensional data structure, i.e., data is aligned in a tabular fashion in rows and columns. Pandas DataFrame consists of three principal components, the data, rows, and columns.
+						
+						3.file_path = '/content/drive/MyDrive/Colab Notebooks/Alma/L, M, A  etc./automobile_data.csv'
+                          df=pd.read_csv(file_path)
+						  tsv-- df = pd.read_csv('GeekforGeeks.tsv', sep='\t')
+						  
+						4# Mount your drive and read the csv file. Make sure you are using the correct file path-
+                          from google.colab import drive
+                          drive.mount('/content/drive')
+						
+						5.1 for accessing only one column- df['revenue']
+						5.df=df.replace('?', np.NaN)                                                   # replacing ? mark With np.nan
+                          df=df.replace('n.a', np.NaN)
+						5.2.Creating a new Dataframe with chosen column of old df- monthly_sales=df[['facewash','facecream']]
+						
+						6.max_car_price = df['price'].fillna(0).astype('int32').max()
+						
+						6- converting dtype---<  dF['aaa'].astype('int32')
+						
+						6.2 for making a series of any column- color_series=diamonds['color'].squeeze() #we can only make one series at a time
+							6.2.1addind back to its df- 		diamonds_with_series=diamonds.assign(COLOR=color_series)  we can also add whole list of df length or a whole column to old df also
+						
+						7.df['new_price'] = df.apply(lambda x: revised_price(x['price'], x['engine-location']),axis=1) 
+						#where revised_price(x['price'], x['engine-location']) is a function call
+						
+						8.	.set_index('col_name') for setting any col as a index
+							.reset_index() for back to default index
+							
+						8. to know the memory usage of each column in df--- df.memory_usage(deep=True)
+						
+						8.1.# Lets fill the missing values with the value 'Not Present'
+                            df['homepage'].fillna('Not Present',inplace = True)
+							
+						9.df[df['engine-location']=="rear"] #for only rear value fot eng-loc column
+						
+						11.print(df['doors-int'].value_counts())  #where doors-int is col name and it is return with your count for evry numbers
+						
+						12.pd.concat(frames,axis=1) #WHERE frames=(pd.DataFrame(GermanCars),pd.DataFrame(japaneseCars))
+						#where GermanCars = {'Company': ['Ford', 'Mercedes', 'BMV', 'Audi'], 'Price': [23845, 171995, 135925 , 71400]}
+					
+						13.
+						14. output new csv after changing something- imdb_df.to_csv(working_dir_path +'output_imdb.csv')
+						
+									file_path = '/content/drive/MyDrive/Colab Notebooks/Alma/L, M, A  etc./automobile_data.csv'
+									for read-- df=pd.read_csv(file_path)
+						
+						15. df.loc[126]   # for open whole row 126 by index
+		imp					df.loc[126:128]   # FOR OPEN ROW 126,127 AND 128 ASWELL BY INDEX
+							df,loc[50:60,:] returns all rows between 50-60 rows (60 included) so the second param is waste in this condition
+							df.loc[50:60,['genres','budget','revenue']]   in .loc method both parameters are included 
+							
+						 df[0:10] bcoz it is indexing it returns rows 0 to till 9 not upto 10 like loc method and we cant provide single index or column range here as a parameter
+						
+							df.iloc[126]   # for open row 126 by index
+							df.iloc[126:128]   # it returns rows 126 to till 127 not upto 128 like loc method
+							df,iloc[50:60,:] returns all rows between 50-60 index (60 not included) so the second param is waste in this condition
+						and we can do col filter also by indexing ---
+								df.iloc[1:4,1:2] it returns 1 to 3 row and 2nd column only
+								
+								
+						
+						15.for getting selected col only- ratings_explicit[['ISBN','Avg_Rating','Total_No_Of_Users_Rated']]
+					
+						16.for only english movies pandas-   english_movies = df[df['original_language'] == 'en']
+						
+						or for two condition- english_movies=df[(df['original_language']=='en') & (df['runtime'] > 120)] for long movie also.
+							#for filtering based on three condition - it returns only those rows which has fair, good and premium in cut column
+							diamond_carat=diamonds[(diamonds['cut']=='Fair') + (diamonds['cut']=='Good') + (diamonds['cut']==' Premium')]
+
+						17.english_movies[['title','cast']] for title and cast of above eng movies.
+						
+						18.# Add new column which is just half the runtime
+                            df['half_runtime'] = df['runtime'] * 0.5
+						
+						19.set imdb id as index -  df.set_index('imdb_id', inplace=True)
+						
+						20.sort column values-- df.sort_values(['status','new_profit'], ascending=[False,True]).head()
+						
+						21.print(date.today())
+                           print(datetime.now())
+						   
+						22.inplace = True ----changes the original data frame while False doesn't
+						
+						23.replace name of specific col-# df.columns = df.columns.str.replace('meta.data_version', 'data_version')
+						
+						or  replace name of all col-df.columns = ['new_col1', 'new_col2', 'new_col3', 'new_col4']
+						OR
+							df.rename(columns = {'old_col1':'new_col1', 'old_col2':'new_col2'}, inplace = True)
+							
+							like-- df=df.replace('?', np.NaN)                                                   
+							
+						24. picking up random rows from any df-  df_new= df.sample(n=3)    where n-no. of rows in new df
+														OR
+										df.sample(frac=0.75, random_state=42) where frac is percentage of desired rows and ran_state for getting same everytime
+										
+						25. if u have some filter row df and u want those row from org df which is not available in yr filter df-
+										rest_df=org_df.loc[~org_df.index.isin(filter_df.index),:]
+
+						25. replace anything to null in df- data = data.replace('No', np.nan)
+						
+						26. how to see unbalance % 
+												# here we check, how much conversion has happened
+													converted = round(len(data[data['Converted']==1]) / len(data['Converted'])*100, 2)
+													print(converted,'%')
+													# Output: 38.54 %
+													
+						27. remove duplicates-   df.drop_duplicates(inplace = True)
+						
+						28. fill null/missing---  df["col_name"].fillna(df["col_name"].mean() or median() or mode()[0] or .iloc[0])
+						
+						29. encoding- df['Gender'] = df['Gender'].map( {'Female': 0, 'Male': 1} ).astype(int)
+						
+									OR
+									gender=pd.get_dummies(df['Gender'],drop_first=True,prefix='ANYTHING WHAT WE WANT IN THE NAME OF DUMMY TABLE',prefix_sep='_')
+									df=pd.concat([df,gender],axis=1) # we can add as many as we want like gender in that line with comma
+						
+									OR  
+									from sklearn. preprocessing import LabelEncoder
+									#changing categorical value to numerical values
+									labelEncoder= LabelEncoder()
+									data['Vehicle_Age'] = labelEncoder.fit_transform(data['Vehicle_Age'])
+									data['Vehicle_Damage'] = labelEncoder.fit_transform(data['Vehicle_Damage'])
+							
+									OR
+									#One hot encoder on Gender
+									from sklearn.preprocessing import OneHotEncoder
+									enc=OneHotEncoder()
+									enc_data=pd.DataFrame(enc.fit_transform(data[['Gender']]).toarray())
+									names=enc.get_feature_names_out()
+									enc_data.columns=names
+
+/
++								df1=data.join(enc_data)
+							
+						30. # for converting column type to int---   df['Region_Code']=df['Region_Code'].astype(int)
+						
+						what is- 5|6
+						31. #Aplying functions on our df
+								book1['tags']=book1['tags'].apply(get_list_of_words)
+								
+						32. encoding a column for logistic reg-  df['class'] = df['Churn'].apply(lambda x : 1 if x == "Yes" else 0)
+						
+						33. sorting : importance_df.sort_values(by=['Feature Importance'],ascending=False)
+						
+						34 DF JOINING-  
+						
+							df1=data.join(enc_data) where enc_data is the same len of data but diff number of col,
+							
+							merged_IJ_df = pd.merge(english_movies, long_movies, how='inner',left_on='imdb_id',right_on='imdb_id') or
+							 OR
+							df = df.merge(df_autox,on = 'company',how = 'left')
+							OR
+							df=df1,merge(df2,on='isbn') where df1 and df2 is different-different df but have primary key-'isbn' in each(can also add how-'left')
+							
+							df=pd.concat([df,gender],axis=1) # we can add as many as we want like gender in that line with comma,
+							
+							diamonds_with_series=diamonds.assign(COLOR=color_series)  we can also add whole list of df length or a whole column to old df also
+							
+						35- #for getting rest 25% rows
+									rest_df=diamonds.loc[~diamonds.index.isin(df_new.index),:]
+									
+							if u have some filter row df and u want those row from org df which is not available in yr filter df-
+										rest_df=org_df.loc[~org_df.index.isin(filter_df.index),:]
+									
+
+						
+						
+						
+DATA WRANGLING-
+
+							pre== for printing range backword- range(6,0,-1)
+                         1.imdb_non_null_runtime = pd.concat([imdb1,imdb2,imdb3])
+						
+						1.2- dropping columns----df=df.drop(['age','weight'],axis=1)   0r   del df['index']
+						
+						 
+						 2.# Merging the two dataframes using inner join
+                             merged_IJ_df = pd.merge(english_movies, long_movies, how='inner',left_on='imdb_id',right_on='imdb_id') or
+							 OR
+							 df = df.merge(df_autox,on = 'company',how = 'left')
+							
+						3. #convert our given datetime col to extractable column
+							df['pickup_datetime'] = pd.to_datetime(df['pickup_datetime'], errors='coerce')
+							#for making func
+							def add_dateparts(df, col):
+								df['year'] = df[col].dt.year
+								df['month'] = df[col].dt.month
+								df['day'] = df[col].dt.day
+								df['weekday'] = df[col].dt.weekday
+								df['hour'] = df[col].dt.hour
+								#applying func to df
+							add_dateparts(df, 'pickup_datetime')
+							 
+						3.# We can find the median maximum movie runtime across different years
+                            imdb_df.groupby('Year_of_release')['runtime'].median().reset_index()
+							
+						4.# Group the data frame by month and item and extract a number of stats from each group
+                            imdb_df.groupby(['Year_of_release', 'original_language'],as_index=False).agg({'runtime':"mean",'revenue': "sum",'imdb_id':"count"}).sort_values(by='Year_of_release').rename(columns ={'runtime':'avg_runtime','revenue':'total_revenue','imdb_id':'num_movies'})
+							
+						5.inplace = True ----changes the original data frame while False doesn't
+						
+						6. finding null
+						- print(df.isnull().sum()) or df.isna().sum() returns columnwise count of nulls while  
+						- OR df.describe()   returns rows of description in which first row is  for count of values in each COLUMN
+						- or df.isnull().values.any() returns boolean value 
+						  solution- df.fillna(0)
+						   OR   df.replace(0, 5) 
+						   OR  
+								mean_value=df['MEDV'].mean()
+								df['MEDV'].fillna(value=mean_value, inplace=True)
+							OR
+							 dF.dropna(inplace=True)
+						   
+						   
+						  6.2- replacing those value to its negative form if that is not devidable by 3 in whole dF's column values-
+								m = df % 3 == 0
+								df.where(m, -df)
+							   
+						7. finding duplicate- len(df[df.duplicated()])    or 
+						7.1- df.drop_duplicates()						
+						7.2- solution- To remove duplicates and keep last occurrences, use keep-
+							df.drop_duplicates(subset=['brand', 'style'], keep='last')
+						
+						8.for getting unique values of a particular column ---   len(df['InvoiceNo'].unique())
+							
+						9. for getting df extract(those rows) which rows have profit=-1 and sales=1 only---
+								df[(df['outlier_univariate_profit']==-1) & (df['outlier_univariate_sales']==1)]
+								
+						10. converting dtype in df-
+								for one column- full_df['User-ID'] = full_df['User-ID'].astype('int')    OR
+												df = df.astype({"Fee":"int","Discount":"int"})
+								for all column- df = df.astype('int')
+							
+						11. groupby:
+									1. user(a) has given 5555 rating in all his life (same as below 2nd point)--
+														final_df.groupby('User-ID')['Book-Rating'].sum().reset_index()
+											1.1. In respect to how much time a title occur, sum of all its rating- code above(count())
+
+									2. If pair of 'title and user-ids' are same in other row also then only sum of 'isbn' will be happen in that case-  
+											op=one.groupby(['title','user-ids'])['isbn'].sum().reset_index()
+											
+						12. Sorting df in descending order :  
+										df=df.sort_values(by=['ISBN'], ascending=False) or
+										df.sort_values(['status','new_profit'], ascending=[False,True])
+										
+						13. check merge function-
+									ab=pd.DataFrame([{'is':12,'t':2,'c':3},\
+                                       #  {'is':12,'t':4,'c':5}
+										{'is':13,'t':5,'c':6},
+										{'is':19,'t':8,'c':9}],index=[1,2,3])
+									bc=pd.DataFrame([{'us':1,'is':12},{'us':4,'is':12},{'us':1,'is':19},{'us':5,'is':15}],index=[1,5,3,9])
+									
+									one=pd.merge(ab,bc,on='is')
+									one
+						
+						14. for access values of a df via index - one.loc[1] where 1 is index
+									
+						16. for getting book title via index- book4['Book-Title'][book_index]
+						
+						17. for getting index of any book-title - - book3.index[book3['Book-Title'] == 'Nights Below Station Street'][0]
+						
+						18. select numerical features only---- numeric_features=df.describe().columns
+						
+						19. Replace blank to np.nan----   df['TotalCharges'] = df['TotalCharges'].replace(' ', np.nan)
+						
+						20.#apply fucntion to any col of df and make a new col- where modiied_response is a function-
+								insurance_df['Modified_Response'] = insurance_df['Response'].apply(modified_response,axis = 1)
+
+							#apply a func to a col of df-
+								insurance_df['Response'] = insurance_df['Response'].apply(modified_response,axis = 1)
+								#OR
+								df['Response'] = df['Response'].apply(lambda x : 1 if x==8 else 0)
+
+
+						21. #display ix rows of df -
+							 pd.set_option('display.max_columns', 200)
+							 pd.set_option('display.max_rows', 200)
+
+						22. #dropping those col which have more than 40% null value
+							# missing_val_count_by_column = insurance_df.isnull().mean()
+							#OR
+							missing_val_count_by_column = insurance_df.isnull().sum()/len(insurance_df)
+							print(missing_val_count_by_column[missing_val_count_by_column > 0.4].sort_values(ascending=False))
+							insurance_df = insurance_df.dropna(thresh=insurance_df.shape[0]*0.4,how='all',axis=1)
+
+						25. filling nan values
+							#Continuous - Median()/mean()
+							#categorical- Mode()
+							#checking rest col 
+								df.isnull().mean()[df.isnull().mean() > 0]
+							#fill nan/null with mean for rest of nulls-
+								d.fillna(X.mean()) 
+								#or 
+								df['Employment_Info_4'] = df['Employment_Info_4'].fillna(df['Employment_Info_4'].median())
+								or in case of categorical--
+								df['Employment_Info_4'] = df['Employment_Info_4'].fillna(df['Employment_Info_4'].mode().iloc[0])
+								
+						26. for getting only null rows-  books.loc[books.Publisher.isnull(),:]
+						
+						27. for maintaining only those rating records for which we have details in books df -- 
+									ratings_new = ratings[ratings.ISBN.isin(books.ISBN)]
+									
+									
+PYSPARK-
+			Is PySpark faster than pandas?
+						Due to parallel execution on all cores on multiple machines, PySpark runs operations faster then pandas. In other words, pandas DataFrames run operations on a single node whereas PySpark runs on multiple machines.
+						
+					data = [('James','','Smith','1991-04-01','M',3000),
+						  ('Michael','Rose','','2000-05-19','M',4000),
+						  ('Robert','','Williams','1978-09-05','M',4000),
+						  ('Maria','Anne','Jones','1967-12-01','F',4000),
+						  ('Jen','Mary','Brown','1980-02-17','F',-1)
+						]
+
+					columns = ["firstname","middlename","lastname","dob","gender","salary"]
+					df = spark.createDataFrame(data=data, schema = columns)
+					df.show()
+						1- read
+								!pip install pyspark
+								import pyspark
+								from pyspark.sql import SparkSession
+								spark=SparkSession.builder.appName('Practise').getOrCreate()
+								df_pyspark=spark.read.option('header','true').csv('/content/drive/MyDrive/Colab Notebooks/Pyspark/Sheet1.csv')
+								
+								df_pyspark.show()
+								
+							excel - we have to intall Maven on databricks cluster and use-
+									filePath = "wasbs://<container-name>@<storage-account>.blob.core.windows.net/MyFile1.xls"
+									DF = spark.read.format("excel").option("header", "true").option("inferSchema", "true").load(filePath)
+									display(DF)
+									
+									via - https://stackoverflow.com/questions/56426069/how-to-read-xlsx-or-xls-files-as-spark-dataframe
+
+								
+						2- convert pandas to pyspark
+								# Read an csv/xlsx file into a PySpark DataFrame
+									file_path = "/content/drive/MyDrive/AlmaBetter/sample_data.xlsx or csv"
+									df = pd.read_excel/csv(file_path).astype('str')  if csv we dont have to convert it
+									# Convert Pandas DataFrame to PySpark DataFrame
+									spark_df = spark.createDataFrame(df)
+									spark_df.show(5)
+									
+							if we don't want to convert our whole data to string in xlsx case then we have to define the schema for each col like that-
+									from pyspark.sql.types import StructType, StructField, DoubleType, StringType, IntegerType
+									file_path = "/content/drive/MyDrive/AlmaBetter/sample_data.xlsx"
+									df = pd.read_excel(file_path)
+									schema = StructType([StructField("Procedure", IntegerType(), True)\
+											   ,StructField("Procedure Description", StringType(), True)\
+											   ,StructField("Payer", StringType(), True)\
+											   ,StructField("Gross Charge", StringType(), True)\
+											   ,StructField("Minimun Negotiated IP Rate", StringType(), True)\
+											   ,StructField("Maximum Negotiated IP Rate", DoubleType(), True)\
+											   ,StructField("IP Cash Price", DoubleType(), True)\
+											   ,StructField("IP Expected Reimbursement", DoubleType(), True)\
+											   ,StructField("Minimun Negotiated OP Rate", DoubleType(), True)\
+											   ,StructField("Maximum Negotiated OP Rate", DoubleType(), True)\
+											   ,StructField("OP Cash Price", DoubleType(), True)\
+											   ,StructField("OP Expected Reimbursement", DoubleType(), True)])
+									# Convert Pandas DataFrame to PySpark DataFrame
+									spark_df = spark.createDataFrame(df,schema=schema)
+									spark_df.show(5)
+								
+						2- print schema- df_pyspark.printSchema()
+						
+						3- select column- df_pyspark.select(['Procedure','Payer']).show()
+						
+						4- knowind dtypes- df_pyspark.dtypes
+						
+						5- description of all col- df_pyspark.describe().show()
+						
+						6- convert dtype of a col- 
+										from pyspark.sql.types import IntegerType,BooleanType,DateType
+										# Convert String to Integer Type
+										
+										df_pyspark=df_pyspark.withColumn("Procedure",df_pyspark.Procedure.cast('int'))
+										df.withColumn("age",df.age.cast('integer'))
+										df.withColumn("age",df.age.cast(IntegerType()))
+
+										# Using select
+										df_pyspark=df_pyspark.select(col("Procedure").cast('int').alias("Procedure")) 
+										it will return only Procedure col after converting it to int 
+										
+						7- Adding or Updating col		
+									### Adding Columns in data frame
+									df_pyspark=df_pyspark.withColumn('Procedure',df_pyspark['Procedure']+50)
+									if we pass 'Procedure' it will update the original 'Procedure' col to new value col while if we add 'Prooocedure' it will add new col with name Prooocedure name
+									
+						8- dropping col- ### Drop the columns
+											df_pyspark=df_pyspark.drop('Prooocedure')
+											
+						9- rename column- df_pyspark.withColumnRenamed('Procedure','New Procedure')
+						
+						10- Nulls- 
+						
+									#finding non-nulls of any columns----
+										df_pyspark.where(col(' OP Cash Price ') != 'nan').show()
+									#dropping nulls
+										df_pyspark.na.drop().show()
+										or 
+										df_pyspark.na.drop(how="any",subset=['Age']).show()
+										or
+										df_pyspark.na.drop(how="any",thresh=3).show()
+										
+											or
+												def data_cleanning(df, columns):
+												  for column in columns:
+													# Removing special characters
+													df = sdf.withColumn(column, regexp_replace(col(column), "[^a-zA-Z0-9\s]+", ""))
+												  # Droping nulls
+												  df = df.dropna()
+
+												  return df
+									#replacing nulls
+										### Filling the Missing Value of OP Cash Price with 'Missing Values' text
+										df_pyspark.na.fill('Missing Values',[' OP Cash Price ']).show()
+										
+									# FOR IMPUTING NULLS BY MEDIAN/mean-
+												from pyspark.ml.feature import Imputer
+												imputer = Imputer(
+												  inputCols=['salary','age'], 
+												  outputCols=["{}_imputed".format(c) for c in ['Salary','age']]
+												  ).setStrategy("median")
+												# Add imputation cols to df
+												df=imputer.fit(df).transform(df)
+												
+							11- replace empty value with null-(like if and else)
+											#Replace empty string with None value
+												from pyspark.sql.functions import col,when
+												df.withColumn("name", \
+													   when(col("name")=="" ,None) \
+														  .otherwise(col("name"))) \
+												  .show()
+											#to whole dF
+												df2=df.select([when(col(c)=="",None).otherwise(col(c)).alias(c) for c in df.columns]) 
+												#or selected col list instead of df.columns like- replaceCols=["name","state"]
+												df2.show()
+												
+							12- FILTER ROWS-
+											### Salary of the people less than or equal to 20000
+												df_pyspark.filter("Procedure<=1800").show()
+
+
+
+
+
+						
+						
+
+						
+						
+
+DATA VISUALIZATION-     
+                        import matplotlib.pyplot as plt
+                        %matplotlib inline
+						
+						monthly_profit=df.groupby(['month_number'])['total_profit']
+						plt.plot(monthly_profit)
+
+                        plt.title('Monthly Sales in the year')
+						plt.ylabel('Total Profit')
+						plt.xlabel('Month Number')
+						
+						
+						sns.distplot(df.Appliances,ax=ax[0])
+						sns.boxplot(df.Appliances, ax=ax[1])
+						stats.probplot(df.Appliances,plot=plt)
+						
+						checking dist for all col at once- pd.DataFrame.hist(data=df,ax=ax)   or 
+							df[temp_cols].hist(bins=25, figsize=(15,20))
+
+						
+						4. for plotting bar plot--
+													df_autox = pd.DataFrame(df.groupby(['company'])['selling_price'].mean().sort_values(ascending = False))
+													df_autox.plot.bar()
+													
+						4. distribution plots-
+											plt.figure(figsize=(7,7))
+											sns.distplot(np.log10(df['selling_price']),color='y')
+							
+					    5.for more than one col- monthly_sales=df[['facewash','facecream','total_profit']]
+						
+						6. for plotting countplot FOR CATEGORICAL-
+												# plotting count plot w.r.t target variable
+													sns.countplot(x = "Lead Source", hue = "Converted", data = data, order = data['Lead Source'].value_counts().index)
+													xticks(rotation = 45)
+													plt.show()
+													
+													or 
+													sns.countplot(x=df['Response'], data=df)
+													mp.title('Not-Intrested vs Intrested Policyholders', size=20)#title for the countplot
+													mp.show()
+						7. FOR PLOTTING BOXPLOT/whisker AND HIST FOR CONTINUOUS-
+																# plotting boxplot and histogram
+																	fig, axs = plt.subplots(1,2,figsize = (20,6.5))
+																	sns.boxplot(data['Total Time Spent on Website'], ax = axs[0])
+																	data['Total Time Spent on Website'].plot.hist(bins=20, ax = axs[1])
+																	plt.show()
+																	
+																	OR 
+																	
+																	# plotting boxplot w.r.t. the target variable
+																	sns.boxplot(y = 'Total Time Spent on Website', x = 'Converted', data = data)
+																	plt.show()
+																	
+																	or
+																	
+																	sns.set(style="whitegrid")
+																	ax = sns.boxplot(df.Appliances)
+																	
+						8. for histplot- Histograms represent the area of the bar because of its nature of representation.
+																	fig, axs = plt.subplots(1,2,figsize = (20,6.5))
+																	data['Total Time Spent on Website'].plot.hist(bins=20, ax = axs[1])
+																	plt.show()
+																	
+																	or 
+																	
+																	#Let's see the distribution of numerical columns
+																	num_col.hist(figsize=(10,10),bins=20)
+																	
+						8. Swornplot: for x=categorical and y=continuous
+										Swarm plots are like the scatter plots (which show the complete data representation) but with categorical data in the axis, which differentiate them from the general scatter plots.
+										the more the density, the more diverge will be data points from the center to both left and right.
+								for one col- -------    sb.swarmplot(data = dataset["value"], size=5);
+								for more than one--		sb.swarmplot(x="type", y="value", data=dataset, size=4);
+								
+								
+								
+						end-  
+								for showing two plots in one fig-- 
+																sb.boxplot(x="type", y="value", data=dataset, whis=3.0);
+																sb.swarmplot(x="type", y="value", data=dataset, size=2, color="k", alpha=0.3);
+																   here as alpha value increses as our brightness of sworn plots incresses over boxplots.
+						9. for violin plot- x=categorical and y=continuous
+								 violin plot shows us the complete distribution for both types we have in our self-created DataFrame
+										sb.violinplot(x="type", y="value", data=dataset);
+										we can add iqr range also in that ----sb.violinplot(x="type", y="value", data=dataset, inner="quartile", bw=0.2);
+										
+						10. #for countplot of a categorical col-
+							sns.countplot(x=insurance_df['Response'])
+							#OR
+							sns.countplot(x='Response',data=df)
+							
+						
+
+
+						
+						for box-plot-   https://towardsdatascience.com/understanding-boxplots-5e2df7bcbd51
+						
+						
+						
+OUTLIERS HANDLING-   WHERE data= your default df
+
+
+						plt.figure(figsize=(6,4))
+						sns.boxplot(data['Height (in cm)'])
+						plt.show()
+
+
+
+
+						def removeOutliers(data, col):
+							Q3 = np.quantile(data[col], 0.75)
+							Q1 = np.quantile(data[col], 0.25)
+							IQR = Q3 - Q1
+						 
+							print("IQR value for column %s is: %s" % (col, IQR))
+							global outlier_free_list
+							global filtered_data
+						 
+							lower_range = Q1 - 1.5 * IQR
+							upper_range = Q3 + 1.5 * IQR
+							outlier_free_list = [x for x in data[col] if (
+								(x > lower_range) & (x < upper_range))]
+							filtered_data = data.loc[data[col].isin(outlier_free_list)]
+							return
+							
+							
+							
+							
+							
+						 
+						 
+						for i in data.columns:
+							  if i == data.columns[0]:
+							  removeOutliers(data, i)
+							else:(use this only if u want to remove outliers from all column i think)
+							  removeOutliers(filtered_data, i)
+						 
+						  
+						# Assigning filtered data back to our original variable
+						data = filtered_data
+						print("Shape of data after outlier removal is: ", data.shape)
+
+
+
+
+
+for sql clsses-   https://www.youtube.com/playlist?list=PL_nMO-wncU0nYz_BFwHJENd2YWoobA9Ly
+               https://www.youtube.com/playlist?list=PLxCzCOWd7aiHqU4HKL7-SITyuSIcD93id
+
+
+
+
+
+
+
+
+for knowing how much % we converts into lead from visitor-
+						# conversion ratio
+						# conversion ratio >this last activity can be "occupation" or 'City' also-
+						d = {}
+						for val in data['Last Activity'].unique():
+							a = data[data['Last Activity'] == val]['Converted'].sum()
+							b = data[data['Last Activity'] == val]['Converted'].count()
+							d[val] = [a, b, round(a/b*100, 2)]
+						pd.DataFrame.from_dict(d, orient='index').rename(columns = {0: 'Converted', 1: 'Leads',2: 'Conversion Ratio'}).sort_values(by=['Conversion Ratio'], ascending=False)
+						
+						
+A logistic regression and an Xgboost model work equally well for a binary classification task. Which one would you go ahead with and why						
+ If both the models performs equally then We will go with the logistic regression as it is more interpretable and explainable than Xgboost and computationally inexpensive
+ 
+What role does gradient descent play in gradient boosting models like GBDT, XGBoost etc. ?
+ As we know Gradient descent is a first-order iterative optimisation algorithm for finding a local minimum of a differentiable function. It's work is same as minimizing loss in the gradient boosting algorithms as well which were basically designed to enhance the performance and speed of a Machine Learning model.
+ 
+ But instead of optimizing the gradient descent for only one algorithms, In gradient boosting we have to optimize it for each model we built in Gradient boosting framework.
+
+How would you justify the complexity of building a model with a neural network & explain the model's predictions to a non-technical stakeholder?
+
+	We can justiy our complex neural networks via it's advantage like outperforms on Big Data, they try to learn high-level features from data in an incremental manner which eliminates the need of domain expertise and hard core feature extraction and these complex techniques tend to solve the problem end to end, where as other Machine learning techniques need the problem statements to break down to different parts to be solved first and then their results to be combine at final stage.
+
+	The complexity of a neural network structure is explained by explaining the problem complexity, the number of parameters in the network like the number of neurons, the weights between neurons (weights) and number of hidden layers available in the algorithm etc.	
+
+
+ctc-5
+exp- 7
+exp-3
+rel exp- 1
+Deep Learning really shines when it comes to complex problems such as image classification, natural language processing, and speech recognition.
+
+As we know DL algorithm are less explainable interpretable than other ML algorithms but in some complex problems it outperforms othe ML algorithms via learning the underneath patterns with the help of complex architecture which imitates human brains.
+
+the complexity of a neural network structure is explained by explaining the problem complexity, the number of parameters in the network like the number of neurons, the weights between neurons (weights) and number of hidden layers available in the algorithm etc. Apart from that we have other traditional models explainable technique as well like SHAP, ELI5, LIME etc. 
+
+
+
+
+
+	Features, concepts and examples of using frameworks like ELI5, Skater and SHAP
+Explore concepts and see them in action — Feature importances, partial dependence plots, surrogate models, interpretation and explanations with LIME, SHAP values
+
+In general, the complexity of a neural network structure is measured by the number of free parameters in the network; that is, the number of neurons and the number and strength of connections between neurons (weights).
+
+
+
+
+
+
+ 
+ 
+ XGBoost is one of the most popular variants of gradient boosting. It is a decision-tree-based ensemble Machine Learning algorithm that uses a gradient boosting framework. XGBoost is basically designed to enhance the performance and speed of a Machine Learning model. In prediction problems involving unstructured data (images, text, etc.), artificial neural networks tend to outperform all other algorithms or frameworks.
+ 
+ It is the overall training of the composite model that performs gradient descent by adding the residual vector (assuming a squared error loss function) to get the improved model prediction. Training a NN using gradient descent tweaks model parameters whereas training a GBM tweaks (boosts) the model output
+ 
+ 
+ 
+is it distance learning program or online learning programme?
+if am eligible?
+online exam or not and any relaxation in exam dates?
+how much fee?  1lakh 20k shikshadotcom
+any discount?
+any scholarship?
+Emi available or not?
+degree is recognized by ugc?
+starting date?
+
+live classes timing?
+
+how much semester is there and in which month exam falls?
+
+

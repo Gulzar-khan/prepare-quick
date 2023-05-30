@@ -1,0 +1,106 @@
+# if we want to replace the zero with mean of that col
+# Insulin_col = df['Insulin']
+# Insulin_col.replace(to_replace = 0, value = df.Insulin.mean(), inplace=True)
+
+
+df.drop(['date'], axis=1,inplace=True)
+
+# Replace the FIRST element with the value 1
+my_list[0] = 1
+this can update the index 0 to this 1 value
+
+String-
+           phrase = 'Statistics sits at the heart of machine learning'
+           my_string = "String built with double quotes"
+        (Immutable) but replace method can be use for replacing elements note-but it can not change org str u have to save it to another variable.
+      TypeError: 'str' object does not support item assignment
+      Concatenate strings and indexing can be posssible
+      'double' in my_string --for finding something in string
+	  JOINING of separated string/list character into one word ---- modified_sentence=" ".join(words_in_sentence)
+	  method- count(),find,upper,lower,replace,split,index--(index and find are same)
+	  
+	  print("\nUsing ",lasso_regressor.best_params_, " the negative mean squared error is: ", lasso_regressor.best_score_)
+	  print("IQR value for column %s is: %s" % (col, IQR))
+	  print('The new score is',self.score)
+	  for removing leading and trailing space- use strip()---- a="  abc  " -->a.strip()--->  "abc"
+	  
+Lists-
+            my_list = ['A string',23,100.232,'o',True]
+			          [[1, 2, 3], ['b', 'a', 'd'], [7, 8, 9]]
+			
+		inputted_num=int(input(()))	
+		indexing can be done	
+	    slicing can be done
+		lists are mutable as opposed to strings
+		Reassign-    loss_functions = loss_functions + ['Kullback-Leibler']
+		#Testing whether an item is in a list- 'australian cattle dog' in dogs - where dogs is a list of dogs breed
+		list functions- len,min,max,sum,sorted(sorted can work on string also and A is came first before a)-but in sorting all the ele must same dtype
+		
+	
+		list methods- sort(permanent change),append(adds eliment as a whole list/tuples into list),extend(adds list/tuple's element only into list), count, index, insert(permanent change), pop(permanent change),zip,reverse(permanent change),clear,remove(permanent)(or del dogs[0] where dogs is the list of dogs name)
+		
+		from copy import copy, deepcopy  --- in copy(shallow copy) append can possible(inside list of list) but not item assignment while if u use deepcopy(object) for making a copy of a list none can be change.
+
+		
+Tuple- 
+			another_tuple = ('one',2, 4.53, 'asbc',(1,2),[2,3],{'c':5})
+      
+	   You would use tuples to present things that shouldn't be changed, such as days of the week, or dates on a calendar.
+	   Immutable just like string
+	   loop can run in tuple
+	   tuples can have anything in it like list,tup,sets,dict
+	   Indexing work just like in lists.
+	   slicing can be done like another_tuple[0:2:3]
+	   # Use .index to enter a value and return the index-my_tuple.index(2)
+	   methods- count,index
+	   
+Sets- 
+     empty_set = set()
+	 my_set = {1, 2,'dog','a',(2,3)}
+	   no indexing and slicing- 'set' object is not subscriptable
+	   sets cant have sets,dict and lists in it but it can have tuples- unhashable type: 'list'
+       Sets are an unordered collection of unique elements. We can construct them by using the set() function.
+       Sets cannot have duplicates.- automatically remove duplicates
+       Sets are mutable just like lists.
+	   loop can run in Sets
+	   sets elements are always sorted 
+       You can create a non-empty set with curly braces by specifying elements separated by a comma.
+	   Methods- add,intersection(common),pop,remove,union(all unique from both),update,clear,difference(return non common from first),symmetric_difference(which is not common in both)
+	   
+Dictionary-
+				empty_dict={}
+               marvel_dict = {'Name':'Thor','Place':'Asgard','Weapon' : 'Hammer', 1:2, 3 : 'power', 'alibies' : ['Ironman','Captain America'], 'abc' : {1:2, 4:5}}
+			 1,Mutable
+			   loop can run in dict(but it goes on keys only )
+			 2.no indexing  instead of index in dict[0], it takes keys in that and return value corresponded to tht key like marvel_dict['Name'].
+			 3.Mutable
+			 4.no slicing(but like that can be possible ---ages = marvel_dict['alibies'][0:1]  )
+			 5.country_list = ['India','Australia','United States','England']
+               city_list = ['New Delhi', 'Canberra' , 'Washington DC','London']
+			   country_city_list = list OR dict(zip(country_list,city_list))
+			 6.# Add a new key-employee_dict['Designation'] ='Senior Data Scientist'#where employee_dict is a dict in which we are adding that   
+			 OR
+			 employee_dict.update({'Salary':'2,000,000'}) # we can use that for updation of existing value of an key also
+	
+			7.dict.pop('England','Not Found')#if 'England' key is found in dict then pop it and return its value,if not return 'Not Found' or give KeyError:3
+			 OR
+			 marvel_dict.get('Random','Not Found')#if 'Random' key is found in marvel_dict then return it's value else it return 'Not Found' or return nothing
+			 
+			 8- Methods- clear,copy,get,items,keys,values,update,pop
+			 
+			 list(marvel_dict.items())- returns-[('Name', 'Thor'),('Place', 'Asgard'),('Weapon', 'Hammer'),(1, 2),(3, 'power')]
+			 list(marvel_dict.keys())-  returns the list of keys
+			 
+			 access key of max/min value- max(ans, key = ans.get) where ans is a dict
+			
+			
+				
+Conditional-
+            if first 'if' is fulfilled it is never go to other condition that means if other condition is wrong that doesnt matter at all				
+			 
+			 
+			 
+MUTABLE- list,set and dict
+		
+
+
