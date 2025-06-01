@@ -15,6 +15,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4)
 
 
 
+
 note:  so onehotencoder is more efficient while modeling than pd.get_dummies
 
 			In short, if I’m doing machine learning then I should use OneHotEncoder(ohe) over get_dummies. OHE does the same things as get dummies but in addition, OHE saves the exploded categories into it’s object.
