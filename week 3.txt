@@ -56,6 +56,7 @@ INTRODUCTION TO PANDAS-
 						3.file_path = '/content/drive/MyDrive/Colab Notebooks/Alma/L, M, A  etc./automobile_data.csv'
                           df=pd.read_csv(file_path)
 						  tsv-- df = pd.read_csv('GeekforGeeks.tsv', sep='\t')
+						  xlsx- df=pd.read_excel(r'C:\Users\Gulzar.khan\Downloads\Online_Retail.xlsx')
 						  
 						4# Mount your drive and read the csv file. Make sure you are using the correct file path-
                           from google.colab import drive
@@ -65,6 +66,10 @@ INTRODUCTION TO PANDAS-
 						5.df=df.replace('?', np.NaN)                                                   # replacing ? mark With np.nan
                           df=df.replace('n.a', np.NaN)
 						5.2.Creating a new Dataframe with chosen column of old df- monthly_sales=df[['facewash','facecream']]
+						
+						5.3: 
+							df1['Name'].is_unique
+								to know if particular column has unique value or not if it is unique then it will return True else False.
 						
 						6.max_car_price = df['price'].fillna(0).astype('int32').max()
 						
@@ -92,7 +97,8 @@ INTRODUCTION TO PANDAS-
 						#where GermanCars = {'Company': ['Ford', 'Mercedes', 'BMV', 'Audi'], 'Price': [23845, 171995, 135925 , 71400]}
 					
 						13.
-						14. output new csv after changing something- imdb_df.to_csv(working_dir_path +'output_imdb.csv')
+						14. output new csv after changing something- 
+									imdb_df.to_csv(working_dir_path +'output_imdb.csv')
 						
 									file_path = '/content/drive/MyDrive/Colab Notebooks/Alma/L, M, A  etc./automobile_data.csv'
 									for read-- df=pd.read_csv(file_path)
@@ -125,7 +131,13 @@ INTRODUCTION TO PANDAS-
 						18.# Add new column which is just half the runtime
                             df['half_runtime'] = df['runtime'] * 0.5
 						
-						19.set imdb id as index -  df.set_index('imdb_id', inplace=True)
+						19.set imdb id as index -  
+												df.set_index('imdb_id', inplace=True)
+												or
+												Multi-index:
+												df.set_index(["series", "Ratings"], inplace=True,append=True, drop=False)
+												
+												The drop parameter is kept as false which will not drop the columns mentioned as index columns and thereafter append parameter is used for appending passed columns to the already existing index columns.
 						
 						20.sort column values-- df.sort_values(['status','new_profit'], ascending=[False,True]).head()
 						
@@ -163,6 +175,9 @@ INTRODUCTION TO PANDAS-
 						
 						29. encoding- df['Gender'] = df['Gender'].map( {'Female': 0, 'Male': 1} ).astype(int)
 						
+									
+
+						
 									OR
 									gender=pd.get_dummies(df['Gender'],drop_first=True,prefix='ANYTHING WHAT WE WANT IN THE NAME OF DUMMY TABLE',prefix_sep='_')
 									df=pd.concat([df,gender],axis=1) # we can add as many as we want like gender in that line with comma
@@ -173,8 +188,13 @@ INTRODUCTION TO PANDAS-
 									labelEncoder= LabelEncoder()
 									data['Vehicle_Age'] = labelEncoder.fit_transform(data['Vehicle_Age'])
 									data['Vehicle_Damage'] = labelEncoder.fit_transform(data['Vehicle_Damage'])
+									
+									OR
+									For Multiple Column at the same time
+									df[['col1', 'col2']] = df[['col1', 'col2']].apply(LabelEncoder().fit_transform)
 							
 									OR
+									
 									#One hot encoder on Gender
 									from sklearn.preprocessing import OneHotEncoder
 									enc=OneHotEncoder()
@@ -200,7 +220,7 @@ INTRODUCTION TO PANDAS-
 							df1=data.join(enc_data) where enc_data is the same len of data but diff number of col,
 							
 							merged_IJ_df = pd.merge(english_movies, long_movies, how='inner',left_on='imdb_id',right_on='imdb_id') or
-							 OR
+							OR
 							df = df.merge(df_autox,on = 'company',how = 'left')
 							OR
 							df=df1,merge(df2,on='isbn') where df1 and df2 is different-different df but have primary key-'isbn' in each(can also add how-'left')
@@ -214,20 +234,28 @@ INTRODUCTION TO PANDAS-
 									
 							if u have some filter row df and u want those row from org df which is not available in yr filter df-
 										rest_df=org_df.loc[~org_df.index.isin(filter_df.index),:]
+										
+						36- for getting 1 st occurence of non-nulls of a df wrt any column 
+							df.loc[~df.index.isin(df.loc[df['Sun'].isnull()].index)]
+									here   	1. 		         df.loc[df['Sun'].isnull()].index) will give you the index of nulls as array
+											2. df.index.isin(df.loc[df['Sun'].isnull()].index) will give you the array of booleans in which true will be for if the records will be available in the the point one(nulls).
+											3. ~ will return you the opposite of point 2 (true for non-nulls)
+											4. so for overall it will return the values which is true for non nulls (in accordance with point 3)
 									
 
 						
 						
 						
-DATA WRANGLING-
+DATA WRANGLING-:
 
+							
 							pre== for printing range backword- range(6,0,-1)
-                         1.imdb_non_null_runtime = pd.concat([imdb1,imdb2,imdb3])
+                        1.imdb_non_null_runtime = pd.concat([imdb1,imdb2,imdb3])
 						
 						1.2- dropping columns----df=df.drop(['age','weight'],axis=1)   0r   del df['index']
 						
 						 
-						 2.# Merging the two dataframes using inner join
+						2.# Merging the two dataframes using inner join
                              merged_IJ_df = pd.merge(english_movies, long_movies, how='inner',left_on='imdb_id',right_on='imdb_id') or
 							 OR
 							 df = df.merge(df_autox,on = 'company',how = 'left')
@@ -248,14 +276,32 @@ DATA WRANGLING-
                             imdb_df.groupby('Year_of_release')['runtime'].median().reset_index()
 							
 						4.# Group the data frame by month and item and extract a number of stats from each group
+						df.groupby(['Age']).agg({'Name':'first'})
+						it will return you the first occurance of name for the duplicate value of Age.
+						
+						
                             imdb_df.groupby(['Year_of_release', 'original_language'],as_index=False).agg({'runtime':"mean",'revenue': "sum",'imdb_id':"count"}).sort_values(by='Year_of_release').rename(columns ={'runtime':'avg_runtime','revenue':'total_revenue','imdb_id':'num_movies'})
 							
 						5.inplace = True ----changes the original data frame while False doesn't
 						
-						6. finding null
+						5.1- df['Age'].idxmax()  will return you the index of max value in Age Column.
+						
+						5.2- df1['Age'].is_monotonic_increasing will give if your value in a particular column is increasing.
+						
+						6. Finding non-nulls
+									df.loc[~df.isnull().any(axis=1)] or without loc as well we can use this code
+									it will return the records which is not having any null in any of the column.
+									
+							Finding Nulls-
+									df[df.isnull().all(axis =1)]
+										will return you the rows which is having nulls in every column.
+										
+							If particular column has nulls--- df['Exp'].hasnans   it will return the single true value if null is there.(for series as well)
+						
+						6.1- finding null
 						- print(df.isnull().sum()) or df.isna().sum() returns columnwise count of nulls while  
 						- OR df.describe()   returns rows of description in which first row is  for count of values in each COLUMN
-						- or df.isnull().values.any() returns boolean value 
+						- or df.isnull().values.any() returns boolean value if there will be any null in the wholw df it will be true.
 						  solution- df.fillna(0)
 						   OR   df.replace(0, 5) 
 						   OR  

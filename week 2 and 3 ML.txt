@@ -160,7 +160,7 @@ Scaling or transformation:
 								
 								STEPS OF PRINCIPAL COMPONENT ANALYSIS:
 
-										1. Normalize the data- STANDARDIZE the data before performing PCA.This will ensure that each feature has a mean = 0 and variance = 1.
+										1. Normalize the data- STANDARDIZE the data before performing PCA. This will ensure that each feature has a mean = 0 and variance = 1.
 										2. Build the covariance matrix-Construct a square matrix to express the correlation between two or more features in a multidimensional dataset.
 										3. Find the Eigenvectors and Eigenvalues- Calculate the eigenvectors/unit vectors and eigenvalues. Eigenvalues are scalars by which we multiply the eigenvector of the covariance matrix.
 										4. Sort the eigenvectors in highest to lowest order and select the number of principal components.

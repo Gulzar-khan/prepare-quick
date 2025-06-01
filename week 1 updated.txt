@@ -1,3 +1,6 @@
+10/3 will give you 3.3333
+10//3 (floor division) will give you full integer --- 3 only
+
 # if we want to replace the zero with mean of that col
 # Insulin_col = df['Insulin']
 # Insulin_col.replace(to_replace = 0, value = df.Insulin.mean(), inplace=True)
@@ -16,7 +19,7 @@ String-
       TypeError: 'str' object does not support item assignment
       Concatenate strings and indexing can be posssible
       'double' in my_string --for finding something in string
-	  JOINING of separated string/list character into one word ---- modified_sentence=" ".join(words_in_sentence)
+	  JOINING of separated string(list of words into one sentence) ---- modified_sentence=" ".join(words_in_sentence)
 	  method- count(),find,upper,lower,replace,split,index--(index and find are same)
 	  
 	  print("\nUsing ",lasso_regressor.best_params_, " the negative mean squared error is: ", lasso_regressor.best_score_)
@@ -40,6 +43,8 @@ Lists-
 		list methods- sort(permanent change),append(adds eliment as a whole list/tuples into list),extend(adds list/tuple's element only into list), count, index, insert(permanent change), pop(permanent change),zip,reverse(permanent change),clear,remove(permanent)(or del dogs[0] where dogs is the list of dogs name)
 		
 		from copy import copy, deepcopy  --- in copy(shallow copy) append can possible(inside list of list) but not item assignment while if u use deepcopy(object) for making a copy of a list none can be change.
+		
+		List Comprehension---- [nums[0]+nums[1] if len(nums)>=2 else nums[0] if len(nums)==1  else 0]
 
 		
 Tuple- 

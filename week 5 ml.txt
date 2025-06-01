@@ -794,8 +794,64 @@ imp-
 					Aspect Mining
 					Topic Modeling
 					
+		What is GenAI?
+					GenAI, or generative AI, is a class of AI models that can generate content based on patterns in their training data. GenAI does not make predictions; instead, it imitates the data it was trained on. GenAI can be tapped in various modalities, including text, images, and video.
+		How are GenAI models created?
+					There are various generative AI architectures. Because LLMs could be used to generate original textual data, they—and their underlying transformer architecture—are a form of GenAI. However, for modalities beyond text, other architectures are more popular.
+
+					The most widely used is the GAN (generative adversarial network), an architecture that uses two competing networks—a generative one and a discriminating one. The former creates content, and the latter attempts to decide whether or not it’s real. GANs create models that minimize the differences between human-created and artificial content.
+					
+		What are the most popular GenAI Models?
+					There are very diverse examples of GenAI.
+
+					The most popular GenAI models are image models, such as Midjourney, DALL-E 3, or Stable Diffusion. These AI models create images using a text-based prompt but can also be used to augment existing images (e.g., Adobe’s Firefly).
+
+					Other common GenAI models include Sora and Synthesia for videos, Meshy for 3D models, and Cursor and GitHub Copilot for code.
+
+					It’s hazier to answer the question of whether LLMs like GPT-3.5 are GenAI. From a commercial standpoint, they are. GitHub Copilot is considered GenAI because it creates new code, but it simply uses GPT under the hood by further training it on the GitHub codex. And if you ask any LLM to write a fictional story, it will do it, creating completely new content. The distinction, however, is that foundational models, like Claude 3.5, do more than generate content; they can be used as a GenAI model, but they weren’t designed to be generative.
+
+					It’s like how cars are technically public transport when used for taxi services, but aren’t a flagship example over trains or buses.
+					
+				An example of this latter use case is seen across industries. For example, a healthcare application may invoke an LLM to interface with a patient but use GenAI to create a diagram or visual. An e-commerce website may use an LLM for processing product data but use GenAI to create additional product shots or videos.
+					
+					
+				GenAI and LLMs are both popular terms when discussing the recent explosion of AI products. While they both describe types of AI models, they define different things. GenAI articulates the goal of a model—to generate new, original content. LLMs, meanwhile, describe how the model was created—by being trained through massive corpuses of text.
+				
+				Both have a bold future with the growth of AI-powered applications and will continue to evolve alongside each other.
+				
 		What do you MEAN BY AUTOENCODERS?
 					A NETWORK THAT IS USED FOR LEARNING A VECTOR REPRESENTATION OF THE INPUT IN A COMPRESSED FORM, IS CALLED AN AUTOENCODER. IT IS A TYPE OF UNSUPERVISED LEARNING SINCE LABELS AREN’T NEEDED FOR THE PROCESS. This is mainly used to learn the mapping function from the input. In order to make the mapping useful, the input is reconstructed from the vector representation. After training is complete, the vector representation that we get helps encode the input text as a dense vector. Autoencoders are generally used to make feature representations.
+					
+		Note: The full form of ChatGPT is Chat Generative Pre-trained Transformer. It's an AI chatbot developed by OpenAI that can engage in human-like conversations and generate text.
+		For LLM Benchmarking: https://www.vellum.ai/llm-leaderboard
+					
+		Transformers:
+					A transformer is an artificial intelligence architecture that replaced previous approaches such as RNNs (recurrent neural networks), LSTMs (long short-term memory), and CNNs (convolutional neural networks).
+					
+					The novelty of the Transformer architecture is their ability to weigh words in a sentence in the context of the entire sentence. Previously, AI models would just process words sequentially. This difference gives the transformer architecture a better understanding of training data, plus transformers can also more efficiently process data in parallel.
+					
+					architecture ---
+										input-->-encoders--->decoders---->output
+										
+										1. Encoders: In this above flow Here The encoding component is a stack of encoders. The decoding component is a stack of decoders of the same number.
+										The encoders are all identical in structure (yet they do not share weights). Each one is broken down into two sub-layers: 1- Feed forward neural network and 2. Self Attention.
+										The encoder’s inputs first flow through a self-attention layer – a layer that helps the encoder look at other words in the input sentence as it encodes a specific word. We’ll look closer at self-attention later in the post.
+												Self-Attention :The outputs of the self-attention layer are fed to a feed-forward neural network. The exact same feed-forward network is independently applied to each position.
+												Example: Say the following sentence is an input sentence we want to translate:
+													”The animal didn't cross the street because it was too tired”
+
+													What does “it” in this sentence refer to? Is it referring to the street or to the animal? It’s a simple question to a human, but not as simple to an algorithm.
+
+													When the model is processing the word “it”, self-attention allows it to associate “it” with “animal”.
+
+													As the model processes each word (each position in the input sequence), self attention allows it to look at other positions in the input sequence for clues that can help lead to a better encoding for this word.
+										2. Decoders: The decoder has both those layers, but between them is an attention layer that helps the decoder focus on relevant parts of the input sentence
+										
+										As we’ve mentioned already, an encoder receives a list of vectors as input. It processes this list by passing these vectors into a ‘self-attention’ layer, then into a feed-forward neural network, then sends out the output upwards to the next encoder.
+										
+								For more details on how LLMs works visit: https://jalammar.github.io/illustrated-transformer/
+								
+								
 					
 		
 					

@@ -651,7 +651,7 @@ Linear regression:
 																							
 																								where , n= no. of observation, k=no. of independent features
 																								
-																					Now as K increases by adding some features SO THE DENOMINATOR WILL DECREASe, n-1 will remain constant. R2 score will remain constant or will increase slightly so the complete answer will increase and when we subtract this from one then the resultant score will decrease. so this is the case when we add an irrelevant feature in the dataset.
+																					Now as K increases by adding some features SO THE DENOMINATOR WILL DECREASe, n-1 will remain constant. R2 score will remain constant or will 4e57 slightly so the complete answer will increase and when we subtract this from one then the resultant score will decrease. so this is the case when we add an irrelevant feature in the dataset.
 																					And if we add a relevant feature then the R2 score will increase and 1-R2 will decrease heavily and THE DENOMINATOR WILL ALSO DECREASE so the complete term decreases, and on subtracting from one the score increases.
 																					
 																					n=40 
@@ -765,9 +765,7 @@ Linear regression:
 								COEFFICIENT (OR WEIGHTS)IS ASSIGNED TO EACH FEATURE - IT IS AN INDICATOR OF THEIR SIGNIFICANCE TO THE OUTCOME Y. For example, we assume that temperature is a larger driver of ice cream sales than whether it's a public holiday. The weight assigned to temperature in our linear model will be larger than the public holiday variable.
 								
 									
-									
-					Particularly, regularization is implemented to avoid overfitting of the data, especially when there is a large variance between train and test set performances. With regularization, the number of features used in training is kept constant, yet the magnitude of the coefficients (w) is reduced.
-					
+														
 					There are different ways of reducing model complexity and preventing overfitting in linear models. This includes ridge and lasso regression models.
 			Regularization technique:
 								Why we go for Regularizaton Technique?
@@ -1120,7 +1118,7 @@ Logistic Regression		:
 																			THE CROSS-ENTROPY LOSS FUNCTION IS USED TO MEASURE THE PERFORMANCE OF A CLASSIFICATION MODEL WHOSE OUTPUT IS A PROBABILITY VALUE.
 
 																			Learn more about the cross-entropy loss function from here.
-			loss unction- cross entropy LOSS FUNCTION
+			loss function- cross entropy LOSS FUNCTION
 																			Kudos to us, we have steadily come all the way here and understood the limitations of Linear regression for classification and the working of the Logistic regression model.
 															Cost Function in Logistic Regression
 															
@@ -1197,10 +1195,10 @@ Logistic Regression		:
 						
 						∏(class1)-: hw(x)  ∏(class0)-: 1−hw(x)
 						
-							The  ∏  symbol means take the product of the  hw(x)  for the observations that are classified as that class. You will notice that for observations that are labeled as class 0, we are taking 1 minus the logistic function. That is because we are trying to find a value to maximize, and since observations that are labeled as class 0 should have a probability close to zero, 1 minus the probability should be close to 1. This procedure is also known as the MAXIMUM LIKELIHOOD ESTIMATION.
+							The ∏  symbol means take the product of the  hw(x)  for the observations that are classified as that class. You will notice that for observations that are labeled as class 0, we are taking 1 minus the logistic function. That is because we are trying to find a value to maximize, and since observations that are labeled as class 0 should have a probability close to zero, 1 minus the probability should be close to 1. This procedure is also known as the MAXIMUM LIKELIHOOD ESTIMATION.
 							
 												(In order that our model predicts output variable as 0 or 1, we need to find the best fit sigmoid curve, that gives the optimum values of beta co-efficients. That is we need to create an efficient boundary between the 0 and 1 values.
-												Now a cost function tells you how close your values are from actual. So here we need a cost function which maximizes the likelihood of getting desired output values. Such a cost function is called as Maximum Likelihood Estimation (MLE) function.)
+												NOW A COST FUNCTION TELLS YOU HOW CLOSE YOUR VALUES ARE FROM ACTUAL. SO HERE WE NEED A COST FUNCTION WHICH MAXIMIZES THE LIKELIHOOD OF GETTING DESIRED OUTPUT VALUES. SUCH A COST FUNCTION IS CALLED AS MAXIMUM LIKELIHOOD ESTIMATION (MLE) FUNCTION.)
 							
 				Updating model parameters using Gradient Descent
 									Recall our task is to find the optimal value for each individual weight to lower the cost. This requires taking the partial derivative of the cost/error function with respect to a single weight, and then running gradient descent for each individual weight to update them.
@@ -1571,6 +1569,5 @@ FOR SELECTING TOP 10 features FROM NUMERICAL DF IN FEATURE ENGINEERING-
 for comparing classification report:
 https://openclassrooms.com/en/courses/6401081-improve-the-performance-of-a-machine-learning-model/6519011-evaluate-the-performance-of-a-classification-model
 
-End
 
  

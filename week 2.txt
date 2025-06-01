@@ -140,11 +140,14 @@ List Comprehension:
 					
 					
 Production_Grade_Programming-  
-                            class Circle:
+                            Read about Dunder Methods-
+						
+							
+							class Circle:
 
-							  def __init__(self, radius=5):
+							  def __init__(self, radius=5):     #init is a constructor like watchmen
 								self.radius = radius
-								self.area = 3.14 * radius * radius
+								self.area = 3.14 * radius * radius     #here self.radius is attributes and radius is variable
 
 							  def setRadius(self, new_radius):
 								self.radius = new_radius
@@ -153,12 +156,15 @@ Production_Grade_Programming-
 							  def getCircumference(self):
 								return 2 * 3.14 * self.radius
 					
-					now for call it-  c = Circle()
+					now for call it-  c = Circle()   #c is the object here
 										print(c.radius)
 										print(c.getCircumference())
 										c.setRadius(2)
 										print(c.radius)
 										print(c.getCircumference())
+										
+										
+										contructor run when u initialize the class while method u have to
 																		
 								
 				ANOTHER EXAMPLE- class Cylinder:
