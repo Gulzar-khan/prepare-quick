@@ -1571,5 +1571,6 @@ FOR SELECTING TOP 10 features FROM NUMERICAL DF IN FEATURE ENGINEERING-
 for comparing classification report:
 https://openclassrooms.com/en/courses/6401081-improve-the-performance-of-a-machine-learning-model/6519011-evaluate-the-performance-of-a-classification-model
 
+End
 
  
