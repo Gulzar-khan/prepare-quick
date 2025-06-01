@@ -1,3 +1,3 @@
 # prepare-quick
 
-Updated ON 6TH June 2025
+Updated ON 1st June 2025
